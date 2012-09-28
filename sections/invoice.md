@@ -276,7 +276,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 
 ## Událost na akce
 
-- `POST /invoices/#{id}/fire?event=mark_as_sent`
+- `POST /invoices/#{id}/fire.json?event=mark_as_sent`
 
 <table>
 <tr><th>event</th><th>popis</th></tr>
