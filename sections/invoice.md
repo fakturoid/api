@@ -234,7 +234,7 @@ _Poznámka:_ Minimem pro vytvoření faktury je vyplnění atributu `subject_id`
 }
 ```
 
-Po úspěšném vytvoření faktury dostanete ze serveru odpověď ```201 Created```, hlavička ```location``` bude nastavena na adresu nově vytvořeného kontaktu. Spolu s tím bude navrácena právě vytvořená faktura.
+Po úspěšném vytvoření faktury dostanete ze serveru odpověď ```201 Created```, hlavička ```location``` bude nastavena na adresu nově vytvořené faktury. Spolu s tím bude navrácena právě vytvořená faktura.
 
 Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď ```422 Unprocessable Entity``` a JSON se seznamem chyb v odeslaných datech.
 
