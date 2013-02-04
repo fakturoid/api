@@ -211,7 +211,7 @@ Filtry je možné libovolně kombinovat. Pokud budou podmínky takové, že žá
 
 - `POST /invoices.json`
 
-_Poznámka:_ Minimem pro vytvoření faktury je vyplnění atributu `subject_id`.
+_Poznámka:_ Minimem pro vytvoření faktury je vyplnění atributu `subject_id`. Pokud na řádku použijete volbu `with_vat` je potřeba zadávat cenu do pole `unit_price_with_vat`.
 
 ```json
 {
