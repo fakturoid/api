@@ -291,7 +291,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 
 Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud nebude možné událost vykonat, server vrátí odpověď `422 Unprocessable Entity`.
 
-## Smazání fakruty
+## Smazání faktury
 
 - `DELETE /invoices/#{id}.json`
 
