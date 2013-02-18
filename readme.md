@@ -5,7 +5,7 @@ API dokumentace pro [Fakturoid](https://www.fakturoid.cz/).
 ## Úvod
 
 
-* [Basics](https://github.com/fakturoid/api/blob/master/sections/basics.md) - základní popis
+* [Basics](https://github.com/fakturoid/api/blob/master/sections/basics.md) - začněte zde
 * [Status codes](https://github.com/fakturoid/api/blob/master/sections/status_codes.md) - status kódy použité v aplikaci
 
 ## Api
@@ -18,7 +18,4 @@ API dokumentace pro [Fakturoid](https://www.fakturoid.cz/).
 * [Event](https://github.com/fakturoid/api/blob/master/sections/event.md) - událost
 * [Todo](https://github.com/fakturoid/api/blob/master/sections/todo.md) - důležitá událost
 
-V současnosti se jedná o *beta-verzi* nového JSON API, některé věci stále nejsou dokumentované a nemusí fungovat. 
-V případě problémů prosím pište na podpora@fakturoid.cz. 
-
-Pokud hledáte staré XML API (pro nové aplikace a integrace již nedoporučujeme používat) koukněte na https://github.com/fakturoid/fakturoid_api
+V případě problémů prosím pište našemu robotovi na podpora@fakturoid.cz. 
