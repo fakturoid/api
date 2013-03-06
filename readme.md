@@ -15,6 +15,7 @@ API dokumentace pro [Fakturoid](https://www.fakturoid.cz/).
 * [Subject](https://github.com/fakturoid/api/blob/master/sections/subject.md) - kontakt
 * [Invoice](https://github.com/fakturoid/api/blob/master/sections/invoice.md) - faktura
 * [Generator](https://github.com/fakturoid/api/blob/master/sections/generator.md) - šablona
+* [Message](https://github.com/fakturoid/api/blob/master/sections/message.md) - email s fakturou
 * [Event](https://github.com/fakturoid/api/blob/master/sections/event.md) - událost
 * [Todo](https://github.com/fakturoid/api/blob/master/sections/todo.md) - důležitá událost
 
