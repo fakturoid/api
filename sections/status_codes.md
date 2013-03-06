@@ -251,6 +251,31 @@ Seznam status kódů a jejich použití v aplikaci.
   </tr>
 </table>
 
+## Odesílání faktur emailem
+
+<table>
+  <tr>
+    <th>HTTP</th>
+    <th>Případ</th>
+    <th>Status Kód</th>
+  </tr>
+  <tr>
+    <td>POST&nbsp;/invoices/#{invoice_id}/message</td>
+    <td>Správně zadaný požadavek</td>
+    <td>201 Created</td>
+  </tr>
+  <tr>
+    <td>POST&nbsp;/invoices/#{invoice_id}/message</td>
+    <td>Požadavek s nevalidními daty</td>
+    <td>422 Unprocessable Entity</td>
+  </tr>
+  <tr>
+    <td>POST&nbsp;/invoices/#{invoice_id}/message</td>
+    <td>Požadavek z neplaceného účtu</td>
+    <td>403 Forbidden</td>
+  </tr>
+</table>
+
 ## Události
 
 <table>
