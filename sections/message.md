@@ -14,7 +14,7 @@ __Poznámka:__ Je přístupné pouze pro placené účty.
 
 ## Odeslání e-mailu
 
-- `POST /invoices/#{invoice_id}/message`
+- `POST /invoices/#{invoice_id}/message.json`
 
 Minimem pro odeslání e-mailu je vyplnění atributu `email`, všechna ostatní pole se doplní z výchozích nastavení.
 
