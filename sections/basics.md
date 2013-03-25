@@ -35,10 +35,6 @@ User-Agent: YourApp (yourname@example.com)
 
 Pokud požadavek nebude obsahovat tuto hlavičku, dostanete jako odpověď server ```400 Bad Request```
 
-## Stav pouze pro čtení
-
-V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP POST, PUT a DELETE akcí odpověď ze serveru ```503 Service Unavailable```
-
 ## Pouze JSON
 
 API podporuje pouze formát JSON. Při použití jiného formátu dostanete ze serveru odpověď ```415 Unsupported Media Type```.
@@ -56,3 +52,12 @@ curl -u X:653638dc733afce75130303fe6e6010f63768af0 \
 ```
 
 Při zadání špatných přihlašovacích údajů dostanete ze serveru odpověď ```401 Unauthorized```
+
+
+## Stav pouze pro čtení
+
+V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP POST, PUT a DELETE akcí odpověď ze serveru ```503 Service Unavailable```
+
+## Zabokovaný účet
+
+Máte-li zabokovaný účet, dostanete odpověď serveru `402 Payment Required` a seznam odkazů na nezaplacené faktury po splatnosti.
