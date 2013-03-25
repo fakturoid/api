@@ -60,4 +60,4 @@ V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP 
 
 ## Zabokovaný účet
 
-Máte-li zabokovaný účet, dostanete odpověď serveru `402 Payment Required` a seznam odkazů na nezaplacené faktury po splatnosti.
+Máte-li zabokovaný účet, dostanete odpověď serveru `402 Payment Required`.
