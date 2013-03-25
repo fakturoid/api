@@ -33,6 +33,10 @@ Seznam status kódů a jejich použití v aplikaci.
     <td>Zapnutý stav pouze pro čtení (POST, PUT a DELETE akce)</td>
     <td>503 Service Unavailable</td>
   </tr>
+  <tr>
+    <td>Zablokovaný účet</td>
+    <td>402 Payment Required</td>
+  </tr>
 </table>
 
 ## Účet
