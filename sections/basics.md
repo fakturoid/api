@@ -58,6 +58,6 @@ Při zadání špatných přihlašovacích údajů dostanete ze serveru odpově�
 
 V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP POST, PUT a DELETE akcí odpověď ze serveru ```503 Service Unavailable```
 
-## Zabokovaný účet
+## Zablokovaný účet
 
-Máte-li zabokovaný účet, dostanete odpověď serveru `402 Payment Required`.
+Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`.
