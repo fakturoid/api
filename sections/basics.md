@@ -33,7 +33,7 @@ Všechny požadavky musí obsahovat hlavičku ```User-Agent``` se jménem vaší
 User-Agent: YourApp (yourname@example.com) 
 ```
 
-Pokud požadavek nebude obsahovat tuto hlavičku, dostanete jako odpověď server ```400 Bad Request```
+Pokud požadavek nebude obsahovat tuto hlavičku, dostanete jako odpověď serveru ```400 Bad Request```
 
 ## Pouze JSON
 
