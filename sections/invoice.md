@@ -175,7 +175,7 @@ Filtry je možné libovolně kombinovat. Pokud budou podmínky takové, že žá
   "payment_method": "bank",
   "currency": "CZK",
   "exchange_rate": "1.0",
-  "language": null,
+  "language": "cz",
   "transferred_tax_liability": false,
   "subtotal": "40000.0",
   "total": "48000.0",
