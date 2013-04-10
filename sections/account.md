@@ -64,7 +64,7 @@ _Poznámka:_ Účet je read only, pro změny použijte prosím webové rozhraní
   "street2": null,
   "city": "Praha",
   "zip": "10000",
-  "country": "\u010cesk\u00e1 republika",
+  "country": "CZ",
   "bank_account": "1234/1234",
   "iban": null,
   "swift_bic": null,
