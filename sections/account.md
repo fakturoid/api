@@ -22,7 +22,7 @@
 <tr><td>street2</td><td>ulice 2</td></tr>
 <tr><td>city</td><td>město</td></tr>
 <tr><td>zip</td><td>PSČ</td></tr>
-<tr><td>country</td><td>země</td></tr>
+<tr><td>country</td><td>země (ISO kód)</td></tr>
 
 <tr><td>bank_account</td><td>bankovní účet</td></tr>
 <tr><td>iban</td><td>IBAN</td></tr>
