@@ -4,8 +4,8 @@ API dokumentace pro [Fakturoid](https://www.fakturoid.cz/).
 
 ## Úvod
 
-
 * [Basics](https://github.com/fakturoid/api/blob/master/sections/basics.md) - začněte zde
+* [Libraries](https://github.com/fakturoid/api/blob/master/sections/libraries.md) - knihovny
 * [Status codes](https://github.com/fakturoid/api/blob/master/sections/status_codes.md) - status kódy použité v aplikaci
 
 ## Api
