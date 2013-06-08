@@ -30,14 +30,20 @@ Seznam status kódů a jejich použití v aplikaci.
     <td>415 Unsupported Media Type</td>
   </tr>
   <tr>
+    <td>Zablokovaný účet</td>
+    <td>402 Payment Required</td>
+  </tr>
+  <tr>
     <td>Zapnutý stav pouze pro čtení (POST, PUT a DELETE akce)</td>
     <td>503 Service Unavailable</td>
   </tr>
   <tr>
-    <td>Zablokovaný účet</td>
-    <td>402 Payment Required</td>
+    <td>Nedostupnost Fakturoidu</td>
+    <td>500</td>
   </tr>
 </table>
+
+
 
 ## Účet
 
