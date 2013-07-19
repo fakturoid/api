@@ -37,7 +37,7 @@ Pokud požadavek nebude obsahovat tuto hlavičku, dostanete jako odpověď serve
 
 ## Pouze JSON
 
-API podporuje pouze formát JSON. Při použití jiného formátu dostanete ze serveru odpověď ```415 Unsupported Media Type```.
+API podporuje pouze formát JSON. Všude používejte kódování UTF8. Při použití jiného formátu dostanete ze serveru odpověď ```415 Unsupported Media Type```.
 
 ## Ověření
 
