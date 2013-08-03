@@ -18,7 +18,7 @@ Faktura
 <tr><td>your_street2</td><td>vaše ulice 2</td></tr>
 <tr><td>your_city</td><td>vaše město</td></tr>
 <tr><td>your_zip</td><td>vaše poštovní směrovací číslo</td></tr>
-<tr><td>your_country</td><td>vaše země</td></tr>
+<tr><td>your_country</td><td>vaše země (ISO kód)</td></tr>
 <tr><td>your_registration_no</td><td>vaše IČ</td></tr>
 <tr><td>your_vat_no</td><td>vaše DIČ</td></tr>
 
@@ -27,7 +27,7 @@ Faktura
 <tr><td>client_street2</td><td>ulice 2 kontaktu</td></tr>
 <tr><td>client_city</td><td>město kontaktu</td></tr>
 <tr><td>client_zip</td><td>poštovní směrovací číslo kontaktu</td></tr>
-<tr><td>client_country</td><td>země kontaktu</td></tr>
+<tr><td>client_country</td><td>země kontaktu (ISO kód)</td></tr>
 <tr><td>client_registration_no</td><td>IČ kontaktu</td></tr>
 <tr><td>client_vat_no</td><td>DIČ kontaktu</td></tr>
 
@@ -141,7 +141,7 @@ Filtry je možné libovolně kombinovat. Pokud budou podmínky takové, že žá
   "your_street2": null,
   "your_city": "Praha",
   "your_zip": "10000",
-  "your_country": "\u010cesk\u00e1 republika",
+  "your_country": "CZ",
   "your_registration_no": "87654321",
   "your_vat_no": "CZ87654321",
   "client_name": "Microsoft a. s.",
@@ -149,7 +149,7 @@ Filtry je možné libovolně kombinovat. Pokud budou podmínky takové, že žá
   "client_street2": null,
   "client_city": "Praha",
   "client_zip": "11000",
-  "client_country": "\u010cesk\u00e1 republika",
+  "client_country": "CZ",
   "client_registration_no": "28444501",
   "client_vat_no": "CZ28444501",
   "subject_id": 4,
