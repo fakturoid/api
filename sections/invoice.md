@@ -274,7 +274,7 @@ Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
-## Událost na akce
+## Vykonat akci
 
 - `POST /invoices/#{id}/fire.json?event=mark_as_sent`
 
@@ -282,7 +282,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 <tr><th>event</th><th>popis</th></tr>
 <tr><td>mark_as_sent</td><td>označit jako odeslanou</td></tr>
 <tr><td>deliver</td><td>doručit emailem</td></tr>
-<tr><td>pay</td><td>označit jako zaplacenou</td></tr>
+<tr><td>pay</td><td>označit jako zaplacenou (akceptuje volitelný parametr `paid_at`)</td></tr>
 <tr><td>pay_proforma</td><td>zaplatit proformu a vystavit daňový doklad</td></tr>
 <tr><td>pay_partial_proforma</td><td>zaplatit částečnou proformu</td></tr>
 <tr><td>remove_payment</td><td>odzaplatit</td></tr>
