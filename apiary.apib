@@ -1254,7 +1254,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
 
 + Response 400 (application/json)
 
-## Invoices Collection fulltext search [/accounts/{slug}/invoices/proforma.json{?query}]
+## Invoices Collection fulltext search [/accounts/{slug}/invoices/search.json{?query}]
 
 ### Fulltextové vyhledávání ve fakturách [GET]
 
@@ -1264,6 +1264,7 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
 + Parameters
     + slug (string, `applecorp`) ... Název účtu
     + query (string, `Hledaný řetězec`) ... Hledaný řetězec
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
 
 + Request
 
