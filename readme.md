@@ -1,6 +1,8 @@
 # API Fakturoid.cz
 
-API dokumentace pro [Fakturoid](https://www.fakturoid.cz/).
+API v1 dokumentace pro [Fakturoid](https://www.fakturoid.cz/).
+
+__Upozornění:__ Tato dokumentace slouží pro API v1. Pro nové integrace prosím použijte API v2 http://docs.fakturoid.apiary.io/.
 
 ## Úvod
 
