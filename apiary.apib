@@ -86,8 +86,8 @@ Do hlavičky `Link` jsou vloženy informace o stránkování.
 ### Příklad
 
 ```
-Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=6>; rel="last", 
-    <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=2>; rel="next"
+Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=6>; rel="last", 
+    <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=2>; rel="next"
 ```
 
 *Odřádkování je jen pro přehlednost.*
@@ -177,8 +177,8 @@ Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`
         "phone": "",
         "web": "",
         "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-        "html_url": "https://app.fakturoid.cz/test/subjects/28",
-        "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+        "html_url": "https://app.fakturoid.cz/applecorp/subjects/28",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
         "updated_at": "2012-06-02T09:34:47+02:00"
     }
     ```
@@ -231,8 +231,8 @@ Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`
             "phone": "",
             "web": "",
             "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-            "html_url": "https://app.fakturoid.cz/test/subjects/28",
-            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+            "html_url": "https://app.fakturoid.cz/applecorp/subjects/28",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
             "updated_at": "2012-06-02T09:34:47+02:00"
         }
         ```
@@ -280,8 +280,8 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
         "phone": "",
         "web": "",
         "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-        "html_url": "https://app.fakturoid.cz/test/subjects/28",
-        "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+        "html_url": "https://app.fakturoid.cz/applecorp/subjects/28",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
         "updated_at": "2012-06-02T09:34:47+02:00"
     }
     ```
@@ -355,8 +355,8 @@ Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď se
             "phone": null,
             "web": "https://www.apple.cz",
             "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-            "html_url": "https://app.fakturoid.cz/test/subjects/6",
-            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/6.json",
+            "html_url": "https://app.fakturoid.cz/applecorp/subjects/6",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/6.json",
             "updated_at": "2012-05-13T12:11:38+02:00"
         },
         {
@@ -379,8 +379,8 @@ Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď se
             "phone": "",
             "web": "",
             "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-            "html_url": "https://app.fakturoid.cz/test/subjects/28",
-            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+            "html_url": "https://app.fakturoid.cz/applecorp/subjects/28",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
             "updated_at": "2012-06-02T09:34:47+02:00"
         }
     ]   
@@ -437,7 +437,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
     
         ```
         Content-Type: application/json
-        Location: https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json
+        Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json
         ```
 
     + Body
@@ -463,8 +463,8 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
             "phone": "",
             "web": "",
             "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-            "html_url": "https://app.fakturoid.cz/test/subjects/28",
-            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+            "html_url": "https://app.fakturoid.cz/applecorp/subjects/28",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
             "updated_at": "2012-06-02T09:34:47+02:00"
         }
         ```
@@ -524,7 +524,7 @@ Při zadání nesprávného formátu data a času v parametru `since` server vr�
         ```
         Content-Type: application/json
         ETag: "75a303df11533fd269fd9ffa56d7b858"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/subjects.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/subjects.json?page=2>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects.json?page=2>; rel="next"
         ```        
 
     + Body
@@ -551,8 +551,8 @@ Při zadání nesprávného formátu data a času v parametru `since` server vr�
                 "phone": null,
                 "web": "https://www.apple.cz",
                 "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-                "html_url": "https://app.fakturoid.cz/test/subjects/6",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/6.json",
+                "html_url": "https://app.fakturoid.cz/applecorp/subjects/6",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/6.json",
                 "updated_at": "2012-05-13T12:11:38+02:00"
             },
             {
@@ -575,8 +575,8 @@ Při zadání nesprávného formátu data a času v parametru `since` server vr�
                 "phone": "",
                 "web": "",
                 "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
-                "html_url": "https://app.fakturoid.cz/test/subjects/28",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+                "html_url": "https://app.fakturoid.cz/applecorp/subjects/28",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
                 "updated_at": "2012-06-02T09:34:47+02:00"
             }
         ]   
@@ -608,7 +608,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
         ```
         Content-Type: application/json
         ETag: "46339b977ca99a3d8df1a1f8e354c66b"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=1&query=czech>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=1&query=czech>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=3&query=czech>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=3&query=czech>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=1&query=czech>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=1&query=czech>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=3&query=czech>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=3&query=czech>; rel="next"
         ```
     
     + Body
@@ -789,10 +789,10 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
                 "vat_rate": 21
             }
         ],
-        "html_url": "https://app.fakturoid.cz/test/invoices/9",
-        "public_html_url": "https://app.fakturoid.cz/test/p/udDTG8Q88M/2012-0004",
-        "url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/9.json",
-        "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+        "html_url": "https://app.fakturoid.cz/applecorp/invoices/9",
+        "public_html_url": "https://app.fakturoid.cz/applecorp/p/udDTG8Q88M/2012-0004",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/9.json",
+        "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json",
         "updated_at": "2012-05-13T12:11:37+02:00"
     }
     ```    
@@ -893,10 +893,10 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
                     "vat_rate": 21
                 }
             ],
-            "html_url": "https://app.fakturoid.cz/test/invoices/9",
-            "public_html_url": "https://app.fakturoid.cz/test/p/udDTG8Q88M/2012-0004",
-            "url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/9.json",
-            "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+            "html_url": "https://app.fakturoid.cz/applecorp/invoices/9",
+            "public_html_url": "https://app.fakturoid.cz/applecorp/p/udDTG8Q88M/2012-0004",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/9.json",
+            "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json",
             "updated_at": "2012-05-13T12:11:37+02:00"
         }
     ```   
@@ -1072,7 +1072,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
     
         ```
         Content-Type: application/json
-        Location: https://app.fakturoid.cz/api/v2/accounts/test/invoices/98.json
+        Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/98.json
         ```
     
     + Body
@@ -1125,7 +1125,7 @@ Parametry je možné libovolně kombinovat.
         ```
         Content-Type: application/json
         ETag: "e50c359d3d1a49c705949037e8b188ef"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=2>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=2>; rel="next"
         ```
     + Body
     
@@ -1178,7 +1178,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
         ```
         Content-Type: application/json
         ETag: "e50c359d3d1a49c705949037e8b188ef"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices/regular.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/regular.json?page=2>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/regular.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/regular.json?page=2>; rel="next"
         ```
     + Body
     
@@ -1231,7 +1231,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
         ```
         Content-Type: application/json
         ETag: "e5a8e55663b9dd5fa070cfee5429aeec"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/testd/invoices/proforma.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/proforma.json?page=2>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorpd/invoices/proforma.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/proforma.json?page=2>; rel="next"
         ```
     + Body
     
@@ -1282,7 +1282,7 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
         ```
         Content-Type: application/json
         ETag: "10b8f52d87e47e20ed63b3b74a78410d"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=1&query=data>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=1&query=data>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=3&query=data>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=3&query=data>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=1&query=data>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=1&query=data>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=3&query=data>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=3&query=data>; rel="next"
         ```
     
     + Body
@@ -1432,9 +1432,9 @@ vypadat náseldovně
                 "vat_rate": 20
             }
         ],
-        "html_url": "https://app.fakturoid.cz/test/generators/4",
-        "url": "https://app.fakturoid.cz/api/v2/accounts/test/generators/4.json",
-        "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+        "html_url": "https://app.fakturoid.cz/applecorp/generators/4",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/4.json",
+        "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json",
         "updated_at": "2012-05-13T12:11:37+02:00"
     }
     ```
@@ -1500,9 +1500,9 @@ vypadat náseldovně
                     "vat_rate": 20
                 }
             ],
-            "html_url": "https://app.fakturoid.cz/test/generators/4",
-            "url": "https://app.fakturoid.cz/api/v2/accounts/test/generators/4.json",
-            "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+            "html_url": "https://app.fakturoid.cz/applecorp/generators/4",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/4.json",
+            "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json",
             "updated_at": "2012-05-13T12:11:37+02:00"
         }
         ```
@@ -1630,7 +1630,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
     
         ```
         Content-Type: application/json
-        Location: https://app.fakturoid.cz/api/v2/accounts/test/generators/98.json
+        Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/98.json
         ```
     
     + Body
@@ -1673,7 +1673,7 @@ Parametry je možné libovolně kombinovat.
     
         ```
         Content-Type: application/json
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/generators.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/generators.json?page=2>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators.json?page=2>; rel="next"
         ```
     
     + Body
@@ -1713,8 +1713,8 @@ Parametry je možné libovolně kombinovat.
                         "vat_rate": 20
                     }
                 ],
-                "html_url": "https://subdomena.fakturoid.cz/generators/5",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/generators/5.json",
+                "html_url": "https://app.fakturoid.cz/applecorp/generators/5",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/5.json",
                 "subject_url": null,
                 "updated_at": "2012-05-13T12:11:38+02:00"
             },
@@ -1751,9 +1751,9 @@ Parametry je možné libovolně kombinovat.
                         "vat_rate": 20
                     }
                 ],
-                "html_url": "https://subdomena.fakturoid.cz/generators/4",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/generators/4.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/subjects/4.json",
+                "html_url": "https://app.fakturoid.cz/applecorp/generators/4",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/4.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json",
                 "updated_at": "2012-05-13T12:11:37+02:00"
             }
         ]
@@ -1787,7 +1787,7 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
         ```
         Content-Type: application/json
         ETag: "ba404a38bfefae21aef4c9884b1d325b"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/generators/recurring.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/generators/recurring.json?page=2>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/recurring.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/recurring.json?page=2>; rel="next"
         ```
     
     + Body
@@ -1837,7 +1837,7 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
         ```
         Content-Type: application/json
         ETag: "bfda9ac2d2d8ec6f8b9b56f3b67d9d2b"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/generators/template.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/generators/template.json?page=2>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/template.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/template.json?page=2>; rel="next"
         ```
     
     + Body
@@ -1920,7 +1920,7 @@ Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
     
         ```json
         {
-            "email": "test@test.cz",
+            "email": "applecorp@applecorp.cz",
             "email_copy":"",
             "subject": "E-mail subject",
             "message": "Hello,\n\nI have invoice for you.\n#link#\n\n   John Doe"
@@ -2011,7 +2011,7 @@ Oproti ostatním uživatelským akcím obsahuje navíc seznam účtů, ke který
             "avatar_url":"https://ssl.fakturoid.cz/images/company-contact.png",
             "accounts":[
                 {
-                    "slug":"test",
+                    "slug":"applecorp",
                     "logo":"https://ssl.fakturoid.cz/files/logos/000/000/014_c9f4677d07.png?1375800316",
                     "name":"Pokusná firma s.r.o."
                 }
@@ -2266,7 +2266,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
         ```
         Content-Type: application/json
         ETag: "cf97891b8145a62772575c5b6655b6bf"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=5>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=5>; rel="next"
         ```
     
     + Body
@@ -2284,8 +2284,8 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
                     "full_name": "Batman"
                     "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
                 }
-                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/11.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json"
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json"
             },
             {
                 "name": "payment_removed",
@@ -2298,8 +2298,8 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
                     "full_name": "Batman"
                     "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
                 }
-                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/11.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json"
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json"
             },
             {
                 "name": "paid_bank",
@@ -2312,8 +2312,8 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
                     "full_name": "Fakturoid robot",
                     "avatar_url": null
                 }
-                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/11.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json"
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json"
             }
         ]
         ```
@@ -2347,7 +2347,7 @@ Vrací pouze události o zalacení faktur.
         ```
         Content-Type: application/json
         ETag: "b7e33e0d339039116cde3792a7981ed0"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=5>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=5>; rel="next"
         ```
         
     + Body
@@ -2365,8 +2365,8 @@ Vrací pouze události o zalacení faktur.
                     "full_name": "Batman",
                     "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
                 }
-                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices/11.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/subjects/4.json"
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json"
             },
             {
                 "name": "paid_bank",
@@ -2379,8 +2379,8 @@ Vrací pouze události o zalacení faktur.
                     "full_name": "Fakturoid robot",
                     "avatar_url": null
                 }
-                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices/11.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/subjects/4.json"
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json"
             }
         ]
         ```
@@ -2429,7 +2429,7 @@ Vrací pouze události o zalacení faktur.
         ```
         Content-Type: application/json
         ETag: "e63346e7aa504454d87ee83eb8fa838e"
-        Link: <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=5>; rel="next"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=5>; rel="next"
         ```
         
     + Body
