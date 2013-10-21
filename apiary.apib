@@ -7,7 +7,7 @@ HOST: https://app.fakturoid.cz/api/v2
 API dokumentace pro [Fakturoid](http://www.fakturoid.cz). Důležité [změny oproti API v1](#changelog).
 
 # Požadavek
-Požadavky je nutné posílat pomocí __HTTPS__. Všechny URL adresy začínají `https://app.fakturoid.cz/api/v2`.
+Požadavky je nutné posílat pomocí __HTTPS__. Všechny URL adresy začínají `https://app.fakturoid.cz/api/v2`. Pro identifikaci účtu slouží parametr `slug` (dříve subdoména), který je součástí adresy většiny požadavků.
 
 ### Příklad: seznam faktur
 
@@ -69,7 +69,7 @@ zpracování dat na serveru a stahování dat, která už máte.
 
 # Stránkování
 
-Stránkování se používá u všech akcí, které vrací více, než jeden záznam. Záznamy jsou stránkovány po 20.
+Stránkování se používá u všech akcí, které vrací více než jeden záznam. Záznamy jsou stránkovány po 20.
 Na další stránku je možné přejít použitím parametru `?page`.
 
 ### Příklad použití stránkování
@@ -1088,7 +1088,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 
 ### Seznam Faktur [GET]
 
-Seznam možných parametrů je uveden v tabulce. Jediným povinným je `subdomain`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
+Seznam možných parametrů je uveden v tabulce. Jediným povinným je `slug`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
 Parametry je možné libovolně kombinovat.
 
 #### Možné stavy faktur
@@ -1648,7 +1648,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 
 ### Seznam šablon [GET]
 
-Seznam možných parametrů je uveden v tabulce. Jediným povinným je `subdomain`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
+Seznam možných parametrů je uveden v tabulce. Jediným povinným je `slug`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
 Parametry je možné libovolně kombinovat.
 
 + Parameters
@@ -1714,7 +1714,7 @@ Parametry je možné libovolně kombinovat.
                     }
                 ],
                 "html_url": "https://subdomena.fakturoid.cz/generators/5",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/generators/5.json",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/generators/5.json",
                 "subject_url": null,
                 "updated_at": "2012-05-13T12:11:38+02:00"
             },
@@ -1752,8 +1752,8 @@ Parametry je možné libovolně kombinovat.
                     }
                 ],
                 "html_url": "https://subdomena.fakturoid.cz/generators/4",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/generators/4.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/subjects/4.json",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/generators/4.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/subjects/4.json",
                 "updated_at": "2012-05-13T12:11:37+02:00"
             }
         ]
@@ -2365,8 +2365,8 @@ Vrací pouze události o zalacení faktur.
                     "full_name": "Batman",
                     "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
                 }
-                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/invoices/11.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/subjects/4.json"
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/subjects/4.json"
             },
             {
                 "name": "paid_bank",
@@ -2379,8 +2379,8 @@ Vrací pouze události o zalacení faktur.
                     "full_name": "Fakturoid robot",
                     "avatar_url": null
                 }
-                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/invoices/11.json",
-                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/subjects/4.json"
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{slug}/subjects/4.json"
             }
         ]
         ```
@@ -2481,7 +2481,7 @@ https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json
 
 Přihlášení probíhá stále přes HTTP BASIC AUTH. Nově je potřeba doplnit kromě API tokenu i přihlašovací email do políčka pro uživatelské jméno.
 
-### Nové zdroje
+### Nové resource
 
 + <a href="#reports">Přehledy</a>
 + <a href="#users">Uživatelé</a>
@@ -2496,4 +2496,5 @@ Přihlášení probíhá stále přes HTTP BASIC AUTH. Nově je potřeba doplnit
 
 + Fulltextové vyhledávání u kontaktů a faktur
 + Možnost editace a mazání řádků faktur
++ Preference `PATCH` místo `PUT` pro částečnou aktualizaci resource
 + Vylepšená podpora pro použití `Etag` a `Last-Modified`
