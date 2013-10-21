@@ -1,22 +1,7 @@
 # API Fakturoid.cz
 
-API dokumentace pro [Fakturoid](https://www.fakturoid.cz/).
+API v2 dokumentace pro [Fakturoid](https://www.fakturoid.cz/) se nachází na http://docs.fakturoid.apiary.io/. 
 
-## Úvod
-
-* [Basics](https://github.com/fakturoid/api/blob/master/sections/basics.md) - začněte zde
-* [Libraries](https://github.com/fakturoid/api/blob/master/sections/libraries.md) - knihovny
-* [Status codes](https://github.com/fakturoid/api/blob/master/sections/status_codes.md) - status kódy použité v aplikaci
-
-## Api
-
-
-* [Account](https://github.com/fakturoid/api/blob/master/sections/account.md) - účet
-* [Subject](https://github.com/fakturoid/api/blob/master/sections/subject.md) - kontakt
-* [Invoice](https://github.com/fakturoid/api/blob/master/sections/invoice.md) - faktura
-* [Generator](https://github.com/fakturoid/api/blob/master/sections/generator.md) - šablona
-* [Message](https://github.com/fakturoid/api/blob/master/sections/message.md) - email s fakturou
-* [Event](https://github.com/fakturoid/api/blob/master/sections/event.md) - událost
-* [Todo](https://github.com/fakturoid/api/blob/master/sections/todo.md) - důležitá událost
+Hledáte původní [v1 dokumentaci](https://github.com/fakturoid/api/blob/v1/readme.md)? 
 
 V případě problémů prosím pište našemu robotovi na podpora@fakturoid.cz. 
