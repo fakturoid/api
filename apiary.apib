@@ -1,0 +1,2498 @@
+FORMAT: 1A
+HOST: https://app.fakturoid.cz/api/v2
+
+
+# Fakturoid API v2
+
+API dokumentace pro [Fakturoid](http://www.fakturoid.cz). Důležité [změny oproti API v1](#changelog).
+
+# Požadavek
+Požadavky je nutné posílat pomocí __HTTPS__. Všechny URL adresy začínají `https://app.fakturoid.cz/api/v2`
+
+### Příklad: seznam faktur
+
+```
+curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
+    https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices.json
+```
+
+### Příklad: vytvoření faktury
+
+Pro vytvoření nebo úpravu záznamu musíte přidat hlavičku `Content-Type: application/json` a data ve formátu JSON.
+
+```
+curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
+    -H 'Content-Type: application/json' \
+    -X POST -d '{ "subject_id": "28" }' \
+    https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices.json
+```
+
+
+# Identifikace vaší aplikace
+
+Všechny požadavky musí obsahovat hlavičku `User-Agent` se jménem vaší aplikace a odkazem na ni nebo e-mailovou adresou.
+
+```
+User-Agent: YourApp (yourname@example.com) 
+```
+
+Na požadavek bez této hlavičky server vrátí odpověď `400 Bad Request`
+
+
+# Pouze JSON
+
+API podporuje pouze formát JSON. Všude používejte kódování UTF8. Při použití jiného formátu dostanete ze serveru odpověď `415 Unsupported Media Type`.
+
+
+# Ověření
+
+Ověření se provádí přes HTTP BASIC AUTH, kde jako username slouží váš email a za heslo uvedete api_token (zjistíte v Nastavení vašeho účtu v záložce _Já_). 
+
+### Příklad
+
+```
+curl -u vas@email.cz:653638dc733afce75130303fe6e6010f63768af0 \
+    -H 'User-Agent: YourApp (yourname@example.com)' \
+    https://app.fakturoid.cz/api/v2/accounts/{slug}/account.json
+```
+
+Při zadání špatných přihlašovacích údajů dostanete ze serveru odpověď `401 Unauthorized`.
+
+
+# HTTP Cache
+
+Pro maximální výkon API i vaší aplikace používejte http cache. Všechny `GET` akce (kromě <a href="#reports">reportů</a>) vrací hlavičku `ETag` a akce,
+které nejsou nad kolekcemi dat vrací i hlavičku `Last-Modified`. Při prvním dotazu si tyto hodnoty uložte
+a při dalších dotazech používejte hlavičky `If-None-Match` a `If-Modified-Since`. Pokud se hodnota 
+zdroj od posledního dotazu nezměnil dostanete zpět odpověď `304 Not Modified`, která ušetří čas vynaložený na
+zpracování dat na serveru a stahování dat, která už máte.
+
+# Stránkování
+
+Stránkování se používá u všech akcí, které vrací více, než jeden záznam. Záznamy jsou stránkovány po 20.
+Na další stránku je možné přejít použitím parametru `?page`.
+
+### Příklad použití stránkování
+
+```
+curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
+    https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices.json?page=5
+```
+
+## Hlavička Link
+
+Do hlavičky `Link` jsou vloženy informace o stránkování.
+
+### Příklad
+
+```
+Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=6>; rel="last", 
+    <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=2>; rel="next"
+```
+
+*Odřádkování je jen pro přehlednost.*
+
+Možné hodnoty `rel` atributu:
+
++ `next` ... url následující stránky
++ `last` ... url poslední stránky
++ `first` ... url první stránky
++ `prev` ... url předchozí stránky
+
+# Ošetření chyb
+
+V případě problémů v robotových obvodech může být API dočasně nedostupné, v takovém případě bude chybová odpověď `5XX`. Je zodpovědností klienta, aby v takovém případě požadavek vyzkoušel znovu.
+
+## Stav pouze pro čtení
+
+V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP POST, PATCH a DELETE akcí odpověď ze serveru `503 Service Unavailable`
+
+
+## Zablokovaný účet
+
+Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`.
+
+
+# Knihovny
+* [PHP](https://github.com/fakturoid/php) - oficiální knihovna pro PHP
+
+
+# Group Subjects
+
+## Kontakty
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+
+<tr><td>id</td><td>identifikátor kontaktu</td><td>integer, readonly</td></tr>
+<tr><td>custom_id</td><td>identifikátor kontaktu ve vaší aplikaci</td><td>string, optional</td></tr>
+
+<tr><td>name</td><td>jméno firmy kontaktu</td><td>string, required</td></tr>
+<tr><td>street</td><td>ulice</td><td>string, optional</td></tr>
+<tr><td>street2</td><td>ulice 2</td><td>string, optional</td></tr>
+<tr><td>city</td><td>město</td><td>string, optional</td></tr>
+<tr><td>zip</td><td>poštovní směrovací číslo</td><td>string, optional</td></tr>
+<tr><td>country</td><td>země (ISO Kód)</td><td>string, optional</td></tr>
+
+<tr><td>registration_no</td><td>IČ podnikatele</td><td>string, optional</td></tr>
+<tr><td>vat_no</td><td>DIČ (plátci DPH)</td><td>string, optional</td></tr>
+
+<tr><td>bank_account</td><td>číslo bankovního účtu</td><td>string, optional</td></tr>
+<tr><td>iban</td><td>IBAN</td><td>string, optional</td></tr>
+<tr><td>variable_symbol</td><td>variabilní symbol</td><td>string, optional</td></tr>
+
+<tr><td>full_name</td><td>jméno kontaktní osoby</td><td>string, optional</td></tr>
+<tr><td>email</td><td>email pro posílání faktur kontaktu</td><td>string, optional</td></tr>
+<tr><td>email_copy</td><td>email pro posílání copie faktur kontaktu</td><td>string, optional</td></tr>
+<tr><td>phone</td><td>telefon</td><td>string, optional</td></tr>
+<tr><td>web</td><td>web</td><td>string, optional</td></tr>
+
+<tr><td>avatar_url</td><td>Adresa obrázku kontaktu</td><td>string, readonly</td></tr>
+<tr><td>html_url</td><td>HTML adresa kontaktu</td><td>string, readonly</td></tr>
+<tr><td>url</td><td>API adresa kontaktu</td><td>string, readonly</td></tr>
+<tr><td>updated_at</td><td>datum poslední aktualizace kontaktu</td><td>datetime, readonly</td></tr>
+</table>
+
+## Subject [/accounts/{slug}/subjects/{id}.json]
+
++ Model (application/json)
+    ```json
+    {
+        "id": 28,
+        "custom_id": null,
+        "name": "MICROSOFT s.r.o.",
+        "street": "Vyskočilova 1461/2a",
+        "street2": null,
+        "city": "Praha",
+        "zip": "14000",
+        "country": "Česká republika",
+        "registration_no": "47123737",
+        "vat_no": "CZ47123737",
+        "bank_account": "",
+        "iban": "",
+        "variable_symbol": "1234567890"
+        "full_name": "",
+        "email": "",
+        "email_copy": "",
+        "phone": "",
+        "web": "",
+        "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+        "html_url": "https://app.fakturoid.cz/test/subjects/28",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+        "updated_at": "2012-06-02T09:34:47+02:00"
+    }
+    ```
+
++ Parameters
+    + id (integer, `1`) ... id kontaktu
+    + slug (string, `applecorp`) ... Název účtu
+
+### Detail kontaktu [GET]
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+        
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "ae9a9ee2419f569a62cef584d501e7dc"
+        Last-Modified: Tue, 21 May 2013 09:46:01 GMT
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "id": 28,
+            "custom_id": null,
+            "name": "MICROSOFT s.r.o.",
+            "street": "Vyskočilova 1461/2a",
+            "street2": null,
+            "city": "Praha",
+            "zip": "14000",
+            "country": "Česká republika",
+            "registration_no": "47123737",
+            "vat_no": "CZ47123737",
+            "bank_account": "",
+            "iban": "",
+            "variable_symbol": "1234567890"
+            "full_name": "",
+            "email": "",
+            "email_copy": "",
+            "phone": "",
+            "web": "",
+            "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+            "html_url": "https://app.fakturoid.cz/test/subjects/28",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+            "updated_at": "2012-06-02T09:34:47+02:00"
+        }
+        ```
+
+### Úprava kontaktu [PATCH]
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným kontaktem. 
+
+Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+        + Headers
+        
+            ```
+            Content-Type: application/json
+            User-Agent: YourApp (yourname@example.com)
+            ```
+    
+        + Body    
+        
+            ```json
+            { "city": "Praha" }    
+            ```
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "id": 28,
+        "custom_id": null,
+        "name": "MICROSOFT s.r.o.",
+        "street": "Vyskočilova 1461/2a",
+        "street2": null,
+        "city": "Praha",
+        "zip": "14000",
+        "country": "Česká republika",
+        "registration_no": "47123737",
+        "vat_no": "CZ47123737",
+        "bank_account": "",
+        "iban": "",
+        "variable_symbol": "1234567890"
+        "full_name": "",
+        "email": "",
+        "email_copy": "",
+        "phone": "",
+        "web": "",
+        "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+        "html_url": "https://app.fakturoid.cz/test/subjects/28",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+        "updated_at": "2012-06-02T09:34:47+02:00"
+    }
+    ```
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body    
+    
+        ```json
+        { "email": "bad@email" }    
+        ```
+
++ Response 422 (application/json)
+
+    ```json
+    {
+        "errors": {
+            "email": [
+                "Prosím zkontrolujte email."
+            ]
+        }
+    }
+    ```
+
+### Smazání kontaktu [DELETE]
+Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď serveru bude `403 Forbidden`.
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204 (application/json)
+
++ Response 403 (application/json)
+
+## Subjects Collection [/accounts/{slug}/subjects.json]
+
++ Model (application/json)
+    
+    ```json
+    [
+        {
+            "id": 6,
+            "custom_id": null,
+            "name": "Apple Czech s.r.o.",
+            "street": "Klimentská 1216/46",
+            "street2": null,
+            "city": "Praha",
+            "zip": "11000",
+            "country": "CZ",
+            "registration_no": "28897501",
+            "vat_no": "CZ28897501",
+            "bank_account": null,
+            "iban": null,
+            "variable_symbol": "",
+            "full_name": null,
+            "email": "",
+            "email_copy": null,
+            "phone": null,
+            "web": "https://www.apple.cz",
+            "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+            "html_url": "https://app.fakturoid.cz/test/subjects/6",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/6.json",
+            "updated_at": "2012-05-13T12:11:38+02:00"
+        },
+        {
+            "id": 28,
+            "custom_id": null,
+            "name": "MICROSOFT s.r.o.",
+            "street": "Vyskočilova 1461/2a",
+            "street2": null,
+            "city": "Praha",
+            "zip": "14000",
+            "country": "Česká republika",
+            "registration_no": "47123737",
+            "vat_no": "CZ47123737",
+            "bank_account": "",
+            "iban": "",
+            "variable_symbol": "1234567890"
+            "full_name": "",
+            "email": "",
+            "email_copy": "",
+            "phone": "",
+            "web": "",
+            "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+            "html_url": "https://app.fakturoid.cz/test/subjects/28",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+            "updated_at": "2012-06-02T09:34:47+02:00"
+        }
+    ]   
+    ```
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
+### Nový kontakt [POST]
+Jedinnou povinnou položkou je jméno kontaktu, pokud nebude nastaven stát, bude nastaven z účtu.
+
+Po úspěšném vytvoření kontaktu dostanete ze serveru odpověď `201 Created` hlavička `location` bude nastavena na adresu nově vytvořeného kontaktu. Spolu s tím bude navrácen právě vytvořený kontakt.
+
+Při dosažení maximálního počtu kontaktů pro váš tarif dostanete při pokusu o vytvoření dalšího odpověď ze serveru `403 Forbiden`.
+
+Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+    
+        ```json
+        {
+            "custom_id": null,
+            "name": "MICROSOFT s.r.o.",
+            "street": "Vyskočilova 1461/2a",
+            "street2": null,
+            "city": "Praha",
+            "zip": "14000",
+            "country": "Česká republika",
+            "registration_no": "47123737",
+            "vat_no": "CZ47123737",
+            "bank_account": "",
+            "iban": "",
+            "variable_symbol": "1234567890"
+            "full_name": "",
+            "email": "",
+            "email_copy": "",
+            "phone": "",
+            "web": "",
+        }
+        ```
+
++ Response 201
+    
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        Location: https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json
+        ```
+
+    + Body
+        
+        ```json
+        {
+            "id": 28,
+            "custom_id": null,
+            "name": "MICROSOFT s.r.o.",
+            "street": "Vyskočilova 1461/2a",
+            "street2": null,
+            "city": "Praha",
+            "zip": "14000",
+            "country": "Česká republika",
+            "registration_no": "47123737",
+            "vat_no": "CZ47123737",
+            "bank_account": "",
+            "iban": "",
+            "variable_symbol": "1234567890"
+            "full_name": "",
+            "email": "",
+            "email_copy": "",
+            "phone": "",
+            "web": "",
+            "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+            "html_url": "https://app.fakturoid.cz/test/subjects/28",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+            "updated_at": "2012-06-02T09:34:47+02:00"
+        }
+        ```
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+        
+        ```json
+        { "name": "" } 
+        ```
+
++ Response 422 (application/json)
+
+    + Body
+    
+        ```json
+        {
+            "errors": {
+                "name": [
+                    "je povinná položka"
+                ]
+            }
+        }
+        ```
+
++ Response 403 (application/json)
+
+### Seznam všech kontaktů [GET]
+
+Při zadání nesprávného formátu data a času v parametru `since` server vrátí odpověď `400 Bad Request`.
+
++ Parameters
+
+    + since (datetime, optional, `2012-05-20T15:00:00+01:00`) ... Všechny kontakty vytvořené po zadaném datu
+    + page (integer, optional, `2`) ... Číslo stránky
+
++ Request
+    
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```    
+
++ Response 200
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "75a303df11533fd269fd9ffa56d7b858"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/subjects.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/subjects.json?page=2>; rel="next"
+        ```        
+
+    + Body
+        
+        ```json
+        [
+            {
+                "id": 6,
+                "custom_id": null,
+                "name": "Apple Czech s.r.o.",
+                "street": "Klimentská 1216/46",
+                "street2": null,
+                "city": "Praha",
+                "zip": "11000",
+                "country": "CZ",
+                "registration_no": "28897501",
+                "vat_no": "CZ28897501",
+                "bank_account": null,
+                "iban": null,
+                "variable_symbol": "",
+                "full_name": null,
+                "email": "",
+                "email_copy": null,
+                "phone": null,
+                "web": "https://www.apple.cz",
+                "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+                "html_url": "https://app.fakturoid.cz/test/subjects/6",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/6.json",
+                "updated_at": "2012-05-13T12:11:38+02:00"
+            },
+            {
+                "id": 28,
+                "custom_id": null,
+                "name": "MICROSOFT s.r.o.",
+                "street": "Vyskočilova 1461/2a",
+                "street2": null,
+                "city": "Praha",
+                "zip": "14000",
+                "country": "Česká republika",
+                "registration_no": "47123737",
+                "vat_no": "CZ47123737",
+                "bank_account": "",
+                "iban": "",
+                "variable_symbol": "1234567890"
+                "full_name": "",
+                "email": "",
+                "email_copy": "",
+                "phone": "",
+                "web": "",
+                "avatar_url": "https://ssl.fakturoid.cz/images/company-contact.png",
+                "html_url": "https://app.fakturoid.cz/test/subjects/28",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/28.json",
+                "updated_at": "2012-06-02T09:34:47+02:00"
+            }
+        ]   
+        ```
+
+## Subjects Collection fulltext search [/accounts/{slug}/subjects/search.json{?query}]
+
+### Fulltextové vyhledávání v kontaktech [GET]
+
+Vyhledává se v políčcích na fakturách: `name`, `full_name`,`email` ,`registration_no`, `country`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + query (string, `Hledaný řetězec`) ... Hledaný řetězec
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "46339b977ca99a3d8df1a1f8e354c66b"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=1&query=czech>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=1&query=czech>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=3&query=czech>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/subjects/search.json?page=3&query=czech>; rel="next"
+        ```
+    
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 6,
+                "custom_id": null,
+                "name": "Apple Czech s.r.o.",
+                // other subject fields truncated ...
+            },
+            {
+                "id": 28,
+                "custom_id": null,
+                "name": "Google Czech s.r.o.",
+                // other subject fields truncated ...
+            }
+        ]   
+        ```
+
+
+# Group Invoices
+
+## Faktury
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+
+<tr><td>id</td><td>identifikátor faktury</td><td>integer, readonly</td></tr>
+
+<tr><td>proforma</td><td>příznak proformy - true/false</td><td>boolean, optional, default: false</td></tr>
+<tr><td>partial_proforma</td><td>přiznak zda je proforma na plnou částku - true/false</td><td>boolean, optional, default: false</td></tr>
+
+<tr><td>number</td><td>číslo faktury (Př: 2011-0001, musí odpovídat formátu čísla v nastavení účtu)</td><td>string, optional, unique</td></tr>
+<tr><td>variable_symbol</td><td>variabilní symbol (nepovinné - doplní se z čísla faktury)</td><td>string, optional, default: by invoice number</td></tr>
+
+<tr><td>your_name</td><td>název vaší firmy</td><td>string, readonly</td></tr>
+<tr><td>your_street</td><td>vaše ulice</td><td>string, readonly</td></tr>
+<tr><td>your_street2</td><td>vaše ulice 2</td><td>string, readonly</td></tr>
+<tr><td>your_city</td><td>vaše město</td><td>string, readonly</td></tr>
+<tr><td>your_zip</td><td>vaše poštovní směrovací číslo</td><td>string, readonly</td></tr>
+<tr><td>your_country</td><td>vaše země (ISO kód)</td><td>string, readonly</td></tr>
+<tr><td>your_registration_no</td><td>vaše IČ</td><td>string, readonly</td></tr>
+<tr><td>your_vat_no</td><td>vaše DIČ</td><td>string, readonly</td></tr>
+
+<tr><td>client_name</td><td>název firmy kontaktu</td><td>string, readonly</td></tr>
+<tr><td>client_street</td><td>ulice kontatku</td><td>string, readonly</td></tr>
+<tr><td>client_street2</td><td>ulice 2 kontaktu</td><td>string, readonly</td></tr>
+<tr><td>client_city</td><td>město kontaktu</td><td>string, readonly</td></tr>
+<tr><td>client_zip</td><td>poštovní směrovací číslo kontaktu</td><td>string, readonly</td></tr>
+<tr><td>client_country</td><td>země kontaktu (ISO kód)</td><td>string, readonly</td></tr>
+<tr><td>client_registration_no</td><td>IČ kontaktu</td><td>string, readonly</td></tr>
+<tr><td>client_vat_no</td><td>DIČ kontaktu</td><td>string, readonly</td></tr>
+
+<tr><td>subject_id</td><td>ID kontaktu (povinné)</td><td>integer, required</td></tr>
+<tr><td>generator_id</td><td>ID šablony ze které byla faktura vystavena</td><td>integer, optional</td></tr>
+<tr><td>related_id</td><td>ID proformy/faktury (u faktur vystavených ze zálohových faktur)</td><td>integer, optional</td></tr>
+
+<tr><td>token</td><td>token pro public akci</td><td>string, readonly</td></tr>
+
+<tr><td>status</td><td>stav faktury - open/sent/overdue/paid/cancelled</td><td>string, readonly</td></tr>
+
+<tr><td>order_number</td><td>číslo objednávky (nepovinné)</td><td>string, optional</td></tr>
+
+<tr><td>issued_on</td><td>datum vystavení (zobrazeno na faktuře)</td><td>date, optional, default: today</td></tr>
+<tr><td>taxable_fulfillment_due</td><td>datum zdanitelného plnění</td><td>date, optional, default: today</td></tr>
+<tr><td>due</td><td>počet dní, než bude po splatnosti (nepovinné - doplní se z účtu)</td><td>integer, optional, default: by account settings</td></tr>
+<tr><td>due_on</td><td>datum splatnosti (doplní se podle due)</td><td>date, readonly</td></tr>
+<tr><td>sent_at</td><td>datum a čas odeslání faktury</td><td>datetime, readonly</td></tr>
+<tr><td>paid_at</td><td>datum a čas zaplacení faktury</td><td>datetime, readonly</td></tr>
+<tr><td>reminder_sent_at</td><td>datum a čas odeslání upomínky</td><td>datetime, readonly</td></tr>
+<tr><td>accepted_at</td><td>datum a čas odsouhlasení faktury klientem</td><td>datetime, readonly</td></tr>
+<tr><td>canceled_at</td><td>datum stornování faktury (pouze pro neplátce DPH)</td><td>datetime, readonly</td></tr>
+
+<tr><td>note</td><td>text před položkami faktury (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>footer_note</td><td>patička faktury (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+
+<tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>iban</td><td>IBAN (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>swift_bic</td><td>BIC (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+
+<tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional, defautl: bank</td></tr>
+<tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
+<tr><td>language</td><td>jazyk faktury (cz, sk, en, de)</td><td>string, optional, default: cz</td></tr>
+<tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
+<tr><td>supply_code</td><td>kód plnění pro souhrnná hlášení (pouze pro zahraniční faktury do EU)</td><td>integer, optional</td></tr>
+
+<tr><td>subtotal</td><td>součet (bez DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>native_subtotal</td><td>součet v měně účtu</td><td>decimal, readonly</td></tr>
+<tr><td>total</td><td>celkový součet (včetně DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>native_total</td><td>součet v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>remaining_amount</td><td>částka k zaplacení (včetně DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>remaining_native_amount</td><td>částka k zaplacení v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
+
+<tr><td>html_url</td><td>HTML adresa faktury</td><td>string, readonly</td></tr>
+<tr><td>public_html_url</td><td>veřejná HTML adresa faktury</td><td>string, readonly</td></tr>
+<tr><td>url</td><td>API adresa faktury</td><td>string, readonly</td></tr>
+<tr><td>subject_url</td><td>API adresa kontaktu</td><td>string, readonly</td></tr>
+<tr><td>updated_at</td><td>datum poslední aktualizace faktury</td><td>datetime, readonly</td></tr>
+</table>
+
+_Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírováním z nastavení účtu a z kontaktu odběratele při vytvoření faktury.
+
+Řádky faktur jsou popsány níže v <a href="#lines">Lines</a>
+
+## Invoice [/accounts/{slug}/invoices/{id}.json]
+
++ Model (application/json)
+
+    ```json
+    {
+        "id": 9,
+        "proforma": false,
+        "number": "2012-0004",
+        "variable_symbol": "20120004",
+        "your_name": "Alexandr Hejsek",
+        "your_street": "Hopsinkov\u00e1 14",
+        "your_street2": null,
+        "your_city": "Praha",
+        "your_zip": "10000",
+        "your_country": "CZ",
+        "your_registration_no": "87654321",
+        "your_vat_no": "CZ87654321",
+        "client_name": "Microsoft a. s.",
+        "client_street": "Trojanova 1216/46",
+        "client_street2": null,
+        "client_city": "Praha",
+        "client_zip": "11000",
+        "client_country": "CZ",
+        "client_registration_no": "28444501",
+        "client_vat_no": "CZ28444501",
+        "subject_id": 4,
+        "generator_id": 4,
+        "related_id": null,
+        "token": "udDTG8Q88M",
+        "status": "paid",
+        "order_number": null,
+        "issued_on": "2011-10-13",
+        "taxable_fulfillment_due": "2011-10-13",
+        "due": 10,
+        "due_on": "2011-10-23",
+        "sent_at": null,
+        "paid_at": "2011-10-20T12:11:37+02:00",
+        "reminder_sent_at": null,
+        "accepted_at": null,
+        "cancelled_at": null,
+        "note": null,
+        "footer_note": null,
+        "bank_account": "1234/1234",
+        "iban": null,
+        "swift_bic": null,
+        "payment_method": "bank",
+        "currency": "CZK",
+        "exchange_rate": "1.0",
+        "language": "cz",
+        "transferred_tax_liability": false,
+        "subtotal": "40000.0",
+        "total": "48000.0",
+        "native_subtotal": "40000.0",
+        "native_total": "48000.0",
+        "lines": [
+            {
+                "id": 1234,
+                "name": "PC",
+                "quantity": "1.0",
+                "unit_name": "",
+                "unit_price": "20000.0",
+                "vat_rate": 21
+            },
+            {
+                "id": 1235,
+                "name": "Notebook",
+                "quantity": "1.0",
+                "unit_name": "",
+                "unit_price": "20000.0",
+                "vat_rate": 21
+            }
+        ],
+        "html_url": "https://app.fakturoid.cz/test/invoices/9",
+        "public_html_url": "https://app.fakturoid.cz/test/p/udDTG8Q88M/2012-0004",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/9.json",
+        "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+        "updated_at": "2012-05-13T12:11:37+02:00"
+    }
+    ```    
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1234`) ... id faktury
+
+### Detail faktury [GET]
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        ETag: "e0a63efa535618c9b2de56bbc53c7813"
+        Last-Modified: Mon, 14 Oct 2013 10:28:46 GMT
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 9,
+            "proforma": false,
+            "number": "2012-0004",
+            "variable_symbol": "20120004",
+            "your_name": "Alexandr Hejsek",
+            "your_street": "Hopsinkov\u00e1 14",
+            "your_street2": null,
+            "your_city": "Praha",
+            "your_zip": "10000",
+            "your_country": "CZ",
+            "your_registration_no": "87654321",
+            "your_vat_no": "CZ87654321",
+            "client_name": "Microsoft a. s.",
+            "client_street": "Trojanova 1216/46",
+            "client_street2": null,
+            "client_city": "Praha",
+            "client_zip": "11000",
+            "client_country": "CZ",
+            "client_registration_no": "28444501",
+            "client_vat_no": "CZ28444501",
+            "subject_id": 4,
+            "generator_id": 4,
+            "related_id": null,
+            "token": "udDTG8Q88M",
+            "status": "paid",
+            "order_number": null,
+            "issued_on": "2011-10-13",
+            "taxable_fulfillment_due": "2011-10-13",
+            "due": 10,
+            "due_on": "2011-10-23",
+            "sent_at": null,
+            "paid_at": "2011-10-20T12:11:37+02:00",
+            "reminder_sent_at": null,
+            "accepted_at": null,
+            "cancelled_at": null,
+            "note": null,
+            "footer_note": null,
+            "bank_account": "1234/1234",
+            "iban": null,
+            "swift_bic": null,
+            "payment_method": "bank",
+            "currency": "CZK",
+            "exchange_rate": "1.0",
+            "language": "cz",
+            "transferred_tax_liability": false,
+            "subtotal": "40000.0",
+            "total": "48000.0",
+            "native_subtotal": "40000.0",
+            "native_total": "48000.0",
+            "lines": [
+                {
+                    "id": 1234,
+                    "name": "PC",
+                    "quantity": "1.0",
+                    "unit_name": "",
+                    "unit_price": "20000.0",
+                    "vat_rate": 21
+                },
+                {
+                    "id": 1235,
+                    "name": "Notebook",
+                    "quantity": "1.0",
+                    "unit_name": "",
+                    "unit_price": "20000.0",
+                    "vat_rate": 21
+                }
+            ],
+            "html_url": "https://app.fakturoid.cz/test/invoices/9",
+            "public_html_url": "https://app.fakturoid.cz/test/p/udDTG8Q88M/2012-0004",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/9.json",
+            "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+            "updated_at": "2012-05-13T12:11:37+02:00"
+        }
+    ```   
+
+### Úprava faktury [PATCH]
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou. 
+
+Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+          "number": "2012-0004"
+        }
+        ```
+
++ Response 200
+
+    [Invoice][]
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+          "number": ""
+        }
+        ```
+
++ Response 422 (application/json)
+
+    ```json
+    {
+        "errors": {
+            "number": [
+                "je povinná položka"
+            ]
+        }
+    }
+    ```
+
+### Smazání faktury [DELETE]
+
+Po smazání faktury server vrátní odpověď `204 No Content`, nejde-li fakturu smazat dostanete odpověď `422 Unprocessable Entity`.
+
+Případy, kdy nelze fakturu smazat:
+
++ Zálohová faktura, k níž je vystavena faktura.
++ Faktura, ke které je vystaven opravný daňový doklad.
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204
+
++ Response 422 (application/json)
+
+
+## Invoice actions [/accounts/{slug}/invoices/{id}/fire.json{?event}]
+
+### Akce nad fakturou [POST]
+
+Seznam možných událostí:
+
+<table>
+    <tr><th>event</th><th>popis</th></tr>
+    <tr><td>mark_as_sent</td><td>Označit jako odeslanou</td></tr>
+    <tr><td>deliver</td><td>Doručit emailem</td></tr>
+    <tr><td>pay</td><td>Označit jako zaplacenou (akceptuje volitelný parametr `paid_at`)</td></tr>
+    <tr><td>pay_proforma</td><td>Zaplatit proformu a vystavit daňový doklad</td></tr>
+    <tr><td>pay_partial_proforma</td><td>Zaplatit částečnou proformu</td></tr>
+    <tr><td>remove_payment</td><td>Zrušit zaplacení</td></tr>
+    <tr><td>deliver_reminder</td><td>Poslat upomínku</td></tr>
+</table>
+
+Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud nebude možné událost vykonat, server vrátí odpověď `422 Unprocessable Entity`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1234`) ... id faktury
+    + event (string, `pay`) ... Událost
+        + `mark_as_sent`
+        + `deliver`
+        + `pay`
+        + `pay_proforma`
+        + `pay_partial_proforma`
+        + `remove_payment`
+        + `deliver_reminder`
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200 (application/json)
+
++ Response 422 (application/json)
+
+## Invoices Collection [/accounts/{slug}/invoices.json]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
+### Nová faktura [POST]
+
+Po úspěšném vytvoření faktury dostanete ze serveru odpověď `201 Created`, hlavička `location` bude nastavena na adresu nově vytvořené faktury. Spolu s tím bude navrácena právě vytvořená faktura.
+
+Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "subject_id": "28",
+            "number": "2012-0001",
+            "currency": "CZK",
+            "payment_method": "bank",
+            "due": 10,
+            "issued_on": "2012-03-30",
+            "taxable_fulfillment_due": "2012-03-30",
+            "lines": [
+                {
+                    "name": "Hard work",
+                    "quantity": "1.0",
+                    "unit_name": "h",
+                    "unit_price": "40000",
+                    "vat_rate": "21"
+                }
+            ]
+        }
+        ```
+
++ Response 201
+    
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        Location: https://app.fakturoid.cz/api/v2/accounts/test/invoices/98.json
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "id": 98,
+            "proforma": false,
+            "number": "2012-0001",
+            // other invoice fields truncated ...
+        }
+        ```
+
+### Seznam Faktur [GET]
+
+Seznam možných parametrů je uveden v tabulce. Jediným povinným je `subdomain`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
+Parametry je možné libovolně kombinovat.
+
+#### Možné stavy faktur
+
+<table>
+  <tr><th>Status</th><th>Popis</th></tr>
+  <tr><td>open</td><td>Faktura není zaplacena, odeslána ani po splatnosti.</td></tr>
+  <tr><td>sent</td><td>Faktura byla odeslána a není po splatnosti.</td></tr>
+  <tr><td>overdue</td><td>Faktura je po splatnosti.</td></tr>
+  <tr><td>paid</td><td>Faktura je zaplacena.</td></tr>
+  <tr><td>cancelled</td><td>Faktura je stornována. (pouze neplátci DPH)</td></tr>
+</table>
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
+    + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
+    + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
+    + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+    
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "e50c359d3d1a49c705949037e8b188ef"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices.json?page=2>; rel="next"
+        ```
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 9,
+                "proforma": false,
+                "number": "2012-0004",
+                // other invoice fields truncated ...
+            },
+            {
+                "id": 10,
+                "proforma": false,
+                "number": "2012-0005",
+                // other invoice fields truncated ...  
+            }
+        ]
+        ```
+
++ Response 400 (application/json)
+
+
+## Invoices Collection without proformas [/accounts/{slug}/invoices/regular.json]
+
+### Seznam Faktur bez zálohových [GET]
+
+Parametry a jejich použití je stejné jako u seznamu faktur výše.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
+    + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
+    + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
+    + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "e50c359d3d1a49c705949037e8b188ef"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices/regular.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/regular.json?page=2>; rel="next"
+        ```
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 9,
+                "proforma": false,
+                "number": "2012-0004",
+                // other invoice fields truncated ...
+            },
+            {
+                "id": 10,
+                "proforma": false,
+                "number": "2012-0005",
+                // other invoice fields truncated ...  
+            }
+        ]
+        ```
+
++ Response 400 (application/json)
+
+## Invoices Collection proformas only [/accounts/{slug}/invoices/proforma.json]
+
+
+### Seznam Zálohových Faktur [GET]
+
+Parametry a jejich použití je stejné jako u seznamu faktur výše.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
+    + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
+    + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
+    + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "e5a8e55663b9dd5fa070cfee5429aeec"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/testd/invoices/proforma.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/proforma.json?page=2>; rel="next"
+        ```
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 11,
+                "proforma": true,
+                "number": "1-2012-0004",
+                // other invoice fields truncated ...
+            },
+            {
+                "id": 12,
+                "proforma": true,
+                "number": "1-2012-0005",
+                // other invoice fields truncated ...  
+            }
+        ]
+        ```
+
++ Response 400 (application/json)
+
+## Invoices Collection fulltext search [/accounts/{slug}/invoices/proforma.json{?query}]
+
+### Fulltextové vyhledávání ve fakturách [GET]
+
+Vyhledává se v políčcích na fakturách: `number`, `variable_symbol`, `client_name`, `note`, `private_note`,
+`footer_note`, `lines`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + query (string, `Hledaný řetězec`) ... Hledaný řetězec
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "10b8f52d87e47e20ed63b3b74a78410d"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=1&query=data>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=1&query=data>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=3&query=data>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/invoices/search.json?page=3&query=data>; rel="next"
+        ```
+    
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 11,
+                "proforma": true,
+                "number": "1-2012-0004",
+                // other invoice fields truncated ...
+            },
+            {
+                "id": 12,
+                "proforma": true,
+                "number": "1-2012-0005",
+                // other invoice fields truncated ...  
+            }
+        ]
+        ```
+        
+
+# Group Lines
+
+## Řádky faktur
+
+<table>
+    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+    <tr><td>id</td><td>Identifikátor řádku</td><td>integer, readonly</td></tr>
+    <tr><td>quantity</td><td>Množství</td><td>decimal, required</td></tr>
+    <tr><td>unit_name</td><td>Množstevní jednotka</td><td>string, optional</td></tr>
+    <tr><td>unit_price</td><td>Cena za jednotuku</td><td>decimal, required</td></tr>
+    <tr><td>vat_rate</td><td>Sazba DPH (pro neplátce DPH 0)</td><td>integer, required</td></tr>
+</table>
+
+```json
+{
+    "id": 1234,
+    "name": "PC",
+    "quantity": "1.0",
+    "unit_name": "",
+    "unit_price": "20000.0",
+    "vat_rate": 21
+}
+```
+
+Při editaci faktury je důležité posílat s řádky i jejich `id`, bez něj bude řádek znovu přidán.
+
+## Smazání řádku
+
+Pro smazání řádku při editaci faktury je potřeba přidat atribut `_destroy: true`, řádek pak bude 
+vypadat náseldovně
+
+```json
+{
+    "id": 1234,
+    "name": "PC",
+    "quantity": "1.0",
+    "unit_name": "",
+    "unit_price": "20000.0",
+    "vat_rate": 21,
+    _destroy: true
+}
+```
+        
+
+# Group Generators
+
+## Šablony faktur (jednoduché i pravidelné)
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+
+<tr><td>id</td><td>identifikátor šablony</td><td>integer, readonly</td></tr>
+
+<tr><td>name</td><td>pojmenování šablony</td><td>string, required</td></tr>
+<tr><td>recurring</td><td>true/false jedná se o pravidelnou nebo normální šablonu</td><td>boolean, required</td></tr>
+<tr><td>proforma</td><td>příznak proformy - true/false</td><td>boolean, optional, default: false</td></tr>
+
+<tr><td>start_date</td><td>počáteční datum pro pravidelnou šablonu</td><td>date, required for recurring invoices</td></tr>
+<tr><td>end_date</td><td>koncové datum pro pravidelnou šablonu</td><td>date, optional</td></tr>
+<tr><td>months_period</td><td>počet měsíců do dalšího vystavení faktury ze šablony (pravidelná šablona)</td><td>integer, required for recurring invoices</td></tr>
+<tr><td>next_occurrence_on</td><td>datum dalšího vystavení faktury z pravidelné šablony</td><td>date, optional</td></tr>
+<tr><td>due</td><td>počet dní, než bude po splatnosti (nepovinné - doplní se z účtu)</td><td>integer, optional, default: by account settings</td></tr>
+
+<tr><td>send_email</td><td>true/false posílat pravidelnou šablonu emailem</td><td>boolean, optional, default: false</td></tr>
+<tr><td>subject_id</td><td>ID kontaktu (povinné)</td><td>integer, required</td></tr>
+
+<tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>iban</td><td>IBAN</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>swift_bic</td><td>BIC (pro SWIFT platby)</td><td>string, optional, default: by account settings</td></tr>
+
+<tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional</td></tr>
+<tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>exchange_rate</td><td>kurz (nepovinné)</td><td>decimal, optional</td></tr>
+<tr><td>language</td><td>jazyk vystavené faktury (cz, sk, en, de)</td><td>string, optional, default: cz</td></tr>
+<tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
+
+<tr><td>subtotal</td><td>součet (bez DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>native_subtotal</td><td>součet v měně účtu</td><td>decimal, readonly</td></tr>
+<tr><td>total</td><td>celkový součet (včetně DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>native_total</td><td>celkový součet v měně účtu</td><td>decimal, readonly</td></tr>
+
+<tr><td>html_url</td><td>HTML adresa šablony</td><td>string, readonly</td></tr>
+<tr><td>url</td><td>API adresa šablony</td><td>string, readonly</td></tr>
+<tr><td>subject_url</td><td>API adresa kontaktu</td><td>string, readonly</td></tr>
+<tr><td>udated_at</td><td>datum poslední aktualizace šablony</td><td>datetime, readonly</td></tr>
+</table>
+
+Řádky šablon jsou popsány výše v <a href="#lines">Lines</a>
+
+## Generator [/accounts/{slug}/generators/{id}.json]
+
++ Model
+
+    ```json
+    {
+        "id": 4,
+        "name": "Školení",
+        "recurring": true,
+        "proforma": false,
+        "start_date": "2011-07-13",
+        "end_date": null,
+        "months_period": 1,
+        "next_occurrence_on": "2012-06-13",
+        "due": 10,
+        "send_email": false,
+        "subject_id": 4,
+        "bank_account": null,
+        "iban": null,
+        "swift_bic": null,
+        "currency": "CZK",
+        "payment_method": "bank",
+        "exchange_rate": "1.0",
+        "language": null,
+        "subtotal": "20000.0",
+        "total": "24000.0",
+        "native_subtotal": "20000.0",
+        "native_total": "24000.0",
+        "lines": [
+            {
+                "id": 1,
+                "name": "Školení",
+                "quantity": "1.0",
+                "unit_name": "",
+                "unit_price": "20000.0",
+                "vat_rate": 20
+            }
+        ],
+        "html_url": "https://app.fakturoid.cz/test/generators/4",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/test/generators/4.json",
+        "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+        "updated_at": "2012-05-13T12:11:37+02:00"
+    }
+    ```
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `20`) ... id šablony
+
+### Detail šablony [GET]
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+    
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "221fff2205c3005243d543a7b849e70d"
+        Last-Modified: Tue, 18 Jun 2013 09:01:58 GMT
+        ```
+
+    + Body
+    
+        ```json
+        {
+            "id": 4,
+            "name": "Školení",
+            "recurring": true,
+            "proforma": false,
+            "start_date": "2011-07-13",
+            "end_date": null,
+            "months_period": 1,
+            "next_occurrence_on": "2012-06-13",
+            "due": 10,
+            "send_email": false,
+            "subject_id": 4,
+            "bank_account": null,
+            "iban": null,
+            "swift_bic": null,
+            "currency": "CZK",
+            "payment_method": "bank",
+            "exchange_rate": "1.0",
+            "language": null,
+            "subtotal": "20000.0",
+            "total": "24000.0",
+            "native_subtotal": "20000.0",
+            "native_total": "24000.0",
+            "lines": [
+                {
+                    "id": 1,
+                    "name": "Školení",
+                    "quantity": "1.0",
+                    "unit_name": "",
+                    "unit_price": "20000.0",
+                    "vat_rate": 20
+                }
+            ],
+            "html_url": "https://app.fakturoid.cz/test/generators/4",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/test/generators/4.json",
+            "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json",
+            "updated_at": "2012-05-13T12:11:37+02:00"
+        }
+        ```
+
+### Úprava šablony [PATCH]
+
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou. 
+
+Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+        
+    + Body
+    
+        ```json
+        { "name": "Hosting" }
+        ```
+
++ Response 200 (application/json)
+    
+    ```json
+    {
+        "id": 98,
+        "name": "Hosting",
+        "recurring": false,
+        "currency": "CZK",
+        "payment_method": "bank",
+        // other generator fields truncated ...
+    }
+    ```
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+        
+    + Body
+    
+        ```json
+        { "name": "" }
+        ```
+
++ Response 422 (application/json)
+
+    ```json
+    {
+        "errors": {
+            "number": [
+                "je povinná položka"
+            ]
+        }
+    }
+    ```
+
+### Smazání šablony [DELETE]
+
+Po smazání šablony server vrátní odpověď `204 No Content`.
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204
+
+## Generators Collection [/accounts/{slug}/generators.json]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
+### Nová šablona [POST]
+
+Po úspěšném vytvoření šablony dostanete ze serveru odpověď `201 Created`, hlavička `location` bude nastavena na adresu nově vytvořené šablony. Spolu s tím bude navrácena právě vytvořená šablona.
+
+Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+    
+        ```json
+        {
+            "name": "Podpora",
+            "recurring": false,
+            "currency": "CZK",
+            "payment_method": "bank",
+            "due": 10,
+            "lines": [
+                {
+                    "name": "Hard work",
+                    "quantity": "1.0",
+                    "unit_name": "h",
+                    "unit_price": "40000",
+                    "vat_rate": "21"
+                }
+            ]
+        }
+        ```
+        
++ Response 201
+    
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        Location: https://app.fakturoid.cz/api/v2/accounts/test/generators/98.json
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "id": 98,
+            "name": "Podpora",
+            "recurring": false,
+            "currency": "CZK",
+            "payment_method": "bank",
+            // other generator fields truncated ...
+        }
+        ```
+
+### Seznam šablon [GET]
+
+Seznam možných parametrů je uveden v tabulce. Jediným povinným je `subdomain`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
+Parametry je možné libovolně kombinovat.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+    + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené po zadaném datu
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        ETag: "19d196964ad49038f59384eed34e3e36"
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/generators.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/generators.json?page=2>; rel="next"
+        ```
+    
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 5,
+                "name": "Školení",
+                "recurring": false,
+                "proforma": false,
+                "start_date": null,
+                "end_date": null,
+                "months_period": null,
+                "next_occurrence_on": null,
+                "due": 10,
+                "send_email": false,
+                "subject_id": null,
+                "bank_account": null,
+                "iban": null,
+                "swift_bic": null,
+                "currency": "CZK",
+                "payment_method": "bank",
+                "exchange_rate": "1.0",
+                "language": null,
+                "subtotal": "28000.0",
+                "total": "33600.0",
+                "native_subtotal": "28000.0",
+                "native_total": "33600.0",
+                "lines": [
+                    {
+                        "id": 50,
+                        "name": "Školení personálu",
+                        "quantity": "4.0",
+                        "unit_name": "lidi",
+                        "unit_price": "7000.0",
+                        "vat_rate": 20
+                    }
+                ],
+                "html_url": "https://subdomena.fakturoid.cz/generators/5",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/generators/5.json",
+                "subject_url": null,
+                "updated_at": "2012-05-13T12:11:38+02:00"
+            },
+            {
+                "id": 4,
+                "name": "Školení",
+                "recurring": true,
+                "proforma": false,
+                "start_date": "2011-07-13",
+                "end_date": null,
+                "months_period": 1,
+                "next_occurrence_on": "2012-06-13",
+                "due": 10,
+                "send_email": false,
+                "subject_id": 4,
+                "bank_account": null,
+                "iban": null,
+                "swift_bic": null,
+                "currency": "CZK",
+                "payment_method": "bank",
+                "exchange_rate": "1.0",
+                "language": null,
+                "subtotal": "20000.0",
+                "total": "24000.0",
+                "native_subtotal": "20000.0",
+                "native_total": "24000.0",
+                "lines": [
+                    {
+                        "id": 40,
+                        "name": "Školení",
+                        "quantity": "1.0",
+                        "unit_name": "",
+                        "unit_price": "20000.0",
+                        "vat_rate": 20
+                    }
+                ],
+                "html_url": "https://subdomena.fakturoid.cz/generators/4",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/generators/4.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/subjects/4.json",
+                "updated_at": "2012-05-13T12:11:37+02:00"
+            }
+        ]
+        ```
+
+## Generators Collection recurring [/accounts/{slug}/generators/recurring.json]
+
+### Seznam pravidelných šablon [GET]
+
+Parametry a jejich použití je stejné jako u seznamu šablon výše.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+    + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené po zadaném datu
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        ETag: "ba404a38bfefae21aef4c9884b1d325b"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/generators/recurring.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/generators/recurring.json?page=2>; rel="next"
+        ```
+    
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 5,
+                "name": "Školení",
+                "recurring": true,
+                // other generator fields truncated ...
+            },
+            {
+                "id": 4,
+                "name": "Školení",
+                "recurring": true,
+                // other generator fields truncated ...
+            }
+        ]
+        ```
+
+## Generators Collection templates [/accounts/{slug}/generators/template.json]
+
+### Seznam jednoduchých šablon [GET]
+
+Parametry a jejich použití je stejné jako u seznamu šablon výše.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+    + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené po zadaném datu
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        ETag: "bfda9ac2d2d8ec6f8b9b56f3b67d9d2b"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/generators/template.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/generators/template.json?page=2>; rel="next"
+        ```
+    
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 5,
+                "name": "Školení",
+                "recurring": false,
+                // other generator fields truncated ...
+            },
+            {
+                "id": 4,
+                "name": "Školení",
+                "recurring": false,
+                // other generator fields truncated ...
+            }
+        ]
+        ```
+
+
+# Group Messages
+
+## Posílání faktur emailem
+
+<table>
+  <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+  <tr><td>email</td><td>E-mail příjemce</td><td>string, optional, default: by invoice subject</td></tr>
+  <tr><td>email_copy</td><td>Kopie na e-mail</td><td>string, optional, default: by invoice subject</td></tr>
+  <tr><td>subject</td><td>Předmět emailu</td><td>string, optional</td></tr>
+  <tr><td>message</td><td>Text e-mailu</td><td>string, optional, default: by account settings</td></tr>
+</table>
+
+__Poznámka:__ Je přístupné pouze pro placené účty.
+
+## Message [/accounts/{slug}/invoices/{invoice_id}/message.json]
+
+### Odeslání E-mailu [POST]
+
+Po úspěšném vytvoření e-mailu server vrací odpověď `201 Created`.
+
+Pokud budou odeslána nevalidní data, server odpoví `422 Unprocessable Entity` se seznamem chyb.
+
+Při odeslání požadavku neplaceným účtem bude odpověď serveru `403 Forbidden`.
+
+####Použité výchozí hodnoty:
+
+Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
+
+<table>
+  <tr><th>Stav faktury</th><th>Popis</th></tr>
+  <tr><td>Po splatnost</td><td>Použijí se výchozí hodnoty pro upomínku.</td</tr>
+  <tr><td>Ostatní</td><td>Použijí se výchozí hodnoty pro odeslání faktury.</td></tr>
+</table>
+
+#### Proměnné, které je možné v textu e-mailu použít:
+<table>
+  <tr><th>Proměnná</th><th>Popis</th></tr>
+  <tr><td>#link#</td><td>odkaz na stránku s náhled a tiskem faktury</td</tr>
+  <tr><td>#no#</td><td>číslo faktury</td</tr>
+  <tr><td>#vs#</td><td>variabilní symbol</td</tr>
+  <tr><td>#price#</td><td>koncová cena</td></tr>
+</table>
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + invoice_id (integer, `1234`) ... id faktury
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "email": "test@test.cz",
+            "email_copy":"",
+            "subject": "E-mail subject",
+            "message": "Hello,\n\nI have invoice for you.\n#link#\n\n   John Doe"
+        }
+        ```
+
++ Response 201 (application/json)
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "email": "bad@email",
+            "email_copy":"",
+            "subject": "E-mail subject",
+            "message": "Hello,\n\nI have invoice for you.\n#link#\n\n   John Doe"
+        }
+        ```
+
++ Response 422 (application/json)
+
+    ```json
+    {
+        "errors": {
+            "email": [
+                "Prosím zkontrolujte email."
+            ]
+        }
+    }
+    ```
+
++ Response 403 (application/json)
+
+
+# Group Users
+
+## Uživatelé
+
+<table>
+    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+    <tr><td>id</td><td>Identifikátor kontaktu</td><td>string</td></tr>
+    <tr><td>full_name</td><td>Jméno uživatele</td><td>string</td></tr>
+    <tr><td>email</td><td>E-mail uživatele</td><td>string</td></tr>
+    <tr><td>avatar_url</td><td>Avatar uživatele</td><td>string</td></tr>
+</table>
+
+## User [/user.json]
+
+### Aktuální uživatel [GET]
+
+Oproti ostatním uživatelským akcím obsahuje navíc seznam účtů, ke kterým má aktuální uživatel přístup.
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Header
+    
+        ```
+        Content-Type: application/json
+        ETag: "7e493771708bb8134aac03d2c2ed05d0"
+        Last-Modified: Fri, 18 Oct 2013 12:21:55 GMT
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "id":456,
+            "full_name":"Jan Testovací",
+            "email":"jan@testovaci.cz",
+            "avatar_url":"https://ssl.fakturoid.cz/images/company-contact.png",
+            "accounts":[
+                {
+                    "slug":"test",
+                    "logo":"https://ssl.fakturoid.cz/files/logos/000/000/014_c9f4677d07.png?1375800316",
+                    "name":"Pokusná firma s.r.o."
+                }
+            ]
+        }
+        ```
+
+## User detail [/accounts/{slug}/users/{id}.json]
+
+### Detail uživatele [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `20`) ... id uživatele
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        ETag: "805b70d23c5fc4fc0a811e3f714092ce"
+        Last-Modified: Thu, 06 Jun 2013 14:08:12 GMT
+        ```
+    
+    + Body
+
+        ```json
+        {
+            "id":8,
+            "full_name":"Batman",
+            "email":"iam@batman.cz",
+            "avatar_url":"https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
+        }
+        ```
+
+## Users Collection [/accounts/{slug}/users.json]
+
+### Seznam uživatelů k účtu [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "c9b6f60b0b42935a13f5c339b3ea7bb2"
+        ```
+        
+    + Body
+    
+        ```json
+        [
+            {
+                "id":5,
+                "full_name":"Pavel Hejsek",
+                "email":"testdph2@test.cz",
+                "avatar_url":"https://ssl.fakturoid.cz/images/company-contact.png"
+            },
+            {
+                "id":8,
+                "full_name":"Batman",
+                "email":"iam@batman.cz",
+                "avatar_url":"https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
+            }
+        ]
+        ```
+
+
+# Group Reports
+
+## Přehledy
+
+Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě položky
+<table>
+    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+    <tr><td>income</td><td>Vyfakturovaná částka bez DPH</td><td>decimal</td></tr>
+    <tr><td>vat</td><td>DPH</td><td>decimal</td></tr>
+</table>
+
+## Reports [/accounts/{slug}/reports/{year}.json]
+
+### Přehled podle data vystavení [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + year (integer, `2013`) ... Rok, pro který chcete zobrazit přehled
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "January":   { "income": "7316.43",  "vat": "1482.57" },
+        "February":  { "income": "8510.0",   "vat": "842.1" },
+        "March":     { "income": "4175.29",  "vat": "876.81" },
+        "April":     { "income": "237342.0", "vat": "1052.1" },
+        "May":       { "income": "23380.0",  "vat": "3733.8" },
+        "June":      { "income": "-1336.32", "vat": "8704.62" },
+        "July":      { "income": "42890.27", "vat": "9243.63" },
+        "August":    { "income": "49706.55", "vat": "3677.31" },
+        "September": { "income": "0.0",      "vat": "0.0" },
+        "October":   { "income": "0.0",      "vat": "0.0" },
+        "November":  { "income": "0.0",      "vat": "0.0" },
+        "December":  { "income": "0.0",      "vat": "0.0" }
+    }
+    ```
+
+## Reports paid [/accounts/{slug}/reports/{year}/paid.json]
+
+### Přehled podle data zaplacení [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + year (integer, `2013`) ... Rok, pro který chcete zobrazit přehled
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "January":   { "income": "7316.43",  "vat": "1482.57" },
+        "February":  { "income": "8510.0",   "vat": "842.1" },
+        "March":     { "income": "4175.29",  "vat": "876.81" },
+        "April":     { "income": "237342.0", "vat": "1052.1" },
+        "May":       { "income": "23380.0",  "vat": "3733.8" },
+        "June":      { "income": "-1336.32", "vat": "8704.62" },
+        "July":      { "income": "42890.27", "vat": "9243.63" },
+        "August":    { "income": "49706.55", "vat": "3677.31" },
+        "September": { "income": "0.0",      "vat": "0.0" },
+        "October":   { "income": "0.0",      "vat": "0.0" },
+        "November":  { "income": "0.0",      "vat": "0.0" },
+        "December":  { "income": "0.0",      "vat": "0.0" }
+    }
+    ```
+
+## Reports vat [/accounts/{slug}/reports/{year}/vat.json]
+
+### Přehled podle data zdanitelného plnění [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + year (integer, `2013`) ... Rok, pro který chcete zobrazit přehled
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "January":   { "income": "7316.43",  "vat": "1482.57" },
+        "February":  { "income": "8510.0",   "vat": "842.1" },
+        "March":     { "income": "4175.29",  "vat": "876.81" },
+        "April":     { "income": "237342.0", "vat": "1052.1" },
+        "May":       { "income": "23380.0",  "vat": "3733.8" },
+        "June":      { "income": "-1336.32", "vat": "8704.62" },
+        "July":      { "income": "42890.27", "vat": "9243.63" },
+        "August":    { "income": "49706.55", "vat": "3677.31" },
+        "September": { "income": "0.0",      "vat": "0.0" },
+        "October":   { "income": "0.0",      "vat": "0.0" },
+        "November":  { "income": "0.0",      "vat": "0.0" },
+        "December":  { "income": "0.0",      "vat": "0.0" }
+    }
+    ```
+
+# Group Events
+
+## Události
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>name</td><td>typ události - generated, sent, accepted, sent_reminder, overdue, paid, paid_bank, payment_removed, unpaired_payment</td><td>string</td></tr>
+<tr><td>created_at</td><td>datum a čas vytvoření události</td><td>datetime</td></tr>
+<tr><td>invoice_id</td><td>ID faktury (nepovinné)</td><td>integer</td></tr>
+<tr><td>subject_id</td><td>ID kontaktu (nepovinné)</td><td>integer</td></tr>
+<tr><td>text</td><td>text události</td><td>string</td></tr>
+
+<tr><td>invoice_url</td><td>API adresa faktury (nepovinné)</td><td>string</td></tr>
+<tr><td>subject_url</td><td>API adresa kontaktu (nepovinné)</td><td>string</td></tr>
+<tr><td>user</td><td>uživatel</td><td>string</td></tr>
+<tr><td>user:id</td><td>Identifikátor uživatele</td><td>integer</td></tr>
+<tr><td>user:full_name</td><td>Jméno uživatel</td><td>string</td></tr>
+<tr><td>user:avatar</td><td>Obrázek uživatele</td><td>string</td></tr>
+</table>
+
+## Events Collection [/accounts/{slug}/events.json]
+
+### Seznam událostí [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`.
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu. Pro špatný formát data bude vrácena odpověď `400 Bad Request`.
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+        
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "cf97891b8145a62772575c5b6655b6bf"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/events.json?page=5>; rel="next"
+        ```
+    
+    + Body
+    
+        ```json
+        [
+            {
+                "name": "paid",
+                "created_at": "2012-05-29T16:28:53+02:00",
+                "invoice_id": 11,
+                "subject_id": 4,
+                "text": "Zaplacena ",
+                "user": {
+                    "id": 1234,
+                    "full_name": "Batman"
+                    "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
+                }
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json"
+            },
+            {
+                "name": "payment_removed",
+                "created_at": "2012-05-29T16:28:44+02:00",
+                "invoice_id": 11,
+                "subject_id": 4,
+                "text": "Zaplacení zrušeno",
+                "user": {
+                    "id": 1234,
+                    "full_name": "Batman"
+                    "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
+                }
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json"
+            },
+            {
+                "name": "paid_bank",
+                "created_at": "2012-05-29T15:21:00+02:00",
+                "invoice_id": 11,
+                "subject_id": 4,
+                "text": "Zaplacena ",
+                "user": {
+                    "id": null,
+                    "full_name": "Fakturoid robot",
+                    "avatar_url": null
+                }
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/test/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/test/subjects/4.json"
+            }
+        ]
+        ```
+        
++ Response 400
+
+## Events Collection paid [/accounts/{slug}/events/paid.json]
+
+### Seznam zaplacených událostí [GET]
+
+Vrací pouze události o zalacení faktur.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`.
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu. Pro špatný formát data bude vrácena odpověď `400 Bad Request`.
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+        
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "b7e33e0d339039116cde3792a7981ed0"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/events/paid.json?page=5>; rel="next"
+        ```
+        
+    + Body
+    
+        ```json
+        [
+            {
+                "name": "paid",
+                "created_at": "2012-05-29T16:28:53+02:00",
+                "invoice_id": 11,
+                "subject_id": 4,
+                "text": "Zaplacena ",
+                "user": {
+                    "id": 1234,
+                    "full_name": "Batman",
+                    "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
+                }
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/subjects/4.json"
+            },
+            {
+                "name": "paid_bank",
+                "created_at": "2012-05-29T15:21:00+02:00",
+                "invoice_id": 11,
+                "subject_id": 4,
+                "text": "Zaplacena ",
+                "user": {
+                    "id": null,
+                    "full_name": "Fakturoid robot",
+                    "avatar_url": null
+                }
+                "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/invoices/11.json",
+                "subject_url": "https://app.fakturoid.cz/api/v2/accounts/{subdomain}/subjects/4.json"
+            }
+        ]
+        ```
++ Response 400
+
+
+# Group Todos
+
+## Důležité události
+
+<table>
+    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+    <tr><td>name</td><td>typ události - initial_todo, initial_fb, already_paid, unpaired_payment, email_bounced</td><td>string</td></tr>
+    <tr><td>created_at</td><td>datum a čas vytvoření události</td><td>datetime</td></tr>
+    <tr><td>completed_at</td><td>datum a čas odškrtnutí události</td><td>datetime</td></tr>
+    <tr><td>invoice_id</td><td>ID faktury</td><td>integer</td></tr>
+    <tr><td>subject_id</td><td>ID kontaktu</td><td>integer</td></tr>
+    <tr><td>text</td><td>text události</td><td>string</td></tr>
+    
+    <tr><td>invoice_url</td><td>API adresa faktury</td><td>string</td></tr>
+    <tr><td>subject_url</td><td>API adresa kontaktu</td><td>string</td></tr>
+</table>
+
+## Todos Collection [/accounts/{slug}/todos.json]
+
+### Seznam důležitých událostí [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`.
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu. Pro špatný formát data bude vrácena odpověď `400 Bad Request`.
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+        
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "e63346e7aa504454d87ee83eb8fa838e"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/test/todos.json?page=5>; rel="next"
+        ```
+        
+    + Body
+
+        ```json
+        [
+            {
+                "name": "initial_fb",
+                "created_at": "2012-05-13T12:11:36+02:00",
+                "completed_at": null,
+                "invoice_id": null,
+                "subject_id": null,
+                "text": "Přidejte si mě do <a href='https://www.facebook.com/fakturoid'>Facebooku</a> a budete vždy vědět, co jsem se naučil nového.",
+                "invoice_url": null,
+                "subject_url": null
+            },
+            {
+                "name": "initial",
+                "created_at": "2012-05-13T12:11:36+02:00",
+                "completed_at": "2012-06-02T09:29:15+02:00",
+                "invoice_id": null,
+                "subject_id": null,
+                "text": "Příklad důležité události, která vyžaduje vaši pozornost. Odškrtněte ji tímto tlačítkem \u2192",
+                "invoice_url": null,
+                "subject_url": null
+            }
+        ]
+        ```
+
+# Group Changelog
+
+## Hlavní změny při přechodu z API v1
+
+### Konstrukce URL
+
+Ve staré verzi API vypadala url následovně
+
+```
+https://applecorp.fakturoid.cz/api/v1/invoices.json
+```
+
+V nové verzi se všechny url převedly na subdoménu `app` a název účtu se uvádí přímo v path (v api parametr `slug`):
+
+```
+https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json
+```
+
+### Příhlašování
+
+Přihlášení probíhá stále přes HTTP BASIC AUTH. Nově je potřeba doplnit kromě API tokenu i přihlašovací email do políčka pro uživatelské jméno.
+
+### Nové zdroje
+
++ <a href="#reports">Přehledy</a>
++ <a href="#users">Uživatele</a>
+
+### Stránkování
+
++ Nově je všude stránkováno po 20 záznamech na stránku
++ Doplněno stránkování pro kontakty
++ Pro lepší orientaci je přidána hlavička `Link`
+
+### Ostatní
+
++ Fulltextové vyhledávání u kontaktů a faktur
++ Možnost editace a mazání řádků faktur
++ Vylepšená podpora pro použití `Etag` a `Last-Modified`
