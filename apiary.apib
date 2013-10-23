@@ -398,7 +398,7 @@ Při dosažení maximálního počtu kontaktů pro váš tarif dostanete při po
 
 Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
-+ Request
++ Request Proper
 
     + Headers
         
@@ -469,7 +469,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
         }
         ```
 
-+ Request
++ Request Faulty
 
     + Headers
         
@@ -906,7 +906,7 @@ Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
-+ Request
++ Request Proper
 
     + Headers
         
@@ -927,7 +927,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 
     [Invoice][]
 
-+ Request
++ Request Faulty
 
     + Headers
         
@@ -1513,7 +1513,7 @@ Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
-+ Request
++ Request Proper
 
     + Headers
         
@@ -1541,7 +1541,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
     }
     ```
 
-+ Request
++ Request Faulty
 
     + Headers
         
@@ -1907,7 +1907,7 @@ Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
     + slug (string, `applecorp`) ... Název účtu
     + invoice_id (integer, `1234`) ... id faktury
 
-+ Request
++ Request Proper
 
     + Headers
     
@@ -1929,7 +1929,7 @@ Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
 
 + Response 201 (application/json)
 
-+ Request
++ Request Faulty
 
     + Headers
     
