@@ -132,7 +132,7 @@ Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`
 <tr><td>street2</td><td>ulice 2</td><td>string, optional</td></tr>
 <tr><td>city</td><td>město</td><td>string, optional</td></tr>
 <tr><td>zip</td><td>poštovní směrovací číslo</td><td>string, optional</td></tr>
-<tr><td>country</td><td>země (ISO Kód)</td><td>string, optional</td></tr>
+<tr><td>country</td><td>země (ISO Kód)</td><td>string, optional, default: same as account</td></tr>
 
 <tr><td>registration_no</td><td>IČ podnikatele</td><td>string, optional</td></tr>
 <tr><td>vat_no</td><td>DIČ (plátci DPH)</td><td>string, optional</td></tr>
@@ -2498,3 +2498,4 @@ Přihlášení probíhá stále přes HTTP BASIC AUTH. Nově je potřeba doplnit
 + Možnost editace a mazání řádků faktur
 + Preference `PATCH` místo `PUT` pro částečnou aktualizaci resource
 + Vylepšená podpora pro použití `Etag` a `Last-Modified`
++ U země kontaktu se vynucuje ISO kód
