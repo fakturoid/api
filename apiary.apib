@@ -2502,6 +2502,7 @@ Vrací pouze události o zalacení faktur.
 
 <table>
     <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+    <tr><td>id</td><td>identifikátor důležité události</td><td>integer</td></tr>
     <tr><td>name</td><td>typ události - initial_todo, initial_fb, already_paid, unpaired_payment, email_bounced</td><td>string</td></tr>
     <tr><td>created_at</td><td>datum a čas vytvoření události</td><td>datetime</td></tr>
     <tr><td>completed_at</td><td>datum a čas odškrtnutí události</td><td>datetime</td></tr>
@@ -2512,6 +2513,41 @@ Vrací pouze události o zalacení faktur.
     <tr><td>invoice_url</td><td>API adresa faktury</td><td>string</td></tr>
     <tr><td>subject_url</td><td>API adresa kontaktu</td><td>string</td></tr>
 </table>
+
+## Todo [/accounts/{slug}/todos/{id}/toggle_completion.json]
+
+### Odškrtnutí důležité události [POST]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `15`) ... id události
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200 (application/json)
+
+    + body
+    
+      ```json
+      {
+          "id": 14,
+          "name": "partial_proforma_paid",
+          "created_at": "2013-09-02T11:30:33.017+02:00",
+          "completed_at": "2013-11-26T12:55:59.019+01:00",
+          "invoice_id": 96,
+          "subject_id": 15,
+          "text": "Záloha zaplacena ",
+          "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/96.json",
+          "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/15.json"
+      }
+      ```
 
 ## Todos Collection [/accounts/{slug}/todos.json]
 
@@ -2546,6 +2582,7 @@ Vrací pouze události o zalacení faktur.
         ```json
         [
             {
+                "id": 15,
                 "name": "initial_fb",
                 "created_at": "2012-05-13T12:11:36+02:00",
                 "completed_at": null,
@@ -2556,6 +2593,7 @@ Vrací pouze události o zalacení faktur.
                 "subject_url": null
             },
             {
+                "id": 14,
                 "name": "initial",
                 "created_at": "2012-05-13T12:11:36+02:00",
                 "completed_at": "2012-06-02T09:29:15+02:00",
