@@ -116,6 +116,115 @@ Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`
 # Knihovny
 * [PHP](https://github.com/fakturoid/php) - oficiální knihovna pro PHP
 
+# Group Account
+
+## Účet
+
+__Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové rozhraní.
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>subdomain</td><td>Název účtu (slug)</td><td>string</td></tr>
+<tr><td>plan</td><td>jméno tarifu</td><td>string</td></tr>
+<tr><td>plan_price</td><td>cena tarifu</td><td>integer</td></tr>
+
+<tr><td>email</td><td>email vlastníka účtu</td><td>string</td></tr>
+<tr><td>invoice_email</td><td>email, ze kterého jsou odesílány faktury</td><td>string, optional</td></tr>
+<tr><td>phone</td><td>telefon vlastníka účtu</td><td>string, optional</td></tr>
+<tr><td>web</td><td>web vlastníka účtu</td><td>string, optional</td></tr>
+
+<tr><td>name</td><td>jméno firmy</td><td>string</td></tr>
+<tr><td>full_name</td><td>jméno majitele účtu</td><td>string, optional</td></tr>
+<tr><td>registration_no</td><td>IČ</td><td>string, optional</td></tr>
+<tr><td>vat_no</td><td>DIČ</td><td>string, optional</td></tr>
+<tr><td>vat_mode</td><td>Plátce DPH / Neplátce DPH / Identifikovaná osoba</td><td>string, values: vat_payer, non_vat_payer, identified_person</td></tr>
+
+<tr><td>street</td><td>ulice</td><td>string</td></tr>
+<tr><td>street2</td><td>ulice 2</td><td>string, optional</td></tr>
+<tr><td>city</td><td>město</td><td>string</td></tr>
+<tr><td>zip</td><td>PSČ</td><td>string</td></tr>
+<tr><td>country</td><td>země (ISO kód)</td><td>string</td></tr>
+
+<tr><td>bank_account</td><td>bankovní účet</td><td>string</td></tr>
+<tr><td>iban</td><td>IBAN</td><td>string, optional</td></tr>
+<tr><td>swift_bic</td><td>BIC (pro SWIFT platby)</td><td>string, optional</td></tr>
+
+<tr><td>currency</td><td>měna</td><td>string</td></tr>
+<tr><td>unit_name</td><td>výchozí jednotka</td><td>string, optional</td></tr>
+<tr><td>vat_rate</td><td>výchozí daňová sazba</td><td>integer</td></tr>
+<tr><td>displayed_note</td><td>text patičky</td><td>string, optional</td></tr>
+<tr><td>invoice_note</td><td>text před položkami faktury</td><td>string, optional</td></tr>
+<tr><td>due</td><td>počet dní před splatností</td><td>integer</td></tr>
+
+<tr><td>html_url</td><td>HTML adresa účtu</td><td>string</td></tr>
+<tr><td>url</td><td>API adresa účtu</td><td>string</td></tr>
+<tr><td>updated_at</td><td>datum poslední úpravy účtu</td><td>datetime</td></tr>
+<tr><td>created_at</td><td>datum vytvoření účtu</td><td>datetime</td></tr>
+</table>
+
+## Account [/accounts/{slug}/account.json]
+
+### Detail účtu [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "f1c9bc9473d2040a6038012ea0c865cd"
+        Last-Modified: Fri, 22 Nov 2013 09:15:45 GMT
+        ```
+
+    + Body
+
+        ```json
+        {
+            "subdomain": "testdph",
+            "plan": "Firma",
+            "plan_price": 480,
+            "email": "applecorp@applecopr.cz",
+            "invoice_email": "applecorp@applecorp.cz",
+            "phone": "123456789",
+            "web": "http://www.applecorp.com",
+            "name": "Alexandr Hejsek",
+            "full_name": "",
+            "registration_no": "87654321",
+            "vat_no": "CZ87654321",
+            "vat_mode": "vat_payer",
+            "street": "Hopsinková 14",
+            "street2": null,
+            "city": "Praha",
+            "zip": "10000",
+            "country": "CZ",
+            "bank_account": "1234/0100",
+            "iban": "",
+            "swift_bic": "",
+            "currency": "CZK",
+            "unit_name": "",
+            "vat_rate": 21,
+            "displayed_note": "",
+            "invoice_note": "",
+            "due": 14,
+            "html_url": "https://app.fakturoid.cz/applecorp/account",
+            "url": "https://app.fakturoid.cz/api/v2/applecorp/testdph/account.json",
+            "updated_at": "2013-11-22T10:15:45.058+01:00",
+            "created_at": "2013-05-21T11:45:59.539+02:00"
+        }
+        ```
+
 
 # Group Subjects
 
