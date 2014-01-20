@@ -156,6 +156,9 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
 <tr><td>invoice_note</td><td>text před položkami faktury</td><td>string, optional</td></tr>
 <tr><td>due</td><td>počet dní před splatností</td><td>integer</td></tr>
 
+<tr><td>custom_email_text</td><td>text emailu pro odeslání faktury</td><td>string</td></tr>
+<tr><td>overdue_email_text</td><td>text upomínky</td><td>string</td></tr>
+
 <tr><td>html_url</td><td>HTML adresa účtu</td><td>string</td></tr>
 <tr><td>url</td><td>API adresa účtu</td><td>string</td></tr>
 <tr><td>updated_at</td><td>datum poslední úpravy účtu</td><td>datetime</td></tr>
@@ -218,6 +221,8 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
             "displayed_note": "",
             "invoice_note": "",
             "due": 14,
+            "custom_email_text": "Hezký den,\r\n\r\nvystavil jsem pro Vás fakturu, najdete ji na\r\n#link#\r\n\r\nDíky!\r\n\r\nAlexandr Hejsek",
+            "overdue_email_text": "Zdravím,\r\n\r\nmůj fakturační robot mě upozornil, že faktura č. #no# je po splatnosti.\r\nFakturu najdete na #link#\r\n\r\nZkuste se na to mrknout. Díky.\r\n\r\nAlexandr Hejsek",
             "html_url": "https://app.fakturoid.cz/applecorp/account",
             "url": "https://app.fakturoid.cz/api/v2/applecorp/testdph/account.json",
             "updated_at": "2013-11-22T10:15:45.058+01:00",
