@@ -2095,6 +2095,17 @@ Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
 ### Aktuální uživatel [GET]
 
 Oproti ostatním uživatelským akcím obsahuje navíc seznam účtů, ke kterým má aktuální uživatel přístup.
+Uživatel může mít různé typy oprávnění k účtům (položka `permission`).
+
+<table>
+  <tr><th>Oprávnění</th><th>Popis</th></tr>
+  <tr><td>owner</td><td>Vlastník účtu</td></tr>
+  <tr><td>write</td><td>Uživatel má právo zápisu i čtení</td></tr>
+  <tr><td>read</td><td>Uživatel má práva pouze pro čtení</td></tr>
+</table>
+
+Pro uživatele s oprávněním `read` jsou povoleny pouze `GET` akce. 
+Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `403 Forbidden`.
 
 + Request
 
@@ -2127,7 +2138,14 @@ Oproti ostatním uživatelským akcím obsahuje navíc seznam účtů, ke který
                 {
                     "slug":"applecorp",
                     "logo":"https://ssl.fakturoid.cz/files/logos/000/000/014_c9f4677d07.png?1375800316",
-                    "name":"Pokusná firma s.r.o."
+                    "name":"Pokusná firma s.r.o.",
+                    "permission":"read"
+                },
+                {
+                    "slug":"microcorp",
+                    "logo":"https://ssl.fakturoid.cz/files/logos/000/000/004_a4573fdd5a.png?1390137835",
+                    "name":"Jan Testovací",
+                    "permission":"owner"
                 }
             ]
         }
