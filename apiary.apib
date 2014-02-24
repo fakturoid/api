@@ -356,20 +356,20 @@ Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným kontaktem.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
-+ Request
++ Request Proper
 
-        + Headers
+    + Headers
         
-            ```
-            Content-Type: application/json
-            User-Agent: YourApp (yourname@example.com)
-            ```
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
     
-        + Body    
+    + Body    
         
-            ```json
-            { "city": "Praha" }    
-            ```
+        ```json
+        { "city": "Praha" }    
+        ```
 
 + Response 200 (application/json)
 
@@ -400,7 +400,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
     }
     ```
 
-+ Request
++ Request Faulty
 
     + Headers
         
@@ -2016,6 +2016,7 @@ Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
   <tr><td>#no#</td><td>číslo faktury</td</tr>
   <tr><td>#vs#</td><td>variabilní symbol</td</tr>
   <tr><td>#price#</td><td>koncová cena</td></tr>
+  <tr><td>#due#</td><td>datum splatnosti</td></tr>
 </table>
 
 + Parameters
@@ -2414,7 +2415,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
                 "text": "Zaplacena ",
                 "user": {
                     "id": 1234,
-                    "full_name": "Batman"
+                    "full_name": "Batman",
                     "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
                 }
                 "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/11.json",
@@ -2428,7 +2429,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
                 "text": "Zaplacení zrušeno",
                 "user": {
                     "id": 1234,
-                    "full_name": "Batman"
+                    "full_name": "Batman",
                     "avatar_url": "https://ssl.fakturoid.cz/files/avatars/000/000/008_c4faac174e.png?1370527691"
                 }
                 "invoice_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/11.json",
