@@ -1222,7 +1222,7 @@ Parametry je možné libovolně kombinovat.
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
     + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
-    + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+    + subject_id (optional, integer, `5`) ... Faktury podle kontatku
     
 + Request
 
@@ -2383,6 +2383,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`.
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu. Pro špatný formát data bude vrácena odpověď `400 Bad Request`.
+    + subject_id (optional, integer, example: `5`) ... Kontakt
 
 + Request
 
@@ -2464,6 +2465,7 @@ Vrací pouze události o zalacení faktur.
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`.
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu. Pro špatný formát data bude vrácena odpověď `400 Bad Request`.
+    + subject_id (optional, integer, example: `5`) ... Kontakt
 
 + Request
 
