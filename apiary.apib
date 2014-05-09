@@ -115,6 +115,7 @@ Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`
 
 # Knihovny
 * [PHP](https://github.com/fakturoid/php) - oficiální knihovna pro PHP
+* [Python](https://github.com/farin/python-fakturoid) - neoficiální knihovna pro Python
 
 # Group Account
 
@@ -2386,7 +2387,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`.
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu. Pro špatný formát data bude vrácena odpověď `400 Bad Request`.
-    + subject_id (optional, integer, example: `5`) ... Kontakt
+    + subject_id (optional, integer, `5`) ... Pouze události týkající se kontaktu
 
 + Request
 
@@ -2468,7 +2469,7 @@ Vrací pouze události o zalacení faktur.
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`.
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu. Pro špatný formát data bude vrácena odpověď `400 Bad Request`.
-    + subject_id (optional, integer, example: `5`) ... Kontakt
+    + subject_id (optional, integer, `5`) ... Pouze události týkající se kontaktu
 
 + Request
 
