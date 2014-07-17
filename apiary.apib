@@ -107,6 +107,9 @@ V případě problémů v robotových obvodech může být API dočasně nedostu
 
 V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP POST, PATCH a DELETE akcí odpověď ze serveru `503 Service Unavailable`
 
+## Rate limit
+
+V případě překročení povoleného počtu požadavků z jedné IP adresy během posledních 5 minut server odpoví `429 Too Many Requests`. 
 
 ## Zablokovaný účet
 
