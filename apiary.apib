@@ -1470,40 +1470,6 @@ vypadat náseldovně
 }
 ```
 
-# Group Webhooks
-
-## Webhooky
-
-V aplikaci, v části `Nastevení > Integrace a API`, si můžete nastavit posílání upozornění na vybranou adresu 
-při změně stavu faktury na **Po splatnosti** nebo **Zaplacena**.
-
-<table>
-    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
-    <tr><td>invoice_id</td><td>Identifikátor faktury</td><td>integer</td></tr>
-    <tr><td>number</td><td>Číslo faktury</td><td>string</td></tr>
-    <tr><td>status</td><td>Nový stav faktury `overdue/paid`</td><td>string</td></tr>
-    <tr><td>total</td><td>Částka faktury</td><td>decimal</td></tr>
-    <tr><td>paid_at</td><td>Datum zaplacení</td><td>date, optional</td></tr>
-    <tr><td>event_name</td><td>Název vytvořené události</td><td>string, required</td></tr>
-</table>
-
-Fakturoid robot pošle `POST` požadavek na vámi nastavenou adresu s následujícími daty v těle a bude očekávat
-odpověď `200 OK` nebo `204 No Content`:
-
-```json
-{
-    "invoice_id": 326,
-    "number": "2014-0300",
-    "status": "paid",
-    "total": 58700.0,
-    "paid_at": "2014-08-27",
-    "event_name": "invoice_paid"
-}
-```
-
-Pokud se nepodaří webhook doručit zkusíme ho doručit znovu. Celkem se pokusíme doručit webhook pětkrát, nepodaří-li se to
-ani při pátem pokusu, vytvoří se důležitá událost s názvem `webhook_failed`.
-
 # Group Generators
 
 ## Šablony faktur (jednoduché i pravidelné)
@@ -2672,6 +2638,42 @@ Vrací pouze události o zalacení faktur.
             }
         ]
         ```
+
+
+# Group Webhooks
+
+## Webhooky
+
+V aplikaci, v části `Nastevení > Integrace a API`, si můžete nastavit posílání upozornění na vybranou adresu 
+při změně stavu faktury na **Po splatnosti** nebo **Zaplacena**.
+
+<table>
+    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+    <tr><td>invoice_id</td><td>Identifikátor faktury</td><td>integer</td></tr>
+    <tr><td>number</td><td>Číslo faktury</td><td>string</td></tr>
+    <tr><td>status</td><td>Nový stav faktury `overdue/paid`</td><td>string</td></tr>
+    <tr><td>total</td><td>Částka faktury</td><td>decimal</td></tr>
+    <tr><td>paid_at</td><td>Datum zaplacení</td><td>date, optional</td></tr>
+    <tr><td>event_name</td><td>Název vytvořené události</td><td>string, required</td></tr>
+</table>
+
+Fakturoid robot pošle `POST` požadavek na vámi nastavenou adresu s následujícími daty v těle a bude očekávat
+odpověď `200 OK` nebo `204 No Content`:
+
+```json
+{
+    "invoice_id": 326,
+    "number": "2014-0300",
+    "status": "paid",
+    "total": 58700.0,
+    "paid_at": "2014-08-27",
+    "event_name": "invoice_paid"
+}
+```
+
+Pokud se nepodaří webhook doručit zkusíme ho doručit znovu. Celkem se pokusíme doručit webhook pětkrát, nepodaří-li se to
+ani při pátem pokusu, vytvoří se důležitá událost s názvem `webhook_failed`.
+
 
 # Group Changelog
 
