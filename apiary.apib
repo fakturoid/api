@@ -1097,6 +1097,32 @@ Případy, kdy nelze fakturu smazat:
 
 + Response 422 (application/json)
 
+## Invoice PDF [/accounts/{slug}/invoices/{id}/download.pdf]
+
+### Stažení faktury v PDF [GET]
+
+Tato akce umožňuje stahnout fakturu ve formátu PDF. Pokud je PDF připraveno ke stažení, akce vrátí odpověď `200 OK` a fakturu.
+Pokud PDF připraveno není, bude vrácena odpověď `204 No content`. V takovém případě to zkuste znovu o 1 - 2 vteřiny později.
+
+Po vystavení nové faktury nebo editaci stávající je potřeba přibližně 1 - 2 vteřiny počkat, než se vygeneruje nové PDF.
+
++ Request
+
+    + Headers
+    
+        ```
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/pdf
+        ```
+
++ Response 204
 
 ## Invoice actions [/accounts/{slug}/invoices/{id}/fire.json{?event}]
 
