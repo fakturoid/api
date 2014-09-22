@@ -149,7 +149,7 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
 <tr><td>zip</td><td>PSČ</td><td>string</td></tr>
 <tr><td>country</td><td>země (ISO kód)</td><td>string</td></tr>
 
-<tr><td>bank_account</td><td>bankovní účet</td><td>string</td></tr>
+<tr><td>bank_account</td><td>výchozí bankovní účet</td><td>string</td></tr>
 <tr><td>iban</td><td>IBAN</td><td>string, optional</td></tr>
 <tr><td>swift_bic</td><td>BIC (pro SWIFT platby)</td><td>string, optional</td></tr>
 
@@ -234,6 +234,75 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
         }
         ```
 
+# Group Bank Accounts
+
+## Bankovní účty
+
+__Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte prosím webové rozhraní.
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>id</td><td>identifikátor bankovního účtu</td><td>integer</td></tr>
+<tr><td>name</td><td>název účtu</td><td>string</td></tr>
+<tr><td>number</td><td>číslo účtu</td><td>string</td></tr>
+<tr><td>currency</td><td>měna</td><td>string</td></tr>
+<tr><td>iban</td><td>IBAN</td><td>string, optional</td></tr>
+<tr><td>swift_bic</td><td>BIC (pro SWIFT platby)</td><td>string, optional</td></tr>
+<tr><td>pairing</td><td>párovnání plateb</td><td>boolean</td></tr>
+<tr><td>payment_adjustment</td><td>haléřové vyrovnání při párování plateb</td><td>boolean</td></tr>
+</table>
+
+## Bank accounts Collection [/accounts/{slug}/bank_account.json]
+
+### Seznam bankovních účtů [GET]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "f1c9bc9473d2040a6038012ea0c865cd"
+        Last-Modified: Fri, 22 Nov 2013 09:15:45 GMT
+        ```
+
+    + Body
+    
+        ```
+        [
+            {
+                "id": 7,
+                "name": "Účet",
+                "currency": "CZK",
+                "number": "1234/0100",
+                "iban": "",
+                "swift_bic": "",
+                "pairing": true,
+                "payment_adjustment": false
+            }, {
+                "id": 10,
+                "name": "Účet u FIO",
+                "currency": "CZK",
+                "number": "1234567/2010",
+                "iban": "CZ6508000000192000145399",
+                "swift_bic": "KOMBCZPP",
+                "pairing": false,
+                "payment_adjustment": false
+            }
+        ]
+        ```
 
 # Group Subjects
 
@@ -806,7 +875,8 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>note</td><td>text před položkami faktury (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>footer_note</td><td>patička faktury (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 
-<tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>bank_account_id</td><td>ID bankovního účtu (nepovinné - použije se výchozí bankovní účet)</td><td>integer, only on create action, optional</td></tr>
+<tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - použije se výchozí bankovní účet)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>iban</td><td>IBAN (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>swift_bic</td><td>BIC (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 
@@ -1203,6 +1273,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
             "due": 10,
             "issued_on": "2012-03-30",
             "taxable_fulfillment_due": "2012-03-30",
+            "bank_account_id": 7,
             "lines": [
                 {
                     "name": "Hard work",
@@ -1520,7 +1591,8 @@ vypadat náseldovně
 <tr><td>send_email</td><td>true/false posílat pravidelnou šablonu emailem</td><td>boolean, optional, default: false</td></tr>
 <tr><td>subject_id</td><td>ID kontaktu (povinné)</td><td>integer, required</td></tr>
 
-<tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>bank_account_id</td><td>ID bankovního účtu (nepovinné - doplní se výchozí bankovní účet)</td><td>integer, optional, default: by account settings</td></tr>
+<tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - doplní se výchozí bankovní účet), musí odpovídat některému účtu z Bankovních účtů</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>iban</td><td>IBAN</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>swift_bic</td><td>BIC (pro SWIFT platby)</td><td>string, optional, default: by account settings</td></tr>
 
@@ -1563,6 +1635,7 @@ vypadat náseldovně
         "bank_account": null,
         "iban": null,
         "swift_bic": null,
+        "bank_account_id": null,
         "currency": "CZK",
         "payment_method": "bank",
         "exchange_rate": "1.0",
@@ -1631,6 +1704,7 @@ vypadat náseldovně
             "bank_account": null,
             "iban": null,
             "swift_bic": null,
+            "bank_account_id": null,
             "currency": "CZK",
             "payment_method": "bank",
             "exchange_rate": "1.0",
@@ -1760,6 +1834,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
             "recurring": false,
             "currency": "CZK",
             "payment_method": "bank",
+            "bank_account_id": 7,
             "due": 10,
             "lines": [
                 {
@@ -1844,6 +1919,7 @@ Parametry je možné libovolně kombinovat.
                 "bank_account": null,
                 "iban": null,
                 "swift_bic": null,
+                "bank_account_id": 7,
                 "currency": "CZK",
                 "payment_method": "bank",
                 "exchange_rate": "1.0",
@@ -1882,6 +1958,7 @@ Parametry je možné libovolně kombinovat.
                 "bank_account": null,
                 "iban": null,
                 "swift_bic": null,
+                "bank_account_id": null,
                 "currency": "CZK",
                 "payment_method": "bank",
                 "exchange_rate": "1.0",
