@@ -885,7 +885,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional, defautl: bank</td></tr>
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
-<tr><td>language</td><td>jazyk faktury (cz, sk, en, de)</td><td>string, optional, default: cz</td></tr>
+<tr><td>language</td><td>jazyk faktury (cz, sk, en, de, fr)</td><td>string, optional, default: cz</td></tr>
 <tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
 <tr><td>supply_code</td><td>kód plnění pro souhrnná hlášení (pouze pro zahraniční faktury do EU)</td><td>integer, optional</td></tr>
 
@@ -1601,7 +1601,7 @@ vypadat náseldovně
 <tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional</td></tr>
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (nepovinné)</td><td>decimal, optional</td></tr>
-<tr><td>language</td><td>jazyk vystavené faktury (cz, sk, en, de)</td><td>string, optional, default: cz</td></tr>
+<tr><td>language</td><td>jazyk vystavené faktury (cz, sk, en, de, fr)</td><td>string, optional, default: cz</td></tr>
 <tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
 
 <tr><td>subtotal</td><td>součet (bez DPH)</td><td>decimal, readonly</td></tr>
