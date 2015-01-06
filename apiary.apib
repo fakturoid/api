@@ -895,6 +895,8 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>footer_note</td><td>patička faktury (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>private_note</td><td>soukromá poznámka (nepovinné)</td><td>string, optional</td></tr>
 
+<tr><td>tags</td><td>seznam tagů faktury</td><td>array, readonly</td></tr>
+
 <tr><td>bank_account_id</td><td>ID bankovního účtu (nepovinné - použije se výchozí bankovní účet)</td><td>integer, only on create action, optional</td></tr>
 <tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - použije se výchozí bankovní účet)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>iban</td><td>IBAN (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
@@ -1101,6 +1103,8 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
             "cancelled_at": null,
             "note": null,
             "footer_note": null,
+            "private_note": null,
+            "tags": ["Vývoj", "PPC", "Ostatní služby"],
             "bank_account": "1234/1234",
             "iban": null,
             "swift_bic": null,
@@ -1532,7 +1536,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
 ### Fulltextové vyhledávání ve fakturách [GET]
 
 Vyhledává se v následujících polích na fakturách: `number`, `variable_symbol`, `client_name`, `note`, `private_note`,
-`footer_note`, `lines`.
+`footer_note`, `lines`, `tags`.
 
 + Parameters
     + slug (string, `applecorp`) ... Název účtu
@@ -1713,6 +1717,579 @@ vypadat náseldovně
 }
 ```
 
+# Group Expenses
+
+## Náklady
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+
+<tr><td>id</td><td>identifikátor nákladu</td><td>integer, readonly</td></tr>
+
+<tr><td>number</td><td>číslo nákladu (Př: N20150101, musí odpovídat formátu čísla v nastavení účtu, doplní se automaticky)</td><td>string, optional, unique, default: next in the row</td></tr>
+<tr><td>variable_symbol</td><td>variabilní symbol (nepovinné)</td><td>string, optional</td></tr>
+
+<tr><td>supplier_name</td><td>název firmy kontaktu</td><td>string, readonly</td></tr>
+<tr><td>supplier_street</td><td>ulice kontatku</td><td>string, readonly</td></tr>
+<tr><td>supplier_city</td><td>město kontaktu</td><td>string, readonly</td></tr>
+<tr><td>supplier_zip</td><td>poštovní směrovací číslo kontaktu</td><td>string, readonly</td></tr>
+<tr><td>supplier_country</td><td>země kontaktu (ISO kód)</td><td>string, readonly</td></tr>
+<tr><td>supplier_registration_no</td><td>IČ kontaktu</td><td>string, readonly</td></tr>
+<tr><td>supplier_vat_no</td><td>DIČ kontaktu</td><td>string, readonly</td></tr>
+
+<tr><td>subject_id</td><td>ID kontaktu (povinné)</td><td>integer, required</td></tr>
+
+<tr><td>status</td><td>stav nákladu - open/overdue/paid</td><td>string, readonly</td></tr>
+<tr><td>document_type</td><td>typ dokumentu - bill/invoice/other</td><td>string, optional, default: invoice</td></tr>
+
+<tr><td>issued_on</td><td>datum vystavení</td><td>date, optional, default: today</td></tr>
+<tr><td>taxable_fulfillment_due</td><td>datum zdanitelného plnění</td><td>date, optional, default: today</td></tr>
+<tr><td>due_on</td><td>datum splatnosti</td><td>date, required</td></tr>
+<tr><td>paid_on</td><td>datum zaplacení nákladu</td><td>datetime, readonly</td></tr>
+
+<tr><td>description</td><td>popis (nepovinné)</td><td>string, optional</td></tr>
+<tr><td>private_note</td><td>soukromá poznámka (nepovinné)</td><td>string, optional</td></tr>
+
+<tr><td>tags</td><td>seznam tagů nákladu</td><td>array, readonly</td></tr>
+
+<tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - použije se bankovní účet z kontaktu)</td><td>string, optional, default: by subject</td></tr>
+<tr><td>iban</td><td>IBAN (nepovinné - doplní se z kontaktu)</td><td>string, optional, default: by subject</td></tr>
+<tr><td>swift_bic</td><td>BIC (nepovinné - doplní se z kontaktu)</td><td>string, optional, default: by subject</td></tr>
+
+<tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional, defautl: bank</td></tr>
+<tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
+<tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
+<tr><td>supply_code</td><td>kód plnění pro souhrnná hlášení (pouze pro zahraniční faktury do EU)</td><td>integer, optional</td></tr>
+
+<tr><td>subtotal</td><td>součet (bez DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>total</td><td>celkový součet (včetně DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>native_subtotal</td><td>součet v měně účtu</td><td>decimal, readonly</td></tr>
+<tr><td>native_total</td><td>součet v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
+
+<tr><td>html_url</td><td>HTML adresa nákladu</td><td>string, readonly</td></tr>
+<tr><td>url</td><td>API adresa nákladu</td><td>string, readonly</td></tr>
+<tr><td>subject_url</td><td>API adresa kontaktu</td><td>string, readonly</td></tr>
+<tr><td>created_at</td><td>datum vytvoření nákladu</td><td>datetime, readonly</td></tr>
+<tr><td>updated_at</td><td>datum poslední aktualizace nákladu</td><td>datetime, readonly</td></tr>
+</table>
+
+_Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kontaktu dodavatele při vytvoření nákladu.
+
+Řádky nákladů jsou popsány níže v <a href="#expenselines">Expense Lines</a>
+
+## Expense [/accounts/{slug}/expenses/{id}.json]
+
++ Model (application/json)
+
+    ```json
+    {
+        "id": 100,
+        "number": "N20130704",
+        "variable_symbol": null,
+        "supplier_name": "Google Czech Republic, s.r.o.",
+        "supplier_street": "Klimentská 1216/46",
+        "supplier_city": "Praha",
+        "supplier_zip": "11000",
+        "supplier_country": "CZ",
+        "supplier_registration_no": "27604977",
+        "supplier_vat_no": "CZ27604977",
+        "subject_id": 19,
+        "status": "paid",
+        "document_type": "invoice",
+        "issued_on": "2013-07-14",
+        "taxable_fulfillment_due": "2013-07-14",
+        "due_on": "2013-07-28",
+        "paid_on": "2013-08-03",
+        "description": null,
+        "private_note": null,
+        "bank_account": null,
+        "iban": null,
+        "swift_bic": null,
+        "payment_method": "bank",
+        "currency": "CZK",
+        "exchange_rate": "1.0",
+        "transferred_tax_liability": false,
+        "supply_code": null,
+        "subtotal": "58800.0",
+        "total": "71148.0",
+        "native_subtotal": "58800.0",
+        "native_total": "71148.0",
+        "paid_amount": "71148.0",
+        "lines": [
+            {
+                "id": 262,
+                "quantity": "5.0",
+                "unit_name": "myš",
+                "name": "Magic mouse",
+                "unit_price": "2000.0",
+                "vat_rate":21
+            }, {
+                "id": 263,
+                "quantity": "4.0",
+                "unit_name": "lidi",
+                "name": "Školení personálu",
+                "unit_price": "7000.0",
+                "vat_rate": 21
+            }, {
+                "id": 264,
+                "quantity": "1.0",
+                "unit_name": "",
+                "name": "Školení",
+                "unit_price": "20000.0",
+                "vat_rate": 21
+            }, {
+                "id": 265,
+                "quantity": "1.0",
+                "unit_name": null,
+                "name": "Kalkulačka",
+                "unit_price": "800.0",
+                "vat_rate": 21
+            }
+        ],
+        "html_url": "https://app.fakturoid.cz/applecorp/expenses/100",
+        "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/100.json",
+        "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/19.json",
+        "created_at": "2015-01-06T09:58:51.111+01:00",
+        "updated_at": "2015-01-06T09:58:51.111+01:00"
+    }
+    ```    
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1234`) ... id nákladu
+
+### Detail nákladu [GET]
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        ETag: "e0a63efa535618c9b2de56bbc53c7813"
+        Last-Modified: Mon, 14 Oct 2013 10:28:46 GMT
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 100,
+            "number": "N20130703",
+            "variable_symbol": null,
+            "supplier_name": "Google Czech Republic, s.r.o.",
+            "supplier_street": "Klimentská 1216/46",
+            "supplier_city": "Praha",
+            "supplier_zip": "11000",
+            "supplier_country": "CZ",
+            "supplier_registration_no": "27604977",
+            "supplier_vat_no": "CZ27604977",
+            "subject_id": 19,
+            "status": "paid",
+            "document_type": "invoice",
+            "issued_on": "2013-07-14",
+            "taxable_fulfillment_due": "2013-07-14",
+            "due_on": "2013-07-28",
+            "paid_on": "2013-08-03",
+            "description": null,
+            "private_note": null,
+            "tags": ["Materiál", "Školení"],
+            "bank_account": null,
+            "iban": null,
+            "swift_bic": null,
+            "payment_method": "bank",
+            "currency": "CZK",
+            "exchange_rate": "1.0",
+            "transferred_tax_liability": false,
+            "supply_code": null,
+            "subtotal": "58800.0",
+            "total": "71148.0",
+            "native_subtotal": "58800.0",
+            "native_total": "71148.0",
+            "paid_amount": "71148.0",
+            "lines": [
+                {
+                    "id": 262,
+                    "quantity": "5.0",
+                    "unit_name": "myš",
+                    "name": "Magic mouse",
+                    "unit_price": "2000.0",
+                    "vat_rate":21
+                }, {
+                    "id": 263,
+                    "quantity": "4.0",
+                    "unit_name": "lidi",
+                    "name": "Školení personálu",
+                    "unit_price": "7000.0",
+                    "vat_rate": 21
+                }, {
+                    "id": 264,
+                    "quantity": "1.0",
+                    "unit_name": "",
+                    "name": "Školení",
+                    "unit_price": "20000.0",
+                    "vat_rate": 21
+                }, {
+                    "id": 265,
+                    "quantity": "1.0",
+                    "unit_name": null,
+                    "name": "Kalkulačka",
+                    "unit_price": "800.0",
+                    "vat_rate": 21
+                }
+            ],
+            "html_url": "https://app.fakturoid.cz/applecorp/expenses/100",
+            "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/100.json",
+            "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/19.json",
+            "created_at": "2015-01-06T09:58:51.111+01:00",
+            "updated_at": "2015-01-06T09:58:51.111+01:00"
+        }
+        ```   
+
+### Úprava nákladu [PATCH]
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným nákladem. 
+
+Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request Proper
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+          "number": "N20130704"
+        }
+        ```
+
++ Response 200
+
+    [Expense][]
+
++ Request Faulty
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+          "number": ""
+        }
+        ```
+
++ Response 422 (application/json)
+
+    ```json
+    {
+        "errors": {
+            "number": [
+                "je povinná položka"
+            ]
+        }
+    }
+    ```
+
+### Smazání nákladu [DELETE]
+
+Po smazání nákladu server vrátní odpověď `204 No Content`, nejde-li náklad smazat dostanete odpověď `422 Unprocessable Entity`.
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204
+
++ Response 422 (application/json)
+
+## Expenses actions [/accounts/{slug}/expenses/{id}/fire.json{?event}]
+
+### Akce nad nákladem [POST]
+
+Seznam možných událostí:
+
+<table>
+    <tr><th>event</th><th>popis</th></tr>
+    <tr><td>pay</td><td>Označit jako zaplacenou (akceptuje volitelný parametr `paid_at`)</td></tr>
+    <tr><td>remove_payment</td><td>Zrušit zaplacení</td></tr>
+</table>
+
+Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud nebude možné událost vykonat, server vrátí odpověď `422 Unprocessable Entity`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1234`) ... id nákladu
+    + event (string, `pay`) ... Událost
+        + `pay`
+        + `remove_payment`
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200 (application/json)
+
++ Response 422 (application/json)
+
+## Expenses Collection [/accounts/{slug}/expenses.json]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
+### Nový náklad [POST]
+
+Po úspěšném vytvoření nákladu dostanete ze serveru odpověď `201 Created`, hlavička `location` bude nastavena na adresu nově vytvořeného nákladu. Spolu s tím bude navrácen právě vytvořený náklad.
+
+Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "subject_id": "28",
+            "currency": "CZK",
+            "payment_method": "bank",
+            "due": 10,
+            "issued_on": "2012-03-30",
+            "taxable_fulfillment_due": "2012-03-30",
+            "lines": [
+                {
+                    "name": "Hard work",
+                    "quantity": "1.0",
+                    "unit_name": "h",
+                    "unit_price": "40000",
+                    "vat_rate": "21"
+                }
+            ]
+        }
+        ```
+
++ Response 201
+    
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/201.json
+        ```
+    
+    + Body
+    
+        ```json
+        {
+            "id": 201,
+            "number": "N20150102",
+            "variable_symbol": null,
+            "supplier_name": "Pavel Druhý",
+            "supplier_street": null,
+            // other expense fields truncated ...
+        }
+        ```
+
+### Seznam Nákladů [GET]
+
+Seznam možných parametrů je uveden v tabulce. Jediným povinným je `slug`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
+Parametry je možné libovolně kombinovat.
+
+#### Možné stavy faktur
+
+<table>
+  <tr><th>Status</th><th>Popis</th></tr>
+  <tr><td>open</td><td>Náklad není zaplacený ani po splatnosti.</td></tr>
+  <tr><td>overdue</td><td>Náklad je po splatnosti.</td></tr>
+  <tr><td>paid</td><td>Náklad je zaplacený.</td></tr>
+</table>
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 nákladech. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Náklady vytvořené po zadaném datu
+    + number (optional, string, `N20150105`) ... Budou vráceny náklady s daným číslem
+    + variable_symbol (optional, string `20150001`) ... Budou vráceny náklady s daným variabilním symbolem
+    + status (optional, string, `paid`) ... Budou vráceny náklady v zadaném stavu.
+    + subject_id (optional, integer, `5`) ... Náklady podle kontatku
+    
++ Request
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "e50c359d3d1a49c705949037e8b188ef"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses.json?page=2>; rel="next"
+        ```
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 201,
+                "number": "N20150102",
+                "variable_symbol": null,
+                "supplier_name": "Pavel Druhý",
+                "supplier_street": null,
+                // other expense fields truncated ...
+            },
+            {
+                "id": 202,
+                "number": "N20150103",
+                "variable_symbol": null,
+                "supplier_name": "Pavel Druhý",
+                "supplier_street": null,
+                // other expense fields truncated ...
+            }
+        ]
+        ```
+
++ Response 400 (application/json)
+
+
+## Expenses Collection fulltext search [/accounts/{slug}/expenses/search.json{?query}]
+
+### Fulltextové vyhledávání v nákladech [GET]
+
+Vyhledává se v následujících polích na nákladech: `number`, `variable_symbol`, `supplier_name`, `private_note`,
+`description`, `lines`, `tags`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + query (string, `Hledaný řetězec`) ... Hledaný řetězec
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
+
++ Request
+
+    + Headers
+    
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+        
+        ```
+        Content-Type: application/json
+        ETag: "10b8f52d87e47e20ed63b3b74a78410d"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=1&query=data>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=1&query=data>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=3&query=data>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=3&query=data>; rel="next"
+        ```
+    
+    + Body
+    
+        ```json
+        [
+            {
+                "id": 201,
+                "number": "N20150102",
+                "variable_symbol": null,
+                "supplier_name": "Pavel Druhý",
+                "supplier_street": null,
+                // other expense fields truncated ...
+            },
+            {
+                "id": 202,
+                "number": "N20150103",
+                "variable_symbol": null,
+                "supplier_name": "Pavel Druhý",
+                "supplier_street": null,
+                // other expense fields truncated ...
+            }
+        ]
+        ```
+
+# Group Expense Lines
+
+## Řádky nákladů
+
+<table>
+    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+    <tr><td>id</td><td>Identifikátor řádku</td><td>integer, readonly</td></tr>
+    <tr><td>name</td><td>Popis řádku faktury</td><td>string, required</td></tr>
+    <tr><td>quantity</td><td>Množství</td><td>decimal, required</td></tr>
+    <tr><td>unit_name</td><td>Množstevní jednotka</td><td>string, optional</td></tr>
+    <tr><td>unit_price</td><td>Cena za jednotuku</td><td>decimal, required</td></tr>
+    <tr><td>vat_rate</td><td>Sazba DPH (pro neplátce DPH 0)</td><td>integer, required</td></tr>
+</table>
+
+```json
+{
+    "id": 1234,
+    "name": "PC",
+    "quantity": "1.0",
+    "unit_name": "",
+    "unit_price": "20000.0",
+    "vat_rate": 21
+}
+```
+
+Při editaci nákladů je důležité posílat s řádky i jejich `id`, bez něj bude řádek znovu přidán.
+
+## Smazání řádku
+
+Pro smazání řádku při editaci nákladu je potřeba přidat atribut `_destroy: true`, řádek pak bude 
+vypadat náseldovně
+
+```json
+{
+    "id": 1234,
+    "name": "PC",
+    "quantity": "1.0",
+    "unit_name": "",
+    "unit_price": "20000.0",
+    "vat_rate": 21,
+    "_destroy": true
+}
+```
+
 # Group Generators
 
 ## Šablony faktur (jednoduché i pravidelné)
@@ -1739,6 +2316,8 @@ vypadat náseldovně
 <tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - doplní se výchozí bankovní účet), musí odpovídat některému účtu z Bankovních účtů</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>iban</td><td>IBAN</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>swift_bic</td><td>BIC (pro SWIFT platby)</td><td>string, optional, default: by account settings</td></tr>
+
+<tr><td>tags</td><td>seznam tagů šablony (jen pravidelné)</td><td>array, readonly</td></tr>
 
 <tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional</td></tr>
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
@@ -1872,6 +2451,7 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
             "iban": null,
             "swift_bic": null,
             "bank_account_id": null,
+            "tags": ["Školení"],
             "currency": "CZK",
             "payment_method": "bank",
             "exchange_rate": "1.0",
