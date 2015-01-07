@@ -333,6 +333,8 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
 <tr><td>id</td><td>identifikátor kontaktu</td><td>integer, readonly</td></tr>
 <tr><td>custom_id</td><td>identifikátor kontaktu ve vaší aplikaci</td><td>string, optional</td></tr>
 
+<tr><td>type</td><td>typ kontaktu - customer/supplier/both</td><td>string, optional, default: customer</td></tr>
+
 <tr><td>name</td><td>jméno firmy kontaktu</td><td>string, required</td></tr>
 <tr><td>street</td><td>ulice</td><td>string, optional</td></tr>
 <tr><td>street2</td><td>ulice 2</td><td>string, optional</td></tr>
@@ -366,6 +368,7 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
     {
         "id": 28,
         "custom_id": null,
+        "type": "both",
         "name": "MICROSOFT s.r.o.",
         "street": "Vyskočilova 1461/2a",
         "street2": null,
@@ -420,6 +423,7 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
         {
             "id": 28,
             "custom_id": null,
+            "type": "both",
             "name": "MICROSOFT s.r.o.",
             "street": "Vyskočilova 1461/2a",
             "street2": null,
@@ -469,6 +473,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
     {
         "id": 28,
         "custom_id": null,
+        "type": "both",
         "name": "MICROSOFT s.r.o.",
         "street": "Vyskočilova 1461/2a",
         "street2": null,
@@ -544,6 +549,7 @@ Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď se
         {
             "id": 6,
             "custom_id": null,
+            "type": "customer",
             "name": "Apple Czech s.r.o.",
             "street": "Klimentská 1216/46",
             "street2": null,
@@ -569,6 +575,7 @@ Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď se
             "id": 28,
             "custom_id": null,
             "name": "MICROSOFT s.r.o.",
+            "type": "supplier",
             "street": "Vyskočilova 1461/2a",
             "street2": null,
             "city": "Praha",
@@ -652,6 +659,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
         {
             "id": 28,
             "custom_id": null,
+            "type": "customer",
             "name": "MICROSOFT s.r.o.",
             "street": "Vyskočilova 1461/2a",
             "street2": null,
@@ -741,6 +749,7 @@ Při zadání nesprávného formátu data a času v parametru `since` server vr�
             {
                 "id": 6,
                 "custom_id": null,
+                "type": "customer",
                 "name": "Apple Czech s.r.o.",
                 "street": "Klimentská 1216/46",
                 "street2": null,
@@ -765,6 +774,7 @@ Při zadání nesprávného formátu data a času v parametru `since` server vr�
             {
                 "id": 28,
                 "custom_id": null,
+                "type": "supplier",
                 "name": "MICROSOFT s.r.o.",
                 "street": "Vyskočilova 1461/2a",
                 "street2": null,
@@ -825,12 +835,14 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
             {
                 "id": 6,
                 "custom_id": null,
+                "type": "supplier",
                 "name": "Apple Czech s.r.o.",
                 // other subject fields truncated ...
             },
             {
                 "id": 28,
                 "custom_id": null,
+                "type": "customer",
                 "name": "Google Czech s.r.o.",
                 // other subject fields truncated ...
             }
