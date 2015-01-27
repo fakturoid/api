@@ -887,6 +887,9 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>generator_id</td><td>ID šablony ze které byla faktura vystavena</td><td>integer, optional</td></tr>
 <tr><td>related_id</td><td>ID proformy/faktury (u faktur vystavených ze zálohových faktur)</td><td>integer, optional</td></tr>
 
+<tr><td>correction</td><td>true - Opravný daňový doklad, false - faktura/proforma</td><td>boolean, optional, default: false</td></tr>
+<tr><td>correction_id</td><td>ID opravovaného dokladu, zdává se pouze pokud je correction=true, na opravovaný doklad se doplní automaticky doplní ID opravného daňového dokladu</td><td>integer, optional</td></tr>
+
 <tr><td>token</td><td>token pro public akci</td><td>string, readonly</td></tr>
 
 <tr><td>status</td><td>stav faktury - open/sent/overdue/paid/cancelled</td><td>string, readonly</td></tr>
@@ -993,6 +996,8 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
         "subject_id": 4,
         "generator_id": 4,
         "related_id": null,
+        "correction": false,
+        "correction_id": null,
         "token": "udDTG8Q88M",
         "status": "paid",
         "order_number": null,
@@ -1102,6 +1107,8 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
             "subject_id": 4,
             "generator_id": 4,
             "related_id": null,
+            "correction": "false",
+            "correction_id": "false",
             "token": "udDTG8Q88M",
             "status": "paid",
             "order_number": null,
