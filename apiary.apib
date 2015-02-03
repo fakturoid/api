@@ -1634,13 +1634,13 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
 Při editaci faktury je důležité posílat s řádky i jejich `id`, bez něj bude řádek znovu přidán.
 
 Atributy `unit_price_without_vat` a `unit_price_with_vat` jsou pouze pro čtení a nastavují se na základě
-zadané částky v `unit_price`, sazby dph `vat_rate` a atributu `vat_price_mode` na faktuře nebo šabloně,
+zadané částky v `unit_price`, sazby dph `vat_rate` a atributu `vat_price_mode` na faktuře, šabloně nebo nákladu,
 ke kterým řádek náleží.
 
 Atributy `unit_price_without_vat` a `unit_price_with_vat` mají stejnou hodnotu v případech:
 
 - sazba DPH je nastavena na 0
-- je zapnuta přenesená daňová povinnost na faktuře nebo šabloně, ke které řádek náleží
+- je zapnuta přenesená daňová povinnost na faktuře nebo šabloně, ke které řádek náleží (je-li na nákladu zapnutá přenesaná daňová povinnost, nastavení `vat_price_mode` je ignorováno)
 
 ### Příklady
 
@@ -1780,6 +1780,7 @@ vypadat náseldovně
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
 <tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
+<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: without_vat, with_vat, default: without_vat</td></tr>
 <tr><td>supply_code</td><td>kód plnění pro souhrnná hlášení (pouze pro zahraniční faktury do EU)</td><td>integer, optional</td></tr>
 
 <tr><td>subtotal</td><td>součet (bez DPH)</td><td>decimal, readonly</td></tr>
@@ -1796,7 +1797,21 @@ vypadat náseldovně
 
 _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kontaktu dodavatele při vytvoření nákladu.
 
-Řádky nákladů jsou popsány níže v <a href="#expenselines">Expense Lines</a>
+### Atribut vat\_price\_mode
+
+<table>
+  <tr>
+    <th>Hodnota</th><th>Popis</th>
+  </tr>
+  <tr>
+    <td>without_vat</td><td>cena zadaná do řádků faktur je bez DPH a DPH se z ní dopočte přes procentuální sazbu DPH</td>
+  </tr>
+  <tr>
+    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem</td>
+  </tr>
+</table>
+
+Řádky šablon jsou popsány výše v <a href="#lines">Lines</a>
 
 ## Expense [/accounts/{slug}/expenses/{id}.json]
 
@@ -1830,6 +1845,7 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
         "currency": "CZK",
         "exchange_rate": "1.0",
         "transferred_tax_liability": false,
+        "vat_price_mode": "without_vat",
         "supply_code": null,
         "subtotal": "58800.0",
         "total": "71148.0",
@@ -1843,28 +1859,36 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
                 "unit_name": "myš",
                 "name": "Magic mouse",
                 "unit_price": "2000.0",
-                "vat_rate":21
+                "vat_rate":21,
+                "unit_price_without_vat": "2000.0",
+                "unit_price_with_vat": "2420.0"
             }, {
                 "id": 263,
                 "quantity": "4.0",
                 "unit_name": "lidi",
                 "name": "Školení personálu",
                 "unit_price": "7000.0",
-                "vat_rate": 21
+                "vat_rate": 21,
+                "unit_price_without_vat": "7000.0",
+                "unit_price_with_vat": "8470.0"
             }, {
                 "id": 264,
                 "quantity": "1.0",
                 "unit_name": "",
                 "name": "Školení",
                 "unit_price": "20000.0",
-                "vat_rate": 21
+                "vat_rate": 21,
+                "unit_price_without_vat": "20000.0",
+                "unit_price_with_vat": "24200.0"
             }, {
                 "id": 265,
                 "quantity": "1.0",
                 "unit_name": null,
                 "name": "Kalkulačka",
                 "unit_price": "800.0",
-                "vat_rate": 21
+                "vat_rate": 21,
+                "unit_price_without_vat": "800.0",
+                "unit_price_with_vat": "968.0"
             }
         ],
         "html_url": "https://app.fakturoid.cz/applecorp/expenses/100",
@@ -1931,6 +1955,7 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
             "currency": "CZK",
             "exchange_rate": "1.0",
             "transferred_tax_liability": false,
+            "vat_price_mode": "without_vat",
             "supply_code": null,
             "subtotal": "58800.0",
             "total": "71148.0",
@@ -1944,28 +1969,36 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
                     "unit_name": "myš",
                     "name": "Magic mouse",
                     "unit_price": "2000.0",
-                    "vat_rate":21
+                    "vat_rate":21,
+                    "unit_price_without_vat": "2000.0",
+                    "unit_price_with_vat": "2420.0"
                 }, {
                     "id": 263,
                     "quantity": "4.0",
                     "unit_name": "lidi",
                     "name": "Školení personálu",
                     "unit_price": "7000.0",
-                    "vat_rate": 21
+                    "vat_rate": 21,
+                    "unit_price_without_vat": "7000.0",
+                    "unit_price_with_vat": "8470.0"
                 }, {
                     "id": 264,
                     "quantity": "1.0",
                     "unit_name": "",
                     "name": "Školení",
                     "unit_price": "20000.0",
-                    "vat_rate": 21
+                    "vat_rate": 21,
+                    "unit_price_without_vat": "20000.0",
+                    "unit_price_with_vat": "24200.0"
                 }, {
                     "id": 265,
                     "quantity": "1.0",
                     "unit_name": null,
                     "name": "Kalkulačka",
                     "unit_price": "800.0",
-                    "vat_rate": 21
+                    "vat_rate": 21,
+                    "unit_price_without_vat": "800.0",
+                    "unit_price_with_vat": "968.0"
                 }
             ],
             "html_url": "https://app.fakturoid.cz/applecorp/expenses/100",
@@ -2265,50 +2298,6 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
             }
         ]
         ```
-
-# Group Expense Lines
-
-## Řádky nákladů
-
-<table>
-    <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
-    <tr><td>id</td><td>Identifikátor řádku</td><td>integer, readonly</td></tr>
-    <tr><td>name</td><td>Popis řádku faktury</td><td>string, required</td></tr>
-    <tr><td>quantity</td><td>Množství</td><td>decimal, required</td></tr>
-    <tr><td>unit_name</td><td>Množstevní jednotka</td><td>string, optional</td></tr>
-    <tr><td>unit_price</td><td>Cena za jednotuku</td><td>decimal, required</td></tr>
-    <tr><td>vat_rate</td><td>Sazba DPH (pro neplátce DPH 0)</td><td>integer, required</td></tr>
-</table>
-
-```json
-{
-    "id": 1234,
-    "name": "PC",
-    "quantity": "1.0",
-    "unit_name": "",
-    "unit_price": "20000.0",
-    "vat_rate": 21
-}
-```
-
-Při editaci nákladů je důležité posílat s řádky i jejich `id`, bez něj bude řádek znovu přidán.
-
-## Smazání řádku
-
-Pro smazání řádku při editaci nákladu je potřeba přidat atribut `_destroy: true`, řádek pak bude 
-vypadat náseldovně
-
-```json
-{
-    "id": 1234,
-    "name": "PC",
-    "quantity": "1.0",
-    "unit_name": "",
-    "unit_price": "20000.0",
-    "vat_rate": 21,
-    "_destroy": true
-}
-```
 
 # Group Generators
 
