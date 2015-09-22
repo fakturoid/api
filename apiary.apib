@@ -718,12 +718,13 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 
 ### Seznam všech kontaktů [GET]
 
-Při zadání nesprávného formátu data a času v parametru `since` server vrátí odpověď `400 Bad Request`.
+Při zadání nesprávného formátu data a času v parametru `since` nebo `updated_since` server vrátí odpověď `400 Bad Request`.
 
 + Parameters
     
     + slug (string, `applecorp`) ... Název účtu
     + since (datetime, optional, `2012-05-20T15:00:00+01:00`) ... Všechny kontakty vytvořené po zadaném datu
+    + updated_since (datetime, optional, `2012-05-20T15:00:00+01:00`) ... Všechny kontakty vytvořené nebo upravené po zadaném datu
     + page (integer, optional, `2`) ... Číslo stránky
     + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
 
@@ -1407,6 +1408,7 @@ Parametry je možné libovolně kombinovat.
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené nebo upravené po zadaném datu
     + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Faktury podle kontatku
@@ -1460,6 +1462,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené nebo upravené po zadaném datu
     + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Šablony podle kontatku
@@ -1513,6 +1516,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené nebo upravené po zadaném datu
     + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Šablony podle kontatku
@@ -2189,7 +2193,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 Seznam možných parametrů je uveden v tabulce. Jediným povinným je `slug`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
 Parametry je možné libovolně kombinovat.
 
-#### Možné stavy faktur
+#### Možné stavy nákladů
 
 <table>
   <tr><th>Status</th><th>Popis</th></tr>
@@ -2202,6 +2206,7 @@ Parametry je možné libovolně kombinovat.
     + slug (string, `applecorp`) ... Název účtu
     + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 nákladech. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Náklady vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Náklady vytvořené nebo upravené po zadaném datu
     + number (optional, string, `N20150105`) ... Budou vráceny náklady s daným číslem
     + variable_symbol (optional, string `20150001`) ... Budou vráceny náklady s daným variabilním symbolem
     + status (optional, string, `paid`) ... Budou vráceny náklady v zadaném stavu.
@@ -2645,6 +2650,7 @@ Parametry je možné libovolně kombinovat.
     + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
     + subject_id (optional, integer, `5`) ... Šablony podle kontatku
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené nebo upravené po zadaném datu
 
 + Request
 
@@ -2763,6 +2769,7 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
     + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
     + subject_id (optional, integer, `5`) ... Šablony podle kontatku
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené nebo upravené po zadaném datu
 
 + Request
 
@@ -2813,6 +2820,7 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
     + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 fakturách. Pro neexistující stránku bude vrácena odpověď `400 Bad Request`
     + subject_id (optional, integer, `5`) ... Šablony podle kontatku
     + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Šablony vytvořené nebo upravené po zadaném datu
 
 + Request
 
