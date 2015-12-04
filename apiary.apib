@@ -1628,14 +1628,14 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
 
 ```json
 {
-    "id": 1234,
-    "name": "PC",
-    "quantity": "1.0",
-    "unit_name": "",
-    "unit_price": "20000.0",
-    "vat_rate": 21,
-    "unit_price_without_vat": "20000.0",
-    "unit_price_with_vat": "242000.0"
+  "id": 1234,
+  "name": "PC",
+  "quantity": "1.0",
+  "unit_name": "",
+  "unit_price": "20000.0",
+  "vat_rate": 21,
+  "unit_price_without_vat": "20000.0",
+  "unit_price_with_vat": "242000.0"
 }
 ```
 
@@ -1658,16 +1658,16 @@ Request:
 
 ```json
 {
-    ...
-    "vat_price_mode": "without_vat",
-    ...
-    lines: [
-      {
-        ...
-        "unit_price": "1000.0",
-        "vat_rate": "21"
-      }
-    ]
+  ...
+  "vat_price_mode": "without_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "unit_price": "1000.0",
+      "vat_rate": "21"
+    }
+  ]
 }
 ```
 
@@ -1675,18 +1675,18 @@ Response:
 
 ```json
 {
-    ...
-    "vat_price_mode": "without_vat",
-    ...
-    lines: [
-      {
-        ...
-        "unit_price": "1000.0",
-        "vat_rate": "21",
-        "unit_price_without_vat": "1000.0",
-        "unit_price_with_vat": "1210.0"
-      }
-    ]
+  ...
+  "vat_price_mode": "without_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "unit_price": "1000.0",
+      "vat_rate": "21",
+      "unit_price_without_vat": "1000.0",
+      "unit_price_with_vat": "1210.0"
+    }
+  ]
 }
 ```
 
@@ -1696,16 +1696,16 @@ Request:
 
 ```json
 {
-    ...
-    "vat_price_mode": "with_vat",
-    ...
-    lines: [
-      {
-        ...
-        "unit_price": "1000.0",
-        "vat_rate": "21"
-      }
-    ]
+  ...
+  "vat_price_mode": "with_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "unit_price": "1000.0",
+      "vat_rate": "21"
+    }
+  ]
 }
 ```
 
@@ -1713,18 +1713,18 @@ Response:
 
 ```json
 {
-    ...
-    "vat_price_mode": "with_vat",
-    ...
-    lines: [
-      {
-        ...
-        "unit_price": "826.4",
-        "vat_rate": "21",
-        "unit_price_without_vat": "826.4",
-        "unit_price_with_vat": "1000.0"
-      }
-    ]
+  ...
+  "vat_price_mode": "with_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "unit_price": "826.4",
+      "vat_rate": "21",
+      "unit_price_without_vat": "826.4",
+      "unit_price_with_vat": "1000.0"
+    }
+  ]
 }
 ```
 
@@ -1735,13 +1735,13 @@ vypadat náseldovně
 
 ```json
 {
-    "id": 1234,
-    "name": "PC",
-    "quantity": "1.0",
-    "unit_name": "",
-    "unit_price": "20000.0",
-    "vat_rate": 21,
-    "_destroy": true
+  "id": 1234,
+  "name": "PC",
+  "quantity": "1.0",
+  "unit_name": "",
+  "unit_price": "20000.0",
+  "vat_rate": 21,
+  "_destroy": true
 }
 ```
 
@@ -1820,7 +1820,7 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
   </tr>
 </table>
 
-Řádky šablon jsou popsány výše v <a href="#reference/lines">Lines</a>
+Řádky nákladů jsou popsány výše v <a href="#reference/lines">Lines</a>
 
 ## Expense [/accounts/{slug}/expenses/{id}.json]
 
