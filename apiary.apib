@@ -4,7 +4,7 @@ HOST: https://app.fakturoid.cz/api/v2
 
 # Fakturoid API v2
 
-API dokumentace pro [Fakturoid](https://www.fakturoid.cz). Důležité [změny oproti API v1](#changelog).
+API dokumentace pro [Fakturoid](https://www.fakturoid.cz). Důležité [změny oproti API v1](#reference/changelog).
 
 # Požadavek
 Požadavky je nutné posílat pomocí __HTTPS__. Všechny URL adresy začínají `https://app.fakturoid.cz/api/v2`. Pro identifikaci účtu slouží parametr `slug` (dříve subdoména), který je součástí adresy většiny požadavků.
@@ -61,7 +61,7 @@ Při zadání špatných přihlašovacích údajů dostanete ze serveru odpově�
 
 # HTTP Cache
 
-Pro maximální výkon API i vaší aplikace používejte http cache. Všechny `GET` akce (kromě <a href="#reports">reportů</a>) vrací hlavičku `ETag` a akce,
+Pro maximální výkon API i vaší aplikace používejte http cache. Všechny `GET` akce (kromě <a href="#reference/reports">reportů</a>) vrací hlavičku `ETag` a akce,
 které nejsou nad kolekcemi dat vrací i hlavičku `Last-Modified`. Při prvním dotazu si tyto hodnoty uložte
 a při dalších dotazech používejte hlavičky `If-None-Match` a `If-Modified-Since`. Pokud se hodnota 
 zdroj od posledního dotazu nezměnil dostanete zpět odpověď `304 Not Modified`, která ušetří čas vynaložený na
@@ -970,7 +970,7 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 
 _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírováním z nastavení účtu a z kontaktu odběratele při vytvoření faktury.
 
-Řádky faktur jsou popsány níže v <a href="#lines">Lines</a>
+Řádky faktur jsou popsány níže v <a href="#reference/lines">Lines</a>
 
 ## Invoice [/accounts/{slug}/invoices/{id}.json]
 
@@ -1820,7 +1820,7 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
   </tr>
 </table>
 
-Řádky šablon jsou popsány výše v <a href="#lines">Lines</a>
+Řádky šablon jsou popsány výše v <a href="#reference/lines">Lines</a>
 
 ## Expense [/accounts/{slug}/expenses/{id}.json]
 
@@ -2378,7 +2378,7 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
   </tr>
 </table>
 
-Řádky šablon jsou popsány výše v <a href="#lines">Lines</a>
+Řádky šablon jsou popsány výše v <a href="#reference/lines">Lines</a>
 
 ## Generator [/accounts/{slug}/generators/{id}.json]
 
@@ -3579,8 +3579,8 @@ Přihlášení probíhá stále přes HTTP BASIC AUTH. Nově je potřeba doplnit
 
 ### Nové resource
 
-+ <a href="#reports">Přehledy</a>
-+ <a href="#users">Uživatelé</a>
++ <a href="#reference/reports">Přehledy</a>
++ <a href="#reference/users">Uživatelé</a>
 
 ### Stránkování
 
