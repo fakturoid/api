@@ -115,12 +115,18 @@ V případě překročení povoleného počtu požadavků z jedné IP adresy bě
 
 Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`.
 
-
 # Knihovny
 * [PHP](https://github.com/fakturoid/fakturoid-php) - oficiální knihovna pro PHP
 * [Ruby](https://github.com/fakturoid/fakturoid-ruby) - oficiální knihovna pro Ruby (a Rails)
 * [Python](https://github.com/farin/python-fakturoid) - neoficiální knihovna pro Python
 * [.NET](https://github.com/ridercz/Fakturoid-API) - neoficiální knihovna pro .NET
+
+# Integrace platebních metod
+
+Nastavení integrací platebních metod ve Fakturoidu:
+
+* [PayPal](https://www.fakturoid.cz/blog/2014/11/25/paypal)
+* [GoPay](https://www.fakturoid.cz/blog/2015/10/06/platebni-brana-gopay)
 
 # Group Account
 
@@ -165,6 +171,9 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
 
 <tr><td>custom_email_text</td><td>text emailu pro odeslání faktury</td><td>string</td></tr>
 <tr><td>overdue_email_text</td><td>text upomínky</td><td>string</td></tr>
+
+<tr><td>invoice_paypal</td><td>zapnutí PayPal plateb</td><td>boolean</td></tr>
+<tr><td>invoice_gopay</td><td>zapnutí GoPay plateb</td><td>boolean</td></tr>
 
 <tr><td>html_url</td><td>HTML adresa účtu</td><td>string</td></tr>
 <tr><td>url</td><td>API adresa účtu</td><td>string</td></tr>
@@ -247,6 +256,8 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
             "due": 14,
             "custom_email_text": "Hezký den,\r\n\r\nvystavil jsem pro Vás fakturu, najdete ji na\r\n#link#\r\n\r\nDíky!\r\n\r\nAlexandr Hejsek",
             "overdue_email_text": "Zdravím,\r\n\r\nmůj fakturační robot mě upozornil, že faktura č. #no# je po splatnosti.\r\nFakturu najdete na #link#\r\n\r\nZkuste se na to mrknout. Díky.\r\n\r\nAlexandr Hejsek",
+            "invoice_paypal": false,
+            "invoice_gopay": true,
             "html_url": "https://app.fakturoid.cz/applecorp/account",
             "url": "https://app.fakturoid.cz/api/v2/applecorp/testdph/account.json",
             "updated_at": "2013-11-22T10:15:45.058+01:00",
@@ -894,6 +905,9 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>correction</td><td>true - Opravný daňový doklad, false - faktura/proforma</td><td>boolean, optional, default: false</td></tr>
 <tr><td>correction_id</td><td>ID opravovaného dokladu, zdává se pouze pokud je correction=true, na opravovaný doklad se doplní automaticky doplní ID opravného daňového dokladu</td><td>integer, optional</td></tr>
 
+<tr><td>paypal</td><td>lze zaplatit přes PayPal</td><td>boolean, optional, default: false</td></tr>
+<tr><td>gopay</td><td>lze zaplatit přes GoPay</td><td>boolean, optional, default: false</td></tr>
+
 <tr><td>token</td><td>token pro public akci</td><td>string, readonly</td></tr>
 
 <tr><td>status</td><td>stav faktury - open/sent/overdue/paid/cancelled</td><td>string, readonly</td></tr>
@@ -1003,6 +1017,8 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
         "related_id": null,
         "correction": false,
         "correction_id": null,
+        "paypal": false,
+        "gopay": false,
         "token": "udDTG8Q88M",
         "status": "paid",
         "order_number": null,
@@ -1114,6 +1130,8 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
             "related_id": null,
             "correction": "false",
             "correction_id": "false",
+            "paypal": false,
+            "gopay": false,
             "token": "udDTG8Q88M",
             "status": "paid",
             "order_number": null,
@@ -2322,6 +2340,9 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 <tr><td>recurring</td><td>true/false jedná se o pravidelnou nebo normální šablonu</td><td>boolean, required</td></tr>
 <tr><td>proforma</td><td>příznak proformy - true/false</td><td>boolean, optional, default: false</td></tr>
 
+<tr><td>paypal</td><td>vystavenou fakturu ze šablony půjde zaplati přes PayPal</td><td>boolean, optional, default: false</td></tr>
+<tr><td>gopay</td><td>vystavenou fakturu ze šablony půjde zaplati přes GoPay</td><td>boolean, optional, default: false</td></tr>
+
 <tr><td>start_date</td><td>počáteční datum pro pravidelnou šablonu</td><td>date, required for recurring invoices</td></tr>
 <tr><td>end_date</td><td>koncové datum pro pravidelnou šablonu</td><td>date, optional</td></tr>
 <tr><td>months_period</td><td>počet měsíců do dalšího vystavení faktury ze šablony (pravidelná šablona)</td><td>integer, required for recurring invoices</td></tr>
@@ -2390,6 +2411,8 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
         "name": "Školení",
         "recurring": true,
         "proforma": false,
+        "paypal": false,
+        "gopay": false,
         "start_date": "2011-07-13",
         "end_date": null,
         "months_period": 1,
@@ -2460,6 +2483,8 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
             "name": "Školení",
             "recurring": true,
             "proforma": false,
+            "paypal": false,
+            "gopay": false,
             "start_date": "2011-07-13",
             "end_date": null,
             "months_period": 1,
@@ -2680,6 +2705,8 @@ Parametry je možné libovolně kombinovat.
                 "name": "Školení",
                 "recurring": false,
                 "proforma": false,
+                "paypal": false,
+                "gopay": false,
                 "start_date": null,
                 "end_date": null,
                 "months_period": null,
@@ -2720,6 +2747,8 @@ Parametry je možné libovolně kombinovat.
                 "name": "Školení",
                 "recurring": true,
                 "proforma": false,
+                "paypal": false,
+                "gopay": false,
                 "start_date": "2011-07-13",
                 "end_date": null,
                 "months_period": 1,
