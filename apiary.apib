@@ -871,6 +871,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 
 <table>
 <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>custom_id</td><td>identifikátor kontaktu ve vaší aplikaci</td><td>string, optional</td></tr>
 
 <tr><td>id</td><td>identifikátor faktury</td><td>integer, readonly</td></tr>
 
@@ -991,6 +992,7 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
     ```json
     {
         "id": 9,
+        "custom_id": null,
         "proforma": false,
         "number": "2012-0004",
         "variable_symbol": "20120004",
@@ -1104,6 +1106,7 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
         ```json
         {
             "id": 9,
+            "custom_id": null,
             "proforma": false,
             "number": "2012-0004",
             "variable_symbol": "20120004",
@@ -1364,6 +1367,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
     
         ```json
         {
+            "custom_id": "1234",
             "subject_id": "28",
             "number": "2012-0001",
             "currency": "CZK",
@@ -1398,6 +1402,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
         ```json
         {
             "id": 98,
+            "custom_id": "1234",
             "proforma": false,
             "number": "2012-0001",
             // other invoice fields truncated ...
@@ -1428,6 +1433,7 @@ Parametry je možné libovolně kombinovat.
     + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Faktury podle kontatku
+    + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
     
 + Request
 
@@ -1452,12 +1458,14 @@ Parametry je možné libovolně kombinovat.
         [
             {
                 "id": 9,
+                "custom_id": null,
                 "proforma": false,
                 "number": "2012-0004",
                 // other invoice fields truncated ...
             },
             {
                 "id": 10,
+                "custom_id": "1234",
                 "proforma": false,
                 "number": "2012-0005",
                 // other invoice fields truncated ...  
@@ -1482,6 +1490,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
     + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+    + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
 
 + Request
 
@@ -1506,12 +1515,14 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
         [
             {
                 "id": 9,
+                "custom_id": null,
                 "proforma": false,
                 "number": "2012-0004",
                 // other invoice fields truncated ...
             },
             {
                 "id": 10,
+                "custom_id": null,
                 "proforma": false,
                 "number": "2012-0005",
                 // other invoice fields truncated ...  
@@ -1536,6 +1547,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
     + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Šablony podle kontatku
+    + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
 
 + Request
 
@@ -1560,12 +1572,14 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
         [
             {
                 "id": 11,
+                "custom_id": null,
                 "proforma": true,
                 "number": "1-2012-0004",
                 // other invoice fields truncated ...
             },
             {
                 "id": 12,
+                "custom_id": null,
                 "proforma": true,
                 "number": "1-2012-0005",
                 // other invoice fields truncated ...  
@@ -1612,12 +1626,14 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
         [
             {
                 "id": 11,
+                "custom_id": null,
                 "proforma": true,
                 "number": "1-2012-0004",
                 // other invoice fields truncated ...
             },
             {
                 "id": 12,
+                "custom_id": null,
                 "proforma": true,
                 "number": "1-2012-0005",
                 // other invoice fields truncated ...  
