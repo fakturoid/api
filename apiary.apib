@@ -933,7 +933,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>iban</td><td>IBAN (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>swift_bic</td><td>BIC (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 
-<tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka) / paypal (PayPal)</td><td>string, optional, defautl: bank</td></tr>
+<tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka) / paypal (PayPal)</td><td>string, optional, default: bank</td></tr>
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
 <tr><td>paypal</td><td>tlačítko pro platbu PayPalem - true/false</td><td>boolean, optional, default: false</td></tr>
@@ -1816,7 +1816,7 @@ vypadat náseldovně
 <tr><td>iban</td><td>IBAN (nepovinné - doplní se z kontaktu)</td><td>string, optional, default: by subject</td></tr>
 <tr><td>swift_bic</td><td>BIC (nepovinné - doplní se z kontaktu)</td><td>string, optional, default: by subject</td></tr>
 
-<tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional, defautl: bank</td></tr>
+<tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka)</td><td>string, optional, default: bank</td></tr>
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
 <tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
@@ -1828,6 +1828,8 @@ vypadat náseldovně
 <tr><td>total</td><td>celkový součet (včetně DPH)</td><td>decimal, readonly</td></tr>
 <tr><td>native_subtotal</td><td>součet v měně účtu</td><td>decimal, readonly</td></tr>
 <tr><td>native_total</td><td>součet v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
+
+<tr><td>attachment</td><td>příloha</td><td>object, optional</td></tr>
 
 <tr><td>html_url</td><td>HTML adresa nákladu</td><td>string, readonly</td></tr>
 <tr><td>url</td><td>API adresa nákladu</td><td>string, readonly</td></tr>
@@ -1851,6 +1853,65 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
     <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem</td>
   </tr>
 </table>
+
+### Atribut attachment
+
+#### Část requestu:
+
+Pokud chcete přidat přílohu, pošlete v requestu data přílohy zakódovaná v Base64 (`attachment`).
+
+Data musí být ve formátu `"data:application/pdf;base64,xxx"`, kde `application/pdf` je MIME type
+obrázku a `xxx` jsou data obrázku zakódovaná v Base64.
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>attachment</td><td><a href="https://en.wikipedia.org/wiki/Data_URI_scheme">Data URI</a></td><td>string</td></tr>
+</table>
+
+Příklad:
+
+```json
+{
+  ...
+  "attachment": "data:application/pdf;base64,iVBORw0KGgoAAAANSU...\n...\n" // Data truncated
+  ...
+}
+```
+
+#### Část response pokud příloha existuje:
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>file_name</td><td>název souboru</td><td>string</td></tr>
+<tr><td>content_type</td><td>MIME type souboru</td><td>string</td></tr>
+<tr><td>download_url</td><td>URL pro download přílohy přes API</td><td>string</td></tr>
+</table>
+
+```json
+{
+  "id": 100,
+  "number": "N20130703",
+  ...
+  "attachment": {
+    "file_name": "N20130704.pdf",
+    "content_type": "application/pdf",
+    "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/100/download"
+  }
+  ...
+}
+```
+
+#### Část response pokud příloha neexistuje:
+
+```json
+{
+  "id": 100,
+  "number": "N20130703",
+  "attachment": null
+}
+```
+
+#### Řádky
 
 Řádky nákladů jsou popsány výše v <a href="#reference/lines">Lines</a>
 
@@ -1932,6 +1993,11 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
                 "unit_price_with_vat": "968.0"
             }
         ],
+        "attachment": {
+            "file_name": "N20130704.pdf",
+            "content_type": "application/pdf",
+            "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/100/download"
+        },
         "html_url": "https://app.fakturoid.cz/applecorp/expenses/100",
         "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/100.json",
         "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/19.json",
@@ -2042,6 +2108,11 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
                     "unit_price_with_vat": "968.0"
                 }
             ],
+            "attachment": {
+                "file_name": "N20130704.pdf",
+                "content_type": "application/pdf",
+                "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/100/download"
+            },
             "html_url": "https://app.fakturoid.cz/applecorp/expenses/100",
             "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/100.json",
             "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/19.json",
@@ -2068,7 +2139,8 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
     
         ```json
         {
-          "number": "N20130704"
+          "number": "N20130704",
+          "attachment": "data:application/pdf;base64,iVBORw0KGgoAAAANSU...\n...\n"
         }
         ```
 
@@ -2216,6 +2288,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
             "variable_symbol": null,
             "supplier_name": "Pavel Druhý",
             "supplier_street": null,
+            "attachment": null,
             // other expense fields truncated ...
         }
         ```
@@ -3299,7 +3372,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
 
 <tr><td>invoice_url</td><td>API adresa faktury (nepovinné)</td><td>string</td></tr>
 <tr><td>subject_url</td><td>API adresa kontaktu (nepovinné)</td><td>string</td></tr>
-<tr><td>user</td><td>uživatel</td><td>string</td></tr>
+<tr><td>user</td><td>uživatel</td><td>object</td></tr>
 <tr><td>user:id</td><td>Identifikátor uživatele</td><td>integer</td></tr>
 <tr><td>user:full_name</td><td>Jméno uživatel</td><td>string</td></tr>
 <tr><td>user:avatar</td><td>Obrázek uživatele</td><td>string</td></tr>
