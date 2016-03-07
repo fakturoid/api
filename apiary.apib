@@ -1854,6 +1854,8 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
   </tr>
 </table>
 
+Řádky nákladů jsou popsány výše v <a href="#reference/lines">Lines</a>
+
 ### Atribut attachment
 
 #### Část requestu:
@@ -1861,7 +1863,7 @@ _Poznámka:_ `supplier_*` položky se nastaví automaticky zkopírováním z kon
 Pokud chcete přidat přílohu, pošlete v requestu data přílohy zakódovaná v Base64 (`attachment`).
 
 Data musí být ve formátu `"data:application/pdf;base64,xxx"`, kde `application/pdf` je MIME type
-obrázku a `xxx` jsou data obrázku zakódovaná v Base64.
+přílohy a `xxx` jsou data přílohy zakódovaná v Base64.
 
 <table>
 <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
@@ -1910,10 +1912,6 @@ Příklad:
   "attachment": null
 }
 ```
-
-#### Řádky
-
-Řádky nákladů jsou popsány výše v <a href="#reference/lines">Lines</a>
 
 ## Expense [/accounts/{slug}/expenses/{id}.json]
 
