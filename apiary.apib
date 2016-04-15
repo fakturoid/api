@@ -983,7 +983,7 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 
 _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírováním z nastavení účtu a z kontaktu odběratele při vytvoření faktury.
 
-Řádky faktur jsou popsány níže v <a href="#reference/lines">Lines</a>
+Řádky faktur jsou popsány níže v <a href="#reference/lines">Lines</a>.
 
 ## Invoice [/accounts/{slug}/invoices/{id}.json]
 
@@ -3379,6 +3379,8 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
 <tr><td>user:avatar</td><td>Obrázek uživatele</td><td>string</td></tr>
 </table>
 
+Typy událostí jsou popsány v <a href="#reference/event-names">Event names</a>.
+
 ## Events Collection [/accounts/{slug}/events.json]
 
 ### Seznam událostí [GET]
@@ -3545,6 +3547,8 @@ Vrací pouze události o zalacení faktur.
     <tr><td>subject_url</td><td>API adresa kontaktu</td><td>string</td></tr>
 </table>
 
+Typy událostí jsou popsány v <a href="#reference/todo-names">Todo names</a>.
+
 ## Todo [/accounts/{slug}/todos/{id}/toggle_completion.json]
 
 ### Odškrtnutí důležité události [POST]
@@ -3671,6 +3675,174 @@ odpověď `200 OK` nebo `204 No Content`:
 
 Pokud se nepodaří webhook doručit zkusíme ho doručit znovu. Celkem se pokusíme doručit webhook pětkrát, nepodaří-li se to
 ani při pátem pokusu, vytvoří se důležitá událost s názvem `webhook_failed`. Pro pomoc s odladěním doporučujeme použít službu http://requestb.in
+
+
+# Group Event names
+
+## Účet
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>account_created</td><td>Založení účtu</td></tr>
+    <tr><td>plan_changed</td><td>Změna tarifu</td></tr>
+    <tr><td>plan_upgraded</td><td>Přechod na vyšší tarif</td></tr>
+    <tr><td>plan_downgraded</td><td>Přechod na nižší tarif</td></tr>
+    <tr><td>plan_period_changed</td><td>Změna periody placení</td></tr>
+    <tr><td>factory_reset</td><td>Vyresetování účtu</td></tr>
+    <tr><td>password_recovery_instructions_sent</td><td>Odeslány instrukce pro získání ztraceného hesla</td></tr>
+    <tr><td>password_recovery_requested</td><td>Odeslány instrukce pro získání ztraceného hesla</td></tr>
+    <tr><td>password_changed</td><td>Nastavení nového hesla</td></tr>
+    <tr><td>user_token_regenerated</td><td>Přegenerování API a RSS klíče</td></tr>
+    <tr><td>account_not_started</td><td>Prázdný účet</td></tr>
+    <tr><td>account_deactivated</td><td>Zablokování účtu</td></tr>
+    <tr><td>account_reactivated</td><td>Odblokování účtu</td></tr>
+    <tr><td>account_archived</td><td>Archivován účtu</td></tr>
+    <tr><td>account_unarchived</td><td>Zrušení archivace účtu</td></tr>
+    <tr><td>account_long_term_blocked</td><td>Účet zablokovaný déle než měsíc</td></tr>
+    <tr><td>invitation_sent</td><td>Poslání pozvánky</td></tr>
+    <tr><td>user_added_to_account</td><td>Přidání uživatele</td></tr>
+    <tr><td>vat_payer</td><td>Status neplátce DPH, identifikovaná osoba, plátce DPH</td></tr>
+</table>
+
+## Faktury
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>invoice_sent</td><td>Odeslána</td></tr>
+    <tr><td>invoice_marked_as_sent</td><td>Označena jako odeslána</td></tr>
+    <tr><td>invoice_accepted</td><td>Schválena klientem</td></tr>
+    <tr><td>invoice_paid</td><td>Zaplacena</td></tr>
+    <tr><td>invoice_paid_bank</td><td>Zaplacena spárováním</td></tr>
+    <tr><td>invoice_paid_paypal</td><td>Zaplacena přes PayPal</td></tr>
+    <tr><td>invoice_paid_gopay</td><td>Zaplacena přes GoPay</td></tr>
+    <tr><td>invoice_paid_with_thank_you_note</td><td>Zaplacena a odesláno poděkování</td></tr>
+    <tr><td>invoice_paid_bank_with_thank_you_note</td><td>Zaplacena spárováním a odesláno poděkování</td></tr>
+    <tr><td>invoice_paid_paypal_with_thank_you_note</td><td>Zaplacena přes PayPal a odesláno poděkování</td></tr>
+    <tr><td>invoice_paid_gopay_with_thank_you_note</td><td>Zaplacena přes GoPay a odesláno poděkování</td></tr>
+    <tr><td>invoice_reminder_sent</td><td>Odeslána upomínka</td></tr>
+    <tr><td>invoice_payment_removed</td><td>Zaplacení zrušeno</td></tr>
+    <tr><td>invoice_cancelled</td><td>Stornována</td></tr>
+    <tr><td>invoice_undo_cancelled</td><td>Stornování zrušeno</td></tr>
+    <tr><td>invoice_generated</td><td>Vystavena ze šablony</td></tr>
+    <tr><td>invoice_overdue</td><td>Po splatnosti</td></tr>
+    <tr><td>invoice_removed</td><td>Faktura smazána</td></tr>
+    <tr><td>invoice_restored</td><td>Faktura obnovena</td></tr>
+</table>
+
+## Proformy
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>proforma_paid</td><td>Zaplacena a vystavena faktura</td></tr>
+    <tr><td>proforma_paid_bank</td><td>Zaplacena spárováním a vystavena faktura</td></tr>
+    <tr><td>proforma_paid_paypal</td><td>Zaplacena přes PayPal a vystavena faktura</td></tr>
+    <tr><td>proforma_paid_gopay</td><td>Zaplacena přes GoPay a vystavena faktura</td></tr>
+</table>
+
+## Kontakty
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>subject_merged</td><td>Kontakt byl sloučen</td></tr>
+    <tr><td>subject_removed</td><td>Kontakt smazán</td></tr>
+</table>
+
+## Šablony
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>generator_removed</td><td>Šablona smazána</td></tr>
+    <tr><td>generator_restored</td><td>Šablona obnovena</td></tr>
+    <tr><td>generator_skipped</td><td>Posunuto datum vystavení příští faktury</td></tr>
+    <tr><td>generator_paused</td><td>Zastavena šablona</td></tr>
+    <tr><td>generator_activated</td><td>Aktivována šablona</td></tr>
+</table>
+
+## Náklady
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>expense_paid</td><td>Uhrazený náklad</td></tr>
+    <tr><td>expense_payment_removed</td><td>Zaplacení zrušeno</td></tr>
+    <tr><td>expense_overdue</td><td>Po splatnosti</td></tr>
+</table>
+
+## Exporty
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>export_invoices</td><td>Vyexportovány faktury</td></tr>
+    <tr><td>export_expenses</td><td>Vyexportovány náklady</td></tr>
+    <tr><td>export_vat_return</td><td>Vyexportováno přiznání k DPH</td></tr>
+    <tr><td>export_moss</td><td>Vyexportováno podání MOSS</td></tr>
+    <tr><td>export_recapitulative_statement</td><td>Vyexportováno souhrnné hlášení k DPH</td></tr>
+    <tr><td>export_control_statement</td><td>Vyexportováno kontrolní hlášení</td></tr>
+</table>
+
+## Žádosti
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>tax_return_ordered</td><td>Objednání zpracování daňového přiznání</td></tr>
+    <tr><td>accounting_ordered</td><td>Objednání účetní služby</td></tr>
+    <tr><td>offer_gopay</td><td>Projeven zájem o GoPay</td></tr>
+    <tr><td>offer_zonky</td><td>Žádost o půjčku na Zonky</td></tr>
+</table>
+
+## Změnové události
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>[model]_[atribut]_on</td><td>Událost při zapnutí některé vlastnosti</td></tr>
+    <tr><td>[model]_[atribut]_off</td><td>Událost při vypnutí některé vlastnosti</td></tr>
+    <tr><td>[model]_[atribut]_changed</td><td>Událost při změně některé vlastnosti</td></tr>
+</table>
+
+### Příklad
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>bank_account_pairing_on</td><td>Zapnutí párování plateb</td></tr>
+    <tr><td>bank_account_pairing_off</td><td>Vypnutí párování plateb</td></tr>
+    <tr><td>invoice_number_changed</td><td>Změna čísla faktury</td></tr>
+</table>
+
+# Group Todo names
+
+<table>
+    <tr><th>Název události</th><th>Popis</th></tr>
+    <tr><td>initial</td><td>Příklad důležité události</td></tr>
+    <tr><td>initial_fb</td><td>Odkaz na Facebook</td></tr>
+    <tr><td>email_bounced</td><td>Email se nepodařil doručit</td></tr>
+    <tr><td>email_for_subject_bounced</td><td>Email pro klienta se nepodařil doručit</td></tr>
+    <tr><td>invoice_overdue</td><td>Nezaplacená faktura po poslední upomínce</td></tr>
+    <tr><td>invoice_partial_proforma_paid</td><td>Záloha zaplacena</td></tr>
+    <tr><td>invoice_partial_proforma_paid_bank</td><td>Záloha zaplacena spárováním</td></tr>
+    <tr><td>invoice_partial_proforma_paid_paypal</td><td>Záloha zaplacena přes PayPal</td></tr>
+    <tr><td>invoice_partial_proforma_paid_gopay</td><td>Záloha zaplacena přes GoPay</td></tr>
+    <tr><td>invoice_already_paid</td><td>Faktura byla již jednou zaplacena</td></tr>
+    <tr><td>expense_already_paid</td><td>Náklad byl již jednou zaplacen</td></tr>
+    <tr><td>unpaired_payment</td><td>Nespárovaná příchozí platba</td></tr>
+    <tr><td>invoice_payment_unpaired</td><td>Nespárovaná příchozí platba</td></tr>
+    <tr><td>expense_payment_unpaired</td><td>Nespárovaná odchozí platba</td></tr>
+    <tr><td>bank_email_received_but_pairing_disabled</td><td>Přišel párovací email, ale párování je vypnuto</td></tr>
+    <tr><td>subject_unreliable_vat_payer</td><td>Kontakt se stal nespolehlivým plátcem DPH</td></tr>
+    <tr><td>subject_reliable_vat_payer</td><td>Kontakt se stal spolehlivým plátcem DPH</td></tr>
+    <tr><td>generator_finished</td><td>Poslední faktura ze šablony</td></tr>
+    <tr><td>generator_failed</td><td>Selhalo vygenerování faktury ze šablony</td></tr>
+    <tr><td>webhook_failed</td><td>Selhalo doručení webhooku</td></tr>
+    <tr><td>paypal_unverified_notification</td><td>Pokus o podvržení platby z PayPalu</td></tr>
+    <tr><td>paypal_tampered_payment</td><td>Pokus o přepsání dat z PayPalu</td></tr>
+    <tr><td>paypal_uncompleted_payment</td><td>Platba na váš PayPal účet vyžaduje pozornost</td></tr>
+    <tr><td>paypal_invalid_token</td><td>Neplatný Fakturoidí PayPal token</td></tr>
+    <tr><td>gopay_invalid_token</td><td>Neplatný Fakturoidí GoPay token ID platby v GoPay</td></tr>
+    <tr><td>gopay_unpaired_payment</td><td>Nespárovaná platba přes GoPay</td></tr>
+    <tr><td>gopay_uncompleted_payment</td><td>Platba na váš GoPay účet nebyla dokončena</td></tr>
+    <tr><td>gopay_wrong_credentials</td><td>Špatné přihlašovací údaje k platební bráně GoPay</td></tr>
+    <tr><td>suspicious_account</td><td>Detekováno přepisování kontaktů</td></tr>
+    <tr><td>account_near_vat_turnover_limit</td><td>Blížíte se k hranici obratu plátce DPH</td></tr>
+    <tr><td>account_exceeded_vat_turnover_limit</td><td>Překročili jste obrat povinné registrace k DPH</td></tr>
+</table>
 
 
 # Group Changelog
