@@ -4,126 +4,128 @@ HOST: https://app.fakturoid.cz/api/v2
 
 # Fakturoid API v2
 
-API dokumentace pro [Fakturoid](https://www.fakturoid.cz). Důležité [změny oproti API v1](#reference/changelog).
+API docs for [Fakturoid](https://www.fakturoid.cz). Important [changes from API v1](#reference/changelog).
 
-# Požadavek
-Požadavky je nutné posílat pomocí __HTTPS__. Všechny URL adresy začínají `https://app.fakturoid.cz/api/v2`. Pro identifikaci účtu slouží parametr `slug` (dříve subdoména), který je součástí adresy většiny požadavků.
+# Request
 
-### Příklad: seznam faktur
+Requests need to be sent via __HTTPS__. All URLs start with `https://app.fakturoid.cz/api/v2`. The `slug` parameter (formely subdomain) identifies the account and is part of most of the request URLs.
+
+### Example: list of invoices
 
 ```
-curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
+curl -u your@email.com:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
     https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices.json
 ```
 
-### Příklad: vytvoření faktury
+### Example: creating an invoice
 
-Pro vytvoření nebo úpravu záznamu musíte přidat hlavičku `Content-Type: application/json` a data ve formátu JSON.
+To create or edit a record, you need to add the `Content-Type: application/json` header and use JSON for the data.
 
 ```
-curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
+curl -u your@email.com:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
     -H 'Content-Type: application/json' \
     -X POST -d '{ "subject_id": "28" }' \
     https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices.json
 ```
 
 
-# Identifikace vaší aplikace
+# ID of your application
 
-Všechny požadavky musí obsahovat hlavičku `User-Agent` se jménem vaší aplikace a odkazem na ni nebo e-mailovou adresou.
+All requests must contain the `User-Agent` header with a name of your application and a link to it, or an email address.
 
 ```
 User-Agent: YourApp (yourname@example.com) 
 ```
 
-Na požadavek bez této hlavičky server vrátí odpověď `400 Bad Request`.
+Requests without this header return `400 Bad Request`.
 
 
-# Pouze JSON
+# Only JSON
 
-API podporuje pouze formát JSON. Všude používejte kódování UTF8. Při použití jiného formátu dostanete ze serveru odpověď `415 Unsupported Media Type`.
+The API supports only JSON. Always use the UTF-8 encoding. For any other encoding, the response will be `415 Unsupported Media Type`.
 
 
-# Ověření
+# Authentication
 
-Ověření se provádí přes HTTP BASIC AUTH, kde jako username slouží váš email a za heslo uvedete api_token (zjistíte v Nastavení vašeho účtu v záložce _Já_). 
+Requests are authenticated via HTTP BASIC AUTH where your email is the username and `api_token` is the password (see your account > _Me_ > _Settings_). 
 
-### Příklad
+### Example
 
 ```
-curl -u vas@email.cz:653638dc733afce75130303fe6e6010f63768af0 \
+curl -u your@email.com:653638dc733afce75130303fe6e6010f63768af0 \
     -H 'User-Agent: YourApp (yourname@example.com)' \
     https://app.fakturoid.cz/api/v2/accounts/{slug}/account.json
 ```
 
-Při zadání špatných přihlašovacích údajů dostanete ze serveru odpověď `401 Unauthorized`.
+Incorrect login info will yield a `401 Unauthorized` response.
 
 
 # HTTP Cache
 
-Pro maximální výkon API i vaší aplikace používejte http cache. Všechny `GET` akce (kromě <a href="#reference/reports">reportů</a>) vrací hlavičku `ETag` a akce,
-které nejsou nad kolekcemi dat vrací i hlavičku `Last-Modified`. Při prvním dotazu si tyto hodnoty uložte
-a při dalších dotazech používejte hlavičky `If-None-Match` a `If-Modified-Since`. Pokud se hodnota 
-zdroj od posledního dotazu nezměnil dostanete zpět odpověď `304 Not Modified`, která ušetří čas vynaložený na
-zpracování dat na serveru a stahování dat, která už máte.
+For maximum performance of both the API and your application, use HTTP cache. All `GET` requests (except <a href="#reference/reports">reports</a>) return the `ETag` header and actions
+that are not on collections of data also return the `Last-Modified` header. Save these values on the first request
+and for the subsequent ones, use the `If-None-Match` and `If-Modified-Since` headers. If the value 
+of the resource didn't change since the last request, you'll get the `304 Not Modified` response which will save time
+necessary to process data on the server and donwload of the data that you already have.
 
-# Stránkování
+# Paging
 
-Stránkování se používá u všech akcí, které vrací více než jeden záznam. Záznamy jsou stránkovány po 20.
-Na další stránku je možné přejít použitím parametru `?page`.
+Paging is used for all actions that use more than one record. The default page size is 20.
+The next page can be navigated to using the `?page` parameter.
 
-### Příklad použití stránkování
+### Paging example
 
 ```
-curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
+curl -u your@email.com:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
     https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices.json?page=5
 ```
 
-## Hlavička Link
+## The `Link` header
 
-Do hlavičky `Link` jsou vloženy informace o stránkování.
+The `Link` header contains the info about paging.
 
-### Příklad
+### Example
 
 ```
 Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=6>; rel="last", 
     <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=2>; rel="next"
 ```
 
-*Odřádkování je jen pro přehlednost.*
+*The linefeed is only for clarity.*
 
-Možné hodnoty `rel` atributu:
+Valid values of the `rel` attribute:
 
-+ `next` ... url následující stránky
-+ `last` ... url poslední stránky
-+ `first` ... url první stránky
-+ `prev` ... url předchozí stránky
++ `next` ... URL of the next page
++ `last` ... URL of the last  page
++ `first` ... URL of the first page
++ `prev` ... URL of the previous page
 
-# Ošetření chyb
+# Error handling
 
-V případě problémů v robotových obvodech může být API dočasně nedostupné, v takovém případě bude chybová odpověď `5XX`. Je zodpovědností klienta, aby v takovém případě požadavek vyzkoušel znovu.
+If the API is temporarily unavailable the error response will be `5XX`. It's up to the client to try to re-submit the request again.
 
-## Stav pouze pro čtení
+## Read-only state
 
-V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP POST, PATCH a DELETE akcí odpověď ze serveru `503 Service Unavailable`
+In case of a server maintenance, read-only state, any attempts to send HTTP POST, PATCH a DELETE actions will yield the `503 Service Unavailable` response.
 
 ## Rate limit
 
-V případě překročení povoleného počtu požadavků z jedné IP adresy během posledních 5 minut server odpoví `429 Too Many Requests`. 
+In case of too many requests from a single IP address in the last 5 minutes, the server returns `429 Too Many Requests`. 
 
-## Zablokovaný účet
+## Locked account
 
-Máte-li zablokovaný účet, dostanete odpověď serveru `402 Payment Required`.
+If your account is locked, you'll get the `402 Payment Required` response.
 
-# Knihovny
-* [PHP](https://github.com/fakturoid/fakturoid-php) - oficiální knihovna pro PHP
-* [Ruby](https://github.com/fakturoid/fakturoid-ruby) - oficiální knihovna pro Ruby (a Rails)
-* [Python](https://github.com/farin/python-fakturoid) - neoficiální knihovna pro Python
-* [.NET](https://github.com/ridercz/Fakturoid-API) - neoficiální knihovna pro .NET
+# Libraries
 
-# Integrace platebních metod
+* [PHP](https://github.com/fakturoid/fakturoid-php) - official library for PHP
+* [Ruby](https://github.com/fakturoid/fakturoid-ruby) - official library for Ruby (and Rails)
+* [Python](https://github.com/farin/python-fakturoid) - unofficial library for Python
+* [.NET](https://github.com/ridercz/Fakturoid-API) - unofficial library for .NET
 
-Nastavení integrací platebních metod ve Fakturoidu:
+# Payment methods integration
+
+How to integrate payment methods in Fakturoid:
 
 * [PayPal](https://www.fakturoid.cz/blog/2014/11/25/paypal)
 * [GoPay](https://www.fakturoid.cz/blog/2015/10/06/platebni-brana-gopay)
