@@ -33,7 +33,7 @@ curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
 Všechny požadavky musí obsahovat hlavičku `User-Agent` se jménem vaší aplikace a odkazem na ni nebo e-mailovou adresou.
 
 ```
-User-Agent: YourApp (yourname@example.com) 
+User-Agent: YourApp (yourname@example.com)
 ```
 
 Na požadavek bez této hlavičky server vrátí odpověď `400 Bad Request`.
@@ -46,7 +46,7 @@ API podporuje pouze formát JSON. Všude používejte kódování UTF8. Při pou
 
 # Ověření
 
-Ověření se provádí přes HTTP BASIC AUTH, kde jako username slouží váš email a za heslo uvedete api_token (zjistíte v Nastavení vašeho účtu v záložce _Já_). 
+Ověření se provádí přes HTTP BASIC AUTH, kde jako username slouží váš email a za heslo uvedete api_token (zjistíte v Nastavení vašeho účtu v záložce _Já_).
 
 ### Příklad
 
@@ -63,7 +63,7 @@ Při zadání špatných přihlašovacích údajů dostanete ze serveru odpově�
 
 Pro maximální výkon API i vaší aplikace používejte http cache. Všechny `GET` akce (kromě <a href="#reference/reports">reportů</a>) vrací hlavičku `ETag` a akce,
 které nejsou nad kolekcemi dat vrací i hlavičku `Last-Modified`. Při prvním dotazu si tyto hodnoty uložte
-a při dalších dotazech používejte hlavičky `If-None-Match` a `If-Modified-Since`. Pokud se hodnota 
+a při dalších dotazech používejte hlavičky `If-None-Match` a `If-Modified-Since`. Pokud se hodnota
 zdroj od posledního dotazu nezměnil dostanete zpět odpověď `304 Not Modified`, která ušetří čas vynaložený na
 zpracování dat na serveru a stahování dat, která už máte.
 
@@ -86,7 +86,7 @@ Do hlavičky `Link` jsou vloženy informace o stránkování.
 ### Příklad
 
 ```
-Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=6>; rel="last", 
+Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=6>; rel="last",
     <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=2>; rel="next"
 ```
 
@@ -109,7 +109,7 @@ V případě údržby, kdy je robot ve stavu pouze pro čtení dostanete u HTTP 
 
 ## Rate limit
 
-V případě překročení povoleného počtu požadavků z jedné IP adresy během posledních 5 minut server odpoví `429 Too Many Requests`. 
+V případě překročení povoleného počtu požadavků z jedné IP adresy během posledních 5 minut server odpoví `429 Too Many Requests`.
 
 ## Zablokovaný účet
 
@@ -207,7 +207,7 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -293,7 +293,7 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -310,7 +310,7 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
         ```
 
     + Body
-    
+
         ```
         [
             {
@@ -414,24 +414,24 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-        
+
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "ae9a9ee2419f569a62cef584d501e7dc"
         Last-Modified: Tue, 21 May 2013 09:46:01 GMT
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "id": 28,
@@ -461,23 +461,23 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
         ```
 
 ### Úprava kontaktu [PATCH]
-Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným kontaktem. 
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným kontaktem.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
 + Request Proper
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
-    + Body    
-        
+
+    + Body
+
         ```json
-        { "city": "Praha" }    
+        { "city": "Praha" }
         ```
 
 + Response 200 (application/json)
@@ -513,16 +513,16 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 + Request Faulty
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
-    + Body    
-    
+
+    + Body
+
         ```json
-        { "email": "bad@email" }    
+        { "email": "bad@email" }
         ```
 
 + Response 422 (application/json)
@@ -543,7 +543,7 @@ Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď se
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -556,7 +556,7 @@ Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď se
 ## Subjects Collection [/accounts/{slug}/subjects.json]
 
 + Model (application/json)
-    
+
     ```json
     [
         {
@@ -609,7 +609,7 @@ Pokud jsou ke kontaktu přiřazeny faktury, nemůže být smazán a odpověď se
             "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
             "updated_at": "2012-06-02T09:34:47+02:00"
         }
-    ]   
+    ]
     ```
 
 + Parameters
@@ -627,14 +627,14 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 + Request Proper
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
 
     + Body
-    
+
         ```json
         {
             "custom_id": null,
@@ -658,16 +658,16 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
         ```
 
 + Response 201
-    
+
     + Headers
-    
+
         ```
         Content-Type: application/json
         Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json
         ```
 
     + Body
-        
+
         ```json
         {
             "id": 28,
@@ -699,22 +699,22 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 + Request Faulty
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-        
+
         ```json
-        { "name": "" } 
+        { "name": "" }
         ```
 
 + Response 422 (application/json)
 
     + Body
-    
+
         ```json
         {
             "errors": {
@@ -732,7 +732,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 Při zadání nesprávného formátu data a času v parametru `since` nebo `updated_since` server vrátí odpověď `400 Bad Request`.
 
 + Parameters
-    
+
     + slug (string, `applecorp`) ... Název účtu
     + since (datetime, optional, `2012-05-20T15:00:00+01:00`) ... Všechny kontakty vytvořené po zadaném datu
     + updated_since (datetime, optional, `2012-05-20T15:00:00+01:00`) ... Všechny kontakty vytvořené nebo upravené po zadaném datu
@@ -740,13 +740,13 @@ Při zadání nesprávného formátu data a času v parametru `since` nebo `upda
     + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
 
 + Request
-    
+
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
-        ```    
+        ```
 
 + Response 200
     + Headers
@@ -755,10 +755,10 @@ Při zadání nesprávného formátu data a času v parametru `since` nebo `upda
         Content-Type: application/json
         ETag: "75a303df11533fd269fd9ffa56d7b858"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects.json?page=2>; rel="next"
-        ```        
+        ```
 
     + Body
-        
+
         ```json
         [
             {
@@ -811,7 +811,7 @@ Při zadání nesprávného formátu data a času v parametru `since` nebo `upda
                 "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/28.json",
                 "updated_at": "2012-06-02T09:34:47+02:00"
             }
-        ]   
+        ]
         ```
 
 ## Subjects Collection fulltext search [/accounts/{slug}/subjects/search.json{?query}]
@@ -827,7 +827,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -836,15 +836,15 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "46339b977ca99a3d8df1a1f8e354c66b"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=1&query=czech>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=1&query=czech>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=3&query=czech>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/search.json?page=3&query=czech>; rel="next"
         ```
-    
+
     + Body
-    
+
         ```json
         [
             {
@@ -861,7 +861,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
                 "name": "Google Czech s.r.o.",
                 // other subject fields truncated ...
             }
-        ]   
+        ]
         ```
 
 
@@ -1074,7 +1074,7 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
         "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json",
         "updated_at": "2012-05-13T12:11:37+02:00"
     }
-    ```    
+    ```
 
 + Parameters
     + slug (string, `applecorp`) ... Název účtu
@@ -1085,7 +1085,7 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -1094,7 +1094,7 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
 + Response 200
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         ETag: "e0a63efa535618c9b2de56bbc53c7813"
@@ -1191,24 +1191,24 @@ _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírován
             "subject_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/subjects/4.json",
             "updated_at": "2012-05-13T12:11:37+02:00"
         }
-    ```   
+    ```
 
 ### Úprava faktury [PATCH]
-Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou. 
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
 + Request Proper
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
           "number": "2012-0004"
@@ -1222,14 +1222,14 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 + Request Faulty
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
           "number": ""
@@ -1260,7 +1260,7 @@ Případy, kdy nelze fakturu smazat:
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -1282,7 +1282,7 @@ Po vystavení nové faktury nebo editaci stávající je potřeba přibližně 1
 + Request
 
     + Headers
-    
+
         ```
         User-Agent: YourApp (yourname@example.com)
         ```
@@ -1290,7 +1290,7 @@ Po vystavení nové faktury nebo editaci stávající je potřeba přibližně 1
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/pdf
         ```
@@ -1333,7 +1333,7 @@ Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud ne
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -1357,14 +1357,14 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "custom_id": "1234",
@@ -1389,16 +1389,16 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
         ```
 
 + Response 201
-    
+
     + Headers
-    
+
         ```
         Content-Type: application/json
         Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/98.json
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "id": 98,
@@ -1434,11 +1434,11 @@ Parametry je možné libovolně kombinovat.
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Faktury podle kontatku
     + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
-    
+
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -1446,14 +1446,14 @@ Parametry je možné libovolně kombinovat.
 
 + Response 200
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "e50c359d3d1a49c705949037e8b188ef"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices.json?page=2>; rel="next"
         ```
     + Body
-    
+
         ```json
         [
             {
@@ -1468,7 +1468,7 @@ Parametry je možné libovolně kombinovat.
                 "custom_id": "1234",
                 "proforma": false,
                 "number": "2012-0005",
-                // other invoice fields truncated ...  
+                // other invoice fields truncated ...
             }
         ]
         ```
@@ -1495,7 +1495,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -1503,14 +1503,14 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
 
 + Response 200
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "e50c359d3d1a49c705949037e8b188ef"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/regular.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/regular.json?page=2>; rel="next"
         ```
     + Body
-    
+
         ```json
         [
             {
@@ -1525,7 +1525,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
                 "custom_id": null,
                 "proforma": false,
                 "number": "2012-0005",
-                // other invoice fields truncated ...  
+                // other invoice fields truncated ...
             }
         ]
         ```
@@ -1552,7 +1552,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -1560,14 +1560,14 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
 
 + Response 200
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "e5a8e55663b9dd5fa070cfee5429aeec"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorpd/invoices/proforma.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/proforma.json?page=2>; rel="next"
         ```
     + Body
-    
+
         ```json
         [
             {
@@ -1582,7 +1582,7 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
                 "custom_id": null,
                 "proforma": true,
                 "number": "1-2012-0005",
-                // other invoice fields truncated ...  
+                // other invoice fields truncated ...
             }
         ]
         ```
@@ -1604,7 +1604,7 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -1613,15 +1613,15 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "10b8f52d87e47e20ed63b3b74a78410d"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=1&query=data>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=1&query=data>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=3&query=data>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/search.json?page=3&query=data>; rel="next"
         ```
-    
+
     + Body
-    
+
         ```json
         [
             {
@@ -1636,11 +1636,11 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
                 "custom_id": null,
                 "proforma": true,
                 "number": "1-2012-0005",
-                // other invoice fields truncated ...  
+                // other invoice fields truncated ...
             }
         ]
         ```
-        
+
 
 # Group Lines
 
@@ -1762,7 +1762,7 @@ Response:
 
 ## Smazání řádku
 
-Pro smazání řádku při editaci faktury je potřeba přidat atribut `_destroy: true`, řádek pak bude 
+Pro smazání řádku při editaci faktury je potřeba přidat atribut `_destroy: true`, řádek pak bude
 vypadat náseldovně
 
 ```json
@@ -2005,7 +2005,7 @@ Příklad:
         "created_at": "2015-01-06T09:58:51.111+01:00",
         "updated_at": "2015-01-06T09:58:51.111+01:00"
     }
-    ```    
+    ```
 
 + Parameters
     + slug (string, `applecorp`) ... Název účtu
@@ -2016,7 +2016,7 @@ Příklad:
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2025,7 +2025,7 @@ Příklad:
 + Response 200
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         ETag: "e0a63efa535618c9b2de56bbc53c7813"
@@ -2120,24 +2120,24 @@ Příklad:
             "created_at": "2015-01-06T09:58:51.111+01:00",
             "updated_at": "2015-01-06T09:58:51.111+01:00"
         }
-        ```   
+        ```
 
 ### Úprava nákladu [PATCH]
-Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným nákladem. 
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným nákladem.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
 + Request Proper
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
           "number": "N20130704",
@@ -2152,14 +2152,14 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 + Request Faulty
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
           "number": ""
@@ -2185,7 +2185,7 @@ Po smazání nákladu server vrátní odpověď `204 No Content`, nejde-li nákl
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2219,7 +2219,7 @@ Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud ne
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2243,14 +2243,14 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "subject_id": "28",
@@ -2272,16 +2272,16 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
         ```
 
 + Response 201
-    
+
     + Headers
-    
+
         ```
         Content-Type: application/json
         Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/201.json
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "id": 201,
@@ -2317,11 +2317,11 @@ Parametry je možné libovolně kombinovat.
     + variable_symbol (optional, string `20150001`) ... Budou vráceny náklady s daným variabilním symbolem
     + status (optional, string, `paid`) ... Budou vráceny náklady v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Náklady podle kontatku
-    
+
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2329,14 +2329,14 @@ Parametry je možné libovolně kombinovat.
 
 + Response 200
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "e50c359d3d1a49c705949037e8b188ef"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses.json?page=2>; rel="next"
         ```
     + Body
-    
+
         ```json
         [
             {
@@ -2376,7 +2376,7 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2385,15 +2385,15 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "10b8f52d87e47e20ed63b3b74a78410d"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=1&query=data>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=1&query=data>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=3&query=data>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/expenses/search.json?page=3&query=data>; rel="next"
         ```
-    
+
     + Body
-    
+
         ```json
         [
             {
@@ -2548,16 +2548,16 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
 
 + Response 200
-    
+
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "221fff2205c3005243d543a7b849e70d"
@@ -2565,7 +2565,7 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
         ```
 
     + Body
-    
+
         ```json
         {
             "id": 4,
@@ -2614,27 +2614,27 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 
 ### Úprava šablony [PATCH]
 
-Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou. 
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
 + Request Proper
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-        
+
     + Body
-    
+
         ```json
         { "name": "Hosting" }
         ```
 
 + Response 200 (application/json)
-    
+
     ```json
     {
         "id": 98,
@@ -2649,14 +2649,14 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 + Request Faulty
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-        
+
     + Body
-    
+
         ```json
         { "name": "" }
         ```
@@ -2680,7 +2680,7 @@ Po smazání šablony server vrátní odpověď `204 No Content`.
 + Request
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2704,14 +2704,14 @@ Na tarifech Zdarma a Sólo je povolena pouze jedna pravidelná šablona, pokud s
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
 
     + Body
-    
+
         ```json
         {
             "name": "Podpora",
@@ -2731,18 +2731,18 @@ Na tarifech Zdarma a Sólo je povolena pouze jedna pravidelná šablona, pokud s
             ]
         }
         ```
-        
+
 + Response 201
-    
+
     + Headers
-    
+
         ```
         Content-Type: application/json
         Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/98.json
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "id": 98,
@@ -2769,7 +2769,7 @@ Parametry je možné libovolně kombinovat.
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         ETag: "19d196964ad49038f59384eed34e3e36"
@@ -2779,14 +2779,14 @@ Parametry je možné libovolně kombinovat.
 + Response 200
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators.json?page=2>; rel="next"
         ```
-    
+
     + Body
-    
+
         ```json
         [
             {
@@ -2892,7 +2892,7 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2901,15 +2901,15 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
 + Response 200
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         ETag: "ba404a38bfefae21aef4c9884b1d325b"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/recurring.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/recurring.json?page=2>; rel="next"
         ```
-    
+
     + Body
-    
+
         ```json
         [
             {
@@ -2943,7 +2943,7 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -2952,15 +2952,15 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
 + Response 200
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         ETag: "bfda9ac2d2d8ec6f8b9b56f3b67d9d2b"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/template.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/generators/template.json?page=2>; rel="next"
         ```
-    
+
     + Body
-    
+
         ```json
         [
             {
@@ -3030,14 +3030,14 @@ Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
 + Request Proper
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "email": "applecorp@applecorp.cz",
@@ -3052,14 +3052,14 @@ Pokud nevyplníte některou z položek pro email, doplní se hodnotou z účtu.
 + Request Faulty
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "email": "bad@email",
@@ -3110,13 +3110,13 @@ Uživatel může mít různé typy oprávnění k účtům (položka `permission
   <tr><td>read</td><td>Uživatel má práva pouze pro čtení</td></tr>
 </table>
 
-Pro uživatele s oprávněním `read` jsou povoleny pouze `GET` akce. 
+Pro uživatele s oprávněním `read` jsou povoleny pouze `GET` akce.
 Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `403 Forbidden`.
 
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -3125,15 +3125,15 @@ Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `40
 + Response 200
 
     + Header
-    
+
         ```
         Content-Type: application/json
         ETag: "7e493771708bb8134aac03d2c2ed05d0"
         Last-Modified: Fri, 18 Oct 2013 12:21:55 GMT
         ```
-    
+
     + Body
-    
+
         ```json
         {
             "id":456,
@@ -3168,7 +3168,7 @@ Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `40
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -3177,13 +3177,13 @@ Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `40
 + Response 200
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         ETag: "805b70d23c5fc4fc0a811e3f714092ce"
         Last-Modified: Thu, 06 Jun 2013 14:08:12 GMT
         ```
-    
+
     + Body
 
         ```json
@@ -3205,7 +3205,7 @@ Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `40
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -3214,14 +3214,14 @@ Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `40
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "c9b6f60b0b42935a13f5c339b3ea7bb2"
         ```
-        
+
     + Body
-    
+
         ```json
         [
             {
@@ -3262,7 +3262,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -3298,7 +3298,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -3334,7 +3334,7 @@ Jsou seskupeny podle jednotlivých měsíců, každý měsíc obsahuje dvě polo
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -3393,24 +3393,24 @@ Typy událostí jsou popsány v <a href="#reference/event-names">Event names</a>
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-        
+
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "cf97891b8145a62772575c5b6655b6bf"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events.json?page=5>; rel="next"
         ```
-    
+
     + Body
-    
+
         ```json
         [
             {
@@ -3457,7 +3457,7 @@ Typy událostí jsou popsány v <a href="#reference/event-names">Event names</a>
             }
         ]
         ```
-        
+
 + Response 400
 
 ## Events Collection paid [/accounts/{slug}/events/paid.json]
@@ -3475,24 +3475,24 @@ Vrací pouze události o zalacení faktur.
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-        
+
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "b7e33e0d339039116cde3792a7981ed0"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/events/paid.json?page=5>; rel="next"
         ```
-        
+
     + Body
-    
+
         ```json
         [
             {
@@ -3558,7 +3558,7 @@ Typy událostí jsou popsány v <a href="#reference/todo-names">Todo names</a>.
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
@@ -3567,7 +3567,7 @@ Typy událostí jsou popsány v <a href="#reference/todo-names">Todo names</a>.
 + Response 200 (application/json)
 
     + body
-    
+
       ```json
       {
           "id": 14,
@@ -3594,22 +3594,22 @@ Typy událostí jsou popsány v <a href="#reference/todo-names">Todo names</a>.
 + Request
 
     + Headers
-    
+
         ```
         Content-Type: application/json
         User-Agent: YourApp (yourname@example.com)
         ```
-        
+
 + Response 200
 
     + Headers
-        
+
         ```
         Content-Type: application/json
         ETag: "e63346e7aa504454d87ee83eb8fa838e"
         Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/todos.json?page=5>; rel="next"
         ```
-        
+
     + Body
 
         ```json
@@ -3644,7 +3644,7 @@ Typy událostí jsou popsány v <a href="#reference/todo-names">Todo names</a>.
 
 ## Webhooky
 
-V aplikaci, v části `Nastavení > Integrace a API`, si můžete nastavit posílání upozornění na vybranou adresu 
+V aplikaci, v části `Nastavení > Integrace a API`, si můžete nastavit posílání upozornění na vybranou adresu
 při změně stavu faktury na **Po splatnosti** nebo **Zaplacena**.
 
 <table>
