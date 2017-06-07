@@ -347,6 +347,8 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
 
 <tr><td>type</td><td>typ kontaktu - customer/supplier/both</td><td>string, optional, default: customer</td></tr>
 
+<tr><td>enabled_reminders</td><td>příznak zda zasílat připomínky</td><td>boolean, optional, default: true</td></tr>
+
 <tr><td>name</td><td>jméno firmy kontaktu</td><td>string, required</td></tr>
 <tr><td>street</td><td>ulice</td><td>string, optional</td></tr>
 <tr><td>street2</td><td>ulice 2</td><td>string, optional</td></tr>
@@ -960,6 +962,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>native_subtotal</td><td>součet v měně účtu</td><td>decimal, readonly</td></tr>
 <tr><td>total</td><td>celkový součet (včetně DPH)</td><td>decimal, readonly</td></tr>
 <tr><td>native_total</td><td>součet v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>round_total</td><td>zaokrouhlovat celkový součet</td><td>boolean, optional, default: false</td></tr>
 <tr><td>remaining_amount</td><td>částka k zaplacení (včetně DPH)</td><td>decimal, readonly</td></tr>
 <tr><td>remaining_native_amount</td><td>částka k zaplacení v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
 
