@@ -177,8 +177,8 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
 
 <tr><td>html_url</td><td>HTML adresa účtu</td><td>string</td></tr>
 <tr><td>url</td><td>API adresa účtu</td><td>string</td></tr>
-<tr><td>updated_at</td><td>datum poslední úpravy účtu</td><td>datetime</td></tr>
 <tr><td>created_at</td><td>datum vytvoření účtu</td><td>datetime</td></tr>
+<tr><td>updated_at</td><td>datum poslední úpravy účtu</td><td>datetime</td></tr>
 </table>
 
 ### Atribut vat\_price\_mode
@@ -374,6 +374,7 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
 <tr><td>avatar_url</td><td>Adresa obrázku kontaktu</td><td>string, readonly</td></tr>
 <tr><td>html_url</td><td>HTML adresa kontaktu</td><td>string, readonly</td></tr>
 <tr><td>url</td><td>API adresa kontaktu</td><td>string, readonly</td></tr>
+<tr><td>created_at</td><td>datum vytvoření kontaktu</td><td>datetime, readonly</td></tr>
 <tr><td>updated_at</td><td>datum poslední aktualizace kontaktu</td><td>datetime, readonly</td></tr>
 </table>
 
@@ -968,6 +969,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>url</td><td>API adresa faktury</td><td>string, readonly</td></tr>
 <tr><td>pdf_url</td><td>API adresa pro stažení faktury v PDF</td><td>string, readonly</td></tr>
 <tr><td>subject_url</td><td>API adresa kontaktu</td><td>string, readonly</td></tr>
+<tr><td>created_at</td><td>datum vytvoření faktury</td><td>datetime, readonly</td></tr>
 <tr><td>updated_at</td><td>datum poslední aktualizace faktury</td><td>datetime, readonly</td></tr>
 </table>
 
@@ -2476,7 +2478,8 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 <tr><td>html_url</td><td>HTML adresa šablony</td><td>string, readonly</td></tr>
 <tr><td>url</td><td>API adresa šablony</td><td>string, readonly</td></tr>
 <tr><td>subject_url</td><td>API adresa kontaktu</td><td>string, readonly</td></tr>
-<tr><td>udated_at</td><td>datum poslední aktualizace šablony</td><td>datetime, readonly</td></tr>
+<tr><td>created_at</td><td>datum vytvoření šablony</td><td>datetime, readonly</td></tr>
+<tr><td>updated_at</td><td>datum poslední aktualizace šablony</td><td>datetime, readonly</td></tr>
 </table>
 
 ### Atribut `vat_price_mode`
