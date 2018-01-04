@@ -972,7 +972,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>eet</td><td>příznak jestli je faktura evidovaná v EET (více v článku na podpoře <a href="https://www.fakturoid.cz/podpora/automatizace/eet-pro-vyvojare">EET pro vývojáře</a>)</td><td>boolean, optional, default: false</td></tr>
 <tr><td>eet_cash_register</td><td>pokladna</td><td>string, optional, default: null</td></tr>
 <tr><td>eet_store</td><td>číslo provozovny</td><td>integer, optional, default: null</td></tr>
-<tr><td>eet_records</td><td><a href="#reference/eet_records">EET záznamy</a></td><td>array, optional, default: []</td></tr>
+<tr><td>eet_records</td><td><a href="#eet-records">EET záznamy</a></td><td>array, optional, default: []</td></tr>
 
 <tr><td>html_url</td><td>HTML adresa faktury</td><td>string, readonly</td></tr>
 <tr><td>public_html_url</td><td>veřejná HTML adresa faktury</td><td>string, readonly</td></tr>
@@ -1007,6 +1007,8 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírováním z nastavení účtu a z kontaktu odběratele při vytvoření faktury.
 
 Řádky faktur jsou popsány níže v <a href="#reference/lines">Lines</a>.
+
+<a id="eet-records"></a>
 
 ### Definice objeku v `eet_records`
 
