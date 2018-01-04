@@ -902,6 +902,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>your_country</td><td>vaše země (ISO kód)</td><td>string, readonly</td></tr>
 <tr><td>your_registration_no</td><td>vaše IČ</td><td>string, readonly</td></tr>
 <tr><td>your_vat_no</td><td>vaše DIČ</td><td>string, readonly</td></tr>
+<tr><td>your_local_vat_no</td><td>vaše SK DIČ (pouze pro Slovensko, nezačíná kódem země)</td><td>string, readonly</td></tr>
 
 <tr><td>client_name</td><td>název firmy kontaktu</td><td>string, readonly</td></tr>
 <tr><td>client_street</td><td>ulice kontatku</td><td>string, readonly</td></tr>
@@ -911,8 +912,10 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>client_country</td><td>země kontaktu (ISO kód)</td><td>string, readonly</td></tr>
 <tr><td>client_registration_no</td><td>IČ kontaktu</td><td>string, readonly</td></tr>
 <tr><td>client_vat_no</td><td>DIČ kontaktu</td><td>string, readonly</td></tr>
+<tr><td>client_local_vat_no</td><td>SK DIČ kontaktu (pouze pro Slovensko, nezačíná kódem země)</td><td>string, readonly</td></tr>
 
 <tr><td>subject_id</td><td>ID kontaktu (povinné)</td><td>integer, required</td></tr>
+<tr><td>subject_custom_id</td><td>identifikátor kontaktu ve vaší aplikaci</td><td>integer, optional</td></tr>
 <tr><td>generator_id</td><td>ID šablony ze které byla faktura vystavena</td><td>integer, optional</td></tr>
 <tr><td>related_id</td><td>ID proformy/faktury (u faktur vystavených ze zálohových faktur)</td><td>integer, optional</td></tr>
 
@@ -933,7 +936,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>paid_at</td><td>datum a čas zaplacení faktury</td><td>datetime, readonly</td></tr>
 <tr><td>reminder_sent_at</td><td>datum a čas odeslání upomínky</td><td>datetime, readonly</td></tr>
 <tr><td>accepted_at</td><td>datum a čas odsouhlasení faktury klientem</td><td>datetime, readonly</td></tr>
-<tr><td>canceled_at</td><td>datum stornování faktury (pouze pro neplátce DPH)</td><td>datetime, readonly</td></tr>
+<tr><td>cancelled_at</td><td>datum stornování faktury (pouze pro neplátce DPH)</td><td>datetime, readonly</td></tr>
 
 <tr><td>note</td><td>text před položkami faktury (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>footer_note</td><td>patička faktury (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
@@ -964,6 +967,12 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>native_total</td><td>součet v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
 <tr><td>remaining_amount</td><td>částka k zaplacení (včetně DPH)</td><td>decimal, readonly</td></tr>
 <tr><td>remaining_native_amount</td><td>částka k zaplacení v měně účtu (včetně DPH)</td><td>decimal, readonly</td></tr>
+<tr><td>paid_amount</td><td>skutečně zaplacená částka</td><td>decimal, readonly</td></tr>
+
+<tr><td>eet</td><td>příznak jestli je faktura evidovaná v EET (více v článku na podpoře <a href="https://www.fakturoid.cz/podpora/automatizace/eet-pro-vyvojare">EET pro vývojáře</a>)</td><td>boolean, optional, default: false</td></tr>
+<tr><td>eet_cash_register</td><td>pokladna</td><td>string, optional, default: null</td></tr>
+<tr><td>eet_store</td><td>číslo provozovny</td><td>integer, optional, default: null</td></tr>
+<tr><td>eet_records</td><td><a href="#reference/eet_records">EET záznamy</a></td><td>array, optional, default: []</td></tr>
 
 <tr><td>html_url</td><td>HTML adresa faktury</td><td>string, readonly</td></tr>
 <tr><td>public_html_url</td><td>veřejná HTML adresa faktury</td><td>string, readonly</td></tr>
@@ -998,6 +1007,50 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 _Poznámka:_ `your_*` a `client_*` položky se nastaví automaticky zkopírováním z nastavení účtu a z kontaktu odběratele při vytvoření faktury.
 
 Řádky faktur jsou popsány níže v <a href="#reference/lines">Lines</a>.
+
+### Definice objeku v `eet_records`
+
+Pokud fakturujete s EET, přečtěte si náš článek na podpoře <a href="https://www.fakturoid.cz/podpora/automatizace/eet-pro-vyvojare">EET pro vývojáře</a>.
+
+<table>
+<tr><th>Atribut</th><th>Popis</th></tr>
+<tr><td>id</td><td>ID záznamu</td></tr>
+<tr><td>vat_no</td><td>DIČ účtu ve fakturoidu</td></tr>
+<tr><td>number</td><td>Pořadové číslo dokladu</td></tr>
+<tr><td>store</td><td>ID provozovny</td></tr>
+<tr><td>cash_register</td><td>Číslo pokladny</td></tr>
+<tr><td>paid_at</td><td>Datum a čas tržby</td></tr>
+<tr><td>vat_base0</td><td>Základ nepodléhající DPH</td></tr>
+<tr><td>vat_base1</td><td>Základ pro základní sazbu DPH (21 %)</td></tr>
+<tr><td>vat1</td><td>DPH pro základní sazbu</td></tr>
+<tr><td>vat_base2</td><td>Základ pro 1. sníženou sazbu DPH (15 %)</td></tr>
+<tr><td>vat2</td><td>DPH pro 1. sníženou sazbu DPH</td></tr>
+<tr><td>vat_base3</td><td>Základ pro 2. sníženou sazbu DPH (10 %)</td></tr>
+<tr><td>vat3</td><td>DPH pro 2. sníženou sazbu DPH</td></tr>
+<tr><td>total</td><td>Celková částka tržby</td></tr>
+<tr><td>fik</td><td>FIK kód</td></tr>
+<tr><td>bkp</td><td>BKP kód</td></tr>
+<tr><td>pkp</td><td>PKP kód</td></tr>
+<tr><td>status</td><td>Stav zaevidování:
+    <ul>
+        <li><code>waiting</code> - čeká se na první odpověď serveru EET</li>
+        <li><code>pkp</code> - na faktuře se zobrazí PKP kód</li>
+        <li><code>fik</code> - na faktuře se zobrazí FIK kód</li>
+    </ul></td></tr>
+<tr><td>fik_received_at</td><td>Datum a čas získání FIK ze serverů EET</td></tr>
+<tr><td>external</td><td>
+    <ul>
+        <li><code>true</code> - Tržba je zaevidována mimo Fakturoid a potřebné kódy jsou zadány přes API
+        <li><code>false</code> - Fakturoid se stará o zaevidování tržby
+    </ul></td></tr>
+<tr><td>attempts</td><td>Počet pokusů o zaevidování tržby</td></tr>
+<tr><td>last_attempt_at</td><td>Datum a čas posledního pokusu o zaevidování tržby</td></tr>
+<tr><td>last_uuid</td><td>UUID posledního pokusu o zaevidování tržby</td></tr>
+<tr><td>playground</td><td>Evidováno v EET Playground prostředí</td></tr>
+<tr><td>invoice_id</td><td>ID faktury, ke které EET záznam patří</td></tr>
+<tr><td>created_at</td><td>Datum a čas vytvoření záznamu</td></tr>
+<tr><td>updated_at</td><td>Datum a čas poslední úpravy záznamu</td></tr>
+</table>
 
 ## Invoice [/accounts/{slug}/invoices/{id}.json]
 
