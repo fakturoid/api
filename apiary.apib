@@ -884,7 +884,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 
 <table>
 <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
-<tr><td>custom_id</td><td>identifikátor kontaktu ve vaší aplikaci</td><td>string, optional</td></tr>
+<tr><td>custom_id</td><td>identifikátor faktury ve vaší aplikaci</td><td>string, optional</td></tr>
 
 <tr><td>id</td><td>identifikátor faktury</td><td>integer, readonly</td></tr>
 
@@ -1854,6 +1854,7 @@ vypadat náseldovně
 <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
 
 <tr><td>id</td><td>identifikátor nákladu</td><td>integer, readonly</td></tr>
+<tr><td>custom_id</td><td>identifikátor nákladu ve vaší aplikaci</td><td>string, optional</td></tr>
 
 <tr><td>number</td><td>číslo nákladu (Př: N20150101, musí odpovídat formátu čísla v nastavení účtu, doplní se automaticky)</td><td>string, optional, unique, default: next in the row</td></tr>
 <tr><td>original_number</td><td>číslo dokladu (uvedené na přijaté faktuře)</td><td>string, optional</td></tr>
@@ -2492,6 +2493,7 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
 
 <tr><td>id</td><td>identifikátor šablony</td><td>integer, readonly</td></tr>
+<tr><td>custom_id</td><td>identifikátor šablony ve vaší aplikaci</td><td>string, optional</td></tr>
 
 <tr><td>name</td><td>pojmenování šablony</td><td>string, required</td></tr>
 <tr><td>recurring</td><td>true/false jedná se o pravidelnou nebo normální šablonu</td><td>boolean, required</td></tr>
