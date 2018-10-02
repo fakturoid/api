@@ -974,6 +974,8 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>eet_store</td><td>číslo provozovny</td><td>integer, optional, default: null</td></tr>
 <tr><td>eet_records</td><td><a href="#eet-records">EET záznamy</a></td><td>array, optional, default: []</td></tr>
 
+<tr><td>attachment</td><td>příloha</td><td>object, optional</td></tr>
+
 <tr><td>html_url</td><td>HTML adresa faktury</td><td>string, readonly</td></tr>
 <tr><td>public_html_url</td><td>veřejná HTML adresa faktury</td><td>string, readonly</td></tr>
 <tr><td>url</td><td>API adresa faktury</td><td>string, readonly</td></tr>
@@ -1053,6 +1055,63 @@ Pokud fakturujete s EET, přečtěte si náš článek na podpoře <a href="http
 <tr><td>created_at</td><td>Datum a čas vytvoření záznamu</td></tr>
 <tr><td>updated_at</td><td>Datum a čas poslední úpravy záznamu</td></tr>
 </table>
+
+### Atribut attachment
+
+#### Část requestu:
+
+Pokud chcete přidat přílohu, pošlete v requestu data přílohy zakódovaná v Base64 (`attachment`).
+
+Data musí být ve formátu `"data:application/pdf;base64,xxx"`, kde `application/pdf` je MIME type
+přílohy a `xxx` jsou data přílohy zakódovaná v Base64.
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>attachment</td><td><a href="https://en.wikipedia.org/wiki/Data_URI_scheme">Data URI</a></td><td>string</td></tr>
+</table>
+
+Příklad:
+
+```json
+{
+  ...
+  "attachment": "data:application/pdf;base64,iVBORw0KGgoAAAANSU...\n...\n" // Data truncated
+  ...
+}
+```
+
+#### Část response pokud příloha existuje:
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>file_name</td><td>název souboru</td><td>string</td></tr>
+<tr><td>content_type</td><td>MIME type souboru</td><td>string</td></tr>
+<tr><td>download_url</td><td>URL pro download přílohy přes API</td><td>string</td></tr>
+</table>
+
+```json
+{
+  "id": 9,
+  "number": "2018-1024",
+  ...
+  "attachment": {
+    "file_name": "64d814c560.pdf",
+    "content_type": "application/pdf",
+    "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/9/download_attachment"
+  }
+  ...
+}
+```
+
+#### Část response pokud příloha neexistuje:
+
+```json
+{
+  "id": 9,
+  "number": "2018-1024",
+  "attachment": null
+}
+```
 
 ## Invoice [/accounts/{slug}/invoices/{id}.json]
 
@@ -1137,6 +1196,11 @@ Pokud fakturujete s EET, přečtěte si náš článek na podpoře <a href="http
                 "unit_price_with_vat": "24200.0"
             }
         ],
+        "attachment": {
+            "file_name": "64d814c560.pdf",
+            "content_type": "application/pdf",
+            "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/9/download_attachment"
+        },
         "html_url": "https://app.fakturoid.cz/applecorp/invoices/9",
         "public_html_url": "https://app.fakturoid.cz/applecorp/p/udDTG8Q88M/2012-0004",
         "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/9.json",
@@ -1253,6 +1317,11 @@ Pokud fakturujete s EET, přečtěte si náš článek na podpoře <a href="http
                     "unit_price_with_vat": "24200.0"
                 }
             ],
+            "attachment": {
+                "file_name": "64d814c560.pdf",
+                "content_type": "application/pdf",
+                "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/9/download_attachment"
+            },
             "html_url": "https://app.fakturoid.cz/applecorp/invoices/9",
             "public_html_url": "https://app.fakturoid.cz/applecorp/p/udDTG8Q88M/2012-0004",
             "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/9.json",
@@ -1280,7 +1349,8 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
 
         ```json
         {
-          "number": "2012-0004"
+          "number": "2012-0004",
+          "attachment": "data:application/pdf;base64,iVBORw0KGgoAAAANSU...\n...\n"
         }
         ```
 
