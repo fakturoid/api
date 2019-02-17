@@ -1453,6 +1453,8 @@ Seznam možných událostí:
     <tr><td>deliver_reminder</td><td>Poslat upomínku</td></tr>
     <tr><td>cancel</td><td>Stornovat fakturu</td></tr>
     <tr><td>undo_cancel</td><td>Zrušit stornování</td></tr>
+    <tr><td>lock</td><td>Uzamčení faktury</td></tr>
+    <tr><td>unlock</td><td>Odemčení faktury</td></tr>
 </table>
 
 Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud nebude možné událost vykonat, server vrátí odpověď `422 Unprocessable Entity`.
@@ -1468,6 +1470,10 @@ Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud ne
         + `pay_partial_proforma`
         + `remove_payment`
         + `deliver_reminder`
+        + `cancel`
+        + `undo_cancel`
+        + `lock`
+        + `unlock`
 
 + Request
 
@@ -2351,6 +2357,8 @@ Seznam možných událostí:
     <tr><th>event</th><th>popis</th></tr>
     <tr><td>pay</td><td>Označit jako zaplacenou (akceptuje volitelný parametr `paid_at`)</td></tr>
     <tr><td>remove_payment</td><td>Zrušit zaplacení</td></tr>
+    <tr><td>lock</td><td>Uzamčení nákladu</td></tr>
+    <tr><td>unlock</td><td>Odemčení nákladu</td></tr>
 </table>
 
 Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud nebude možné událost vykonat, server vrátí odpověď `422 Unprocessable Entity`.
@@ -2361,6 +2369,8 @@ Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud ne
     + event (string, `pay`) ... Událost
         + `pay`
         + `remove_payment`
+        + `lock`
+        + `unlock`
 
 + Request
 
