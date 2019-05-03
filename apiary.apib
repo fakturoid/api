@@ -995,7 +995,10 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
     <td>without_vat</td><td>cena zadaná do řádků faktur je bez DPH a DPH se z ní dopočte přes sazbu DPH</td>
   </tr>
   <tr>
-    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem</td>
+    <td>from_total_with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte numericky</td>
+  </tr>
+  <tr>
+    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem (použitelné do 31. 3. 2019)</td>
   </tr>
 </table>
 
@@ -1966,7 +1969,7 @@ vypadat náseldovně
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
 <tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
-<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: without_vat, with_vat, default: without_vat</td></tr>
+<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: without_vat, from_total_with_vat, default: without_vat</td></tr>
 <tr><td>supply_code</td><td>kód plnění pro souhrnná hlášení (pouze pro zahraniční faktury do EU)</td><td>integer, optional</td></tr>
 
 <tr><td>round_total</td><td>zaokrouhlit cenu s DPH (při vystavení)</td><td>boolean, optional, default: false</td></tr>
