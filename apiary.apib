@@ -30,11 +30,13 @@ curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
 
 # Identifikace vaší aplikace
 
-Všechny požadavky musí obsahovat hlavičku `User-Agent` se jménem vaší aplikace a odkazem na ni nebo e-mailovou adresou.
+Všechny požadavky musí obsahovat hlavičku `User-Agent` se jménem vaší aplikace a odkazem na ni a e-mailovou adresou na technického správce integrace.
 
 ```
 User-Agent: YourApp (yourname@example.com)
 ```
+
+Budeme tak vědět, koho primárně kontaktovat okolo případných problémů v API napojení.
 
 Na požadavek bez této hlavičky server vrátí odpověď `400 Bad Request`.
 
