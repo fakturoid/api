@@ -3813,6 +3813,7 @@ při změně stavu faktury na **Po splatnosti** nebo **Zaplacena**.
     <tr><td>total</td><td>Částka faktury</td><td>decimal</td></tr>
     <tr><td>paid_at</td><td>Datum zaplacení</td><td>date, optional</td></tr>
     <tr><td>event_name</td><td>Název vytvořené události</td><td>string, required</td></tr>
+    <tr><td>invoice_custom_id</td><td>Identifikátor faktury ve vaší aplikaci</td><td>string, optional</td></tr>
 </table>
 
 Fakturoid robot pošle `POST` požadavek na vámi nastavenou adresu s následujícími daty v těle a bude očekávat
@@ -3825,7 +3826,8 @@ odpověď `200 OK` nebo `204 No Content`:
     "status": "paid",
     "total": 58700.0,
     "paid_at": "2014-08-27",
-    "event_name": "invoice_paid"
+    "event_name": "invoice_paid",
+    "invoice_custom_id": null
 }
 ```
 
