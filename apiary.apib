@@ -1334,6 +1334,8 @@ Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou fakturou.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
+Při pokusu editovat uzamčenou fakturu bude vráceno `403 Forbidden`.
+
 + Request Proper
 
     + Headers
@@ -1384,6 +1386,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
         }
     }
     ```
++ Response 403 (application/json)
 
 ### Smazání faktury [DELETE]
 
@@ -2280,6 +2283,8 @@ Odpověď serveru na tento příkaz je `200 OK` a JSON s upraveným nákladem.
 
 Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
+Při pokusu editovat uzamčený náklad bude vráceno `403 Forbidden`.
+
 + Request Proper
 
     + Headers
@@ -2330,6 +2335,8 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
         }
     }
     ```
+
++ Response 403 (application/json)
 
 ### Smazání nákladu [DELETE]
 
