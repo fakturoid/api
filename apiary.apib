@@ -152,7 +152,7 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
 <tr><td>registration_no</td><td>IČ</td><td>string, optional</td></tr>
 <tr><td>vat_no</td><td>DIČ</td><td>string, optional</td></tr>
 <tr><td>vat_mode</td><td>Plátce DPH / Neplátce DPH / Identifikovaná osoba</td><td>string, values: vat_payer, non_vat_payer, identified_person</td></tr>
-<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: without_vat, with_vat</td></tr>
+<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: without_vat, from_total_with_vat</td></tr>
 
 <tr><td>street</td><td>ulice</td><td>string</td></tr>
 <tr><td>street2</td><td>ulice 2</td><td>string, optional</td></tr>
@@ -195,7 +195,10 @@ __Poznámka:__ Účet je pouze pro čtení, pro změny použijte prosím webové
     <td>without_vat</td><td>cena zadaná do řádků faktur je bez DPH a DPH se z ní dopočte přes procentuální sazbu DPH</td>
   </tr>
   <tr>
-    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem</td>
+    <td>from_total_with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte</td>
+  </tr>
+  <tr>
+    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem (platné do 30. 9. 2019)</td>
   </tr>
 </table>
 
@@ -953,7 +956,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
 <tr><td>supply_code</td><td>kód plnění pro souhrnná hlášení (pouze pro zahraniční faktury do EU)</td><td>integer, optional</td></tr>
 <tr><td>eu_electronic_service</td><td>příznak, pokud je faktura v režimu MOSS</td><td>boolean, optional, default: false</td></tr>
-<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: null, without_vat, with_vat, default: by account settings</td></tr>
+<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: null, without_vat, from_total_with_vat, default: by account settings</td></tr>
 
 <tr><td>round_total</td><td>zaokrouhlit cenu s DPH (při vystavení)</td><td>boolean, optional, default: false</td></tr>
 <tr><td>subtotal</td><td>součet (bez DPH)</td><td>decimal, readonly</td></tr>
@@ -985,6 +988,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 - účet je neplátce DPH
 - je zapnuta přenesená daňová povinnost
+- od 30. 9. 2019 se u nových faktur bude hodnota `with_vat` automaticky nahrazovat hodnotou `from_total_with_vat`.
 
 <table>
   <tr>
@@ -1000,7 +1004,7 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
     <td>from_total_with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte numericky</td>
   </tr>
   <tr>
-    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem (použitelné do 31. 3. 2019)</td>
+    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem (platné do 30. 9. 2019)</td>
   </tr>
 </table>
 
@@ -1881,12 +1885,12 @@ Request:
 ```json
 {
   ...
-  "vat_price_mode": "with_vat",
+  "vat_price_mode": "from_total_with_vat",
   ...
   "lines": [
     {
       ...
-      "unit_price": "1000.0",
+      "unit_price": "1210.0",
       "vat_rate": "21"
     }
   ]
@@ -1898,15 +1902,15 @@ Response:
 ```json
 {
   ...
-  "vat_price_mode": "with_vat",
+  "vat_price_mode": "from_total_with_vat",
   ...
   "lines": [
     {
       ...
-      "unit_price": "826.4",
+      "unit_price": "1000.0",
       "vat_rate": "21",
-      "unit_price_without_vat": "826.4",
-      "unit_price_with_vat": "1000.0"
+      "unit_price_without_vat": "1000.0",
+      "unit_price_with_vat": "1210.0"
     }
   ]
 }
@@ -2617,7 +2621,7 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (nepovinné)</td><td>decimal, optional</td></tr>
 <tr><td>language</td><td>jazyk vystavené faktury (cz, sk, en, de, fr, it, es, ru, pl)</td><td>string, optional, default: cz</td></tr>
-<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: null, without_vat, with_vat</td></tr>
+<tr><td>vat_price_mode</td><td>způsob zadávání cen do řádků</td><td>string, values: null, without_vat, from_total_with_vat</td></tr>
 <tr><td>transferred_tax_liability</td><td>přenesená daňová povinnost true/false</td><td>boolean, optional, default: false</td></tr>
 <tr><td>eu_electronic_service</td><td>příznak, pokud je faktura v režimu MOSS</td><td>boolean, optional, default: false</td></tr>
 <tr><td>supply_code</td><td>kód plnění pro souhrnná hlášení (pouze pro zahraniční faktury do EU)</td><td>integer, optional</td></tr>
@@ -2639,6 +2643,7 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 Nastavení `vat_price_mode` je ignorováno v následujícíh případech
 - účet je neplátce DPH
 - je zapnuta přenesená daňová povinnost
+- od 30. 9. 2019 se u nových faktur bude hodnota `with_vat` automaticky nahrazovat hodnotou `from_total_with_vat`.
 
 <table>
   <tr>
@@ -2651,7 +2656,10 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
     <td>without_vat</td><td>cena zadaná do řádků faktur je bez DPH a DPH se z ní dopočte přes procenta</td>
   </tr>
   <tr>
-    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem</td>
+    <td>from_total_with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte</td>
+  </tr>
+  <tr>
+    <td>with_vat</td><td>cena zadaná do řádků faktur je včetně DPH a DPH se z ní dopočte koeficientem (platné do 30. 9. 2019)</td>
   </tr>
 </table>
 
