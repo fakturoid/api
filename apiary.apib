@@ -1504,6 +1504,8 @@ Po úspěšném vytvoření faktury dostanete ze serveru odpověď `201 Created`
 
 Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
+V případě, kdy ve Fakturoidím učtu není zadaný bankovní účet, API vrátí odpověď `403 Forbidden`. V těle odpovědi bude popis chyby s odkazem do nastavení bankovních účtů (bankovní účet nelze zadat přes API).
+
 + Request
 
     + Headers
@@ -2876,6 +2878,8 @@ Po úspěšném vytvoření šablony dostanete ze serveru odpověď `201 Created
 Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
 
 Na tarifech Zdarma a Sólo je povolena pouze jedna pravidelná šablona, pokud se pokusíte přidat další, server vrátí `403 Forbidden`.
+
+V případě, kdy ve Fakturoidím učtu není zadaný bankovní účet, API vrátí odpověď `403 Forbidden`. V těle odpovědi bude popis chyby s odkazem do nastavení bankovních účtů (bankovní účet nelze zadat přes API).
 
 + Request
 
