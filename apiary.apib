@@ -1420,6 +1420,7 @@ Případy, kdy nelze fakturu smazat:
 
 Tato akce umožňuje stahnout fakturu ve formátu PDF. Pokud je PDF připraveno ke stažení, akce vrátí odpověď `200 OK` a fakturu.
 Pokud PDF připraveno není, bude vrácena odpověď `204 No content`. V takovém případě to zkuste znovu o 1 - 2 vteřiny později.
+Pokud je vrácen kód `403 Forbidden`, faktura čeká na odeslání do eet a není ji možno stáhnout.
 
 Po vystavení nové faktury nebo editaci stávající je potřeba přibližně 1 - 2 vteřiny počkat, než se vygeneruje nové PDF.
 
@@ -1440,6 +1441,7 @@ Po vystavení nové faktury nebo editaci stávající je potřeba přibližně 1
         ```
 
 + Response 204
++ Response 403
 
 ## Invoice actions [/accounts/{slug}/invoices/{id}/fire.json{?event}]
 
