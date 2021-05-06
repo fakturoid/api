@@ -945,6 +945,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>bank_account_id</td><td>ID bankovního účtu (nepovinné - použije se výchozí bankovní účet)</td><td>integer, only on create action, optional</td></tr>
 <tr><td>bank_account</td><td>číslo bankovního účtu (nepovinné - použije se výchozí bankovní účet)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>iban</td><td>IBAN (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>iban_visibility</td><td>viditelnost IBANu</td><td>string, optional, values: automatically, always</td></tr>
 <tr><td>swift_bic</td><td>BIC (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 
 <tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka) / paypal (PayPal) / card (Karta)</td><td>string, optional, default: bank</td></tr>
