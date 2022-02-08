@@ -340,6 +340,73 @@ __Poznámka:__ Bankovní účty jsou pouze pro čtení, pro změny použijte pro
         ]
         ```
 
+# Group Number Formats
+
+## Číselné řady
+
+__Poznámka:__ Číselné řady jsou pouze pro čtení, pro změny nebo vytvoření nové použijte prosím webové rozhraní. Vrací se pouze nearchivované číselné řady.
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>id</td><td>identifikátor číselné řady</td><td>integer, readonly</td></tr>
+<tr><td>format</td><td>formát číselné řady</td><td>string, readonly</td></tr>
+<tr><td>default</td><td>defaultní číselná řada</td><td>boolean, readonly</td></tr>
+<tr><td>created_at</td><td>datum vytvoření číselné řady</td><td>datetime, readonly</td></tr>
+<tr><td>updated_at</td><td>datum poslední aktualizace číselné řady</td><td>datetime, readonly</td></tr>
+</table>
+
+## Number formats Collection [/accounts/{slug}/number_formats/invoices.json]
+
+### Seznam číselných řad [GET]
+
+Číselná řada lze přidat pouze při vytváření faktury, při pokusu změnit číselnou řadu při úpravě faktury bude vráceno `422 Unprocessable Entity`.
+### Atribut default
+
+`default` slouží k zobrazení výchozí číselné řady.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "f1c9bc9473d2040a6038012ea0c865cd"
+        Last-Modified: Fri, 22 Nov 2013 09:15:45 GMT
+        ```
+
+    + Body
+
+        ```
+        [
+
+          {
+            "id": 1,
+            "format": "#yyyy#-#dddd#",
+            "default: true,
+            "created_at": "2022-01-14T13:05:42.652+02:00",
+            "updated_at": "2022-01-14T13:05:42.652+02:00"
+          },
+          {
+            "id": 2,
+            "format": "T#yyyy#-#dddd#",
+            "default: false,
+            "created_at": "2022-01-14T14:05:42.652+02:00",
+            "updated_at": "2022-01-14T14:05:42.652+02:00"
+          }
+        ]
+        ```
+
 # Group Subjects
 
 ## Kontakty
@@ -890,6 +957,7 @@ Vyhledává se v následujících polích na fakturách: `name`, `full_name`,`em
 <tr><td>partial_proforma</td><td>přiznak zda je proforma na plnou částku - true/false</td><td>boolean, optional, default: false</td></tr>
 
 <tr><td>number</td><td>číslo faktury (Př: 2011-0001, musí odpovídat formátu čísla v nastavení účtu)</td><td>string, optional, unique</td></tr>
+<tr><td>number_format_id</td><td>ID číselné řady</td><td>integer, optional</td></tr>
 <tr><td>variable_symbol</td><td>variabilní symbol (nepovinné - doplní se z čísla faktury)</td><td>string, optional, default: by invoice number</td></tr>
 
 <tr><td>your_name</td><td>název vaší firmy</td><td>string, readonly</td></tr>
@@ -1246,6 +1314,7 @@ Příklad:
             "custom_id": null,
             "proforma": false,
             "number": "2012-0004",
+            "number_format_id": 1,
             "variable_symbol": "20120004",
             "your_name": "Alexandr Hejsek",
             "your_street": "Hopsinkov\u00e1 14",
@@ -1525,6 +1594,7 @@ V případě, kdy ve Fakturoidím učtu není zadaný bankovní účet, API vrá
         {
             "custom_id": "1234",
             "subject_id": "28",
+            "number_format_id": "1",
             "number": "2012-0001",
             "currency": "CZK",
             "payment_method": "bank",
@@ -2616,6 +2686,7 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
 
 <tr><td>send_email</td><td>true/false posílat pravidelnou šablonu emailem</td><td>boolean, optional, default: false</td></tr>
 <tr><td>subject_id</td><td>ID kontaktu (povinné)</td><td>integer, required</td></tr>
+<tr><td>number_format_id</td><td>ID číselné řady</td><td>integer, optional</td></tr>
 <tr><td>note</td><td>text před položkami faktury</td><td>string, optional</td></tr>
 
 <tr><td>bank_account_id</td><td>ID bankovního účtu (nepovinné - doplní se výchozí bankovní účet)</td><td>integer, optional, default: by account settings</td></tr>
@@ -2767,6 +2838,7 @@ Nastavení `vat_price_mode` je ignorováno v následujícíh případech
             "due": 10,
             "send_email": false,
             "subject_id": 4,
+            "number_format_id": 1,
             "bank_account": null,
             "iban": null,
             "swift_bic": null,
