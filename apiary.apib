@@ -1533,6 +1533,8 @@ Seznam možných událostí:
     <tr><td>undo_cancel</td><td>Zrušit stornování</td></tr>
     <tr><td>lock</td><td>Uzamčení faktury</td></tr>
     <tr><td>unlock</td><td>Odemčení faktury</td></tr>
+    <tr><td>mark_as_uncollectible</td><td>Označit jako nedobytnou</td></tr>
+    <tr><td>undo_uncollectible</td><td>Zrušit označení jako nedobytné</td></tr>
 </table>
 
 Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud nebude možné událost vykonat, server vrátí odpověď `422 Unprocessable Entity`.
@@ -1552,6 +1554,8 @@ Po úspěšném vykonání události server vrátí odpověď `200 OK`. Pokud ne
         + `undo_cancel`
         + `lock`
         + `unlock`
+        + `mark_as_uncollectible`
+        + `undo_uncollectible`
 
 + Request
 
