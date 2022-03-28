@@ -3467,6 +3467,7 @@ Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `40
 
 + Parameters
     + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 uživatelích.
 
 + Request
 
@@ -3484,6 +3485,7 @@ Při pokusu o `POST`, `PATCH` a `DELETE` požadavky server vrátí odpověď `40
         ```
         Content-Type: application/json
         ETag: "c9b6f60b0b42935a13f5c339b3ea7bb2"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/users.json?page=1>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/users.json?page=3>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/users.json?page=8>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/users.json?page=5>; rel="next"
         ```
 
     + Body
