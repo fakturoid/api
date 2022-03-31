@@ -1017,6 +1017,7 @@ Vyhledává se v následujících polích v kontaktech: `name`, `full_name`,`ema
 <tr><td>iban_visibility</td><td>viditelnost IBANu</td><td>string, optional, values: automatically, always</td></tr>
 <tr><td>swift_bic</td><td>BIC (nepovinné - doplní se z účtu)</td><td>string, optional, default: by account settings</td></tr>
 
+<tr><td>show_already_paid_note_in_pdf</td><td>zobrazí na faktuře "Neplaťte již uhrazeno" v jazyce faktury **bez ohledu na stav platby**. Lze nastavit pouze pro faktury, pro proformy je vždy `false`. Pro faktury vystavené z plné proformy je vždy `true`.</td><td>boolean, optional, default: false</td</tr>
 <tr><td>payment_method</td><td>bank (bankovní převod) / cash (hotově) / cod (dobírka) / paypal (PayPal) / card (Karta)</td><td>string, optional, default: bank</td></tr>
 <tr><td>currency</td><td>kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
 <tr><td>exchange_rate</td><td>kurz (povinný pokud je měna faktury jiná než měna účtu)</td><td>string, optional</td></tr>
@@ -1237,6 +1238,7 @@ Příklad:
         "bank_account": "1234/1234",
         "iban": null,
         "swift_bic": null,
+        "show_already_paid_note_in_pdf": false,
         "payment_method": "bank",
         "currency": "CZK",
         "exchange_rate": "1.0",
@@ -1359,6 +1361,7 @@ Příklad:
             "bank_account": "1234/1234",
             "iban": null,
             "swift_bic": null,
+            "show_already_paid_note_in_pdf": true,
             "payment_method": "bank",
             "currency": "CZK",
             "exchange_rate": "1.0",
