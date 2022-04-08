@@ -349,6 +349,7 @@ __Poznámka:__ Číselné řady jsou pouze pro čtení, pro změny nebo vytvoře
 <tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
 <tr><td>id</td><td>identifikátor číselné řady</td><td>integer, readonly</td></tr>
 <tr><td>format</td><td>formát číselné řady</td><td>string, readonly</td></tr>
+<tr><td>preview</td><td>náhled číselné řady</td><td>string, readonly</td></tr>
 <tr><td>default</td><td>defaultní číselná řada</td><td>boolean, readonly</td></tr>
 <tr><td>created_at</td><td>datum vytvoření číselné řady</td><td>datetime, readonly</td></tr>
 <tr><td>updated_at</td><td>datum poslední aktualizace číselné řady</td><td>datetime, readonly</td></tr>
@@ -393,6 +394,7 @@ __Poznámka:__ Číselné řady jsou pouze pro čtení, pro změny nebo vytvoře
           {
             "id": 1,
             "format": "#yyyy#-#dddd#",
+            "preview": "2022-0001, 2022-0002, ..., 2022-9999",
             "default: true,
             "created_at": "2022-01-14T13:05:42.652+02:00",
             "updated_at": "2022-01-14T13:05:42.652+02:00"
@@ -400,6 +402,7 @@ __Poznámka:__ Číselné řady jsou pouze pro čtení, pro změny nebo vytvoře
           {
             "id": 2,
             "format": "T#yyyy#-#dddd#",
+            "preview": "T2022-0001, T2022-0002, ..., T2022-9999",
             "default: false,
             "created_at": "2022-01-14T14:05:42.652+02:00",
             "updated_at": "2022-01-14T14:05:42.652+02:00"
