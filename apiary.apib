@@ -3502,7 +3502,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 ### Seznam položek [GET]
 
 Seznam možných parametrů je uveden v tabulce. Jediným povinným je `slug`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
-Parametry je možné libovolně kombinovat.
+Parametry je možné libovolně kombinovat. Archivované položky se nevrací.
 
 + Parameters
     + slug (string, `applecorp`) ... Název účtu
@@ -3589,6 +3589,185 @@ Parametry je možné libovolně kombinovat.
             }
         ]
         ```
+## Inventory Items Collection archived only [/accounts/{slug}/inventory_items/archived.json]
+### Seznam archivovanách položek [GET]
+
+Parametry a jejich použití je stejné jako u seznamu položek výše. Vrací se pouze archivované položky.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 položkách.
+    + article_number (optional, string, `ian`) ... Položky podle typ kódu produktu
+    + sku (optional, string, `KU994RUR8423`) ... Položky podle sku
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Položky vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Položky vytvořené nebo upravené po zadaném datu
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "19d196964ad49038f59384eed34e3e36"
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/archived.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/archived.json?page=2>; rel="next"
+        ```
+
+    + Body
+
+        ```json
+        [
+            {
+                "id":5,
+                "name":"Some improvement",
+                "sku":null,
+                "article_number_type":"ian",
+                "article_number":null,
+                "unit_name":null,
+                "track_quantity":false,
+                "quantity":null,
+                "min_quantity":null,
+                "max_quantity":null,
+                "allow_below_zero":false,
+                "native_purchase_price":null,
+                "native_retail_price":"1000.0",
+                "vat_rate":null,
+                "average_native_purchase_price":"0.0",
+                "supply_type":"service",
+                "archived":true,
+                "private_note":null,
+                "suggest_for":"invoices",
+                "created_at":"2022-1-22T16:26:02.998+01:00",
+                "updated_at":"2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
+                "subject_url": null,
+            },
+            {
+                "id":4,
+                "name":"Some improvement",
+                "sku":null,
+                "article_number_type":"ian",
+                "article_number":null,
+                "unit_name":null,
+                "track_quantity":false,
+                "quantity":null,
+                "min_quantity":null,
+                "max_quantity":null,
+                "allow_below_zero":false,
+                "native_purchase_price":null,
+                "native_retail_price":"1000.0",
+                "vat_rate":null,
+                "average_native_purchase_price":"0.0",
+                "supply_type":"service",
+                "archived":true,
+                "private_note":null,
+                "suggest_for":"invoices",
+                "created_at":"2022-1-22T16:26:02.998+01:00",
+                "updated_at":"2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
+                "subject_url": null,
+            }
+        ]
+        ```
+## Inventory Items Collection fulltext search [/accounts/{slug}/inventory_items/search.json{?query}]
+
+### Fulltextové vyhledávání v položkách [GET]
+
+Vyhledává se v následujících polích v kontaktech: `name`, `article_number`,`sku`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + query (string, `Hledaný řetězec`) ... Hledaný řetězec
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 položkách.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "46339b977ca99a3d8df1a1f8e354c66b"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=1&query=czech>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=1&query=czech>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=3&query=czech>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=3&query=czech>; rel="next"
+        ```
+
+    + Body
+
+        ```json
+       [
+            {
+                "id":5,
+                "name":"Some improvement",
+                "sku":null,
+                "article_number_type":"ian",
+                "article_number":null,
+                "unit_name":null,
+                "track_quantity":false,
+                "quantity":null,
+                "min_quantity":null,
+                "max_quantity":null,
+                "allow_below_zero":false,
+                "native_purchase_price":null,
+                "native_retail_price":"1000.0",
+                "vat_rate":null,
+                "average_native_purchase_price":"0.0",
+                "supply_type":"service",
+                "archived":true,
+                "private_note":null,
+                "suggest_for":"invoices",
+                "created_at":"2022-1-22T16:26:02.998+01:00",
+                "updated_at":"2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
+                "subject_url": null,
+            },
+            {
+                "id":4,
+                "name":"Some improvement",
+                "sku":null,
+                "article_number_type":"ian",
+                "article_number":null,
+                "unit_name":null,
+                "track_quantity":false,
+                "quantity":null,
+                "min_quantity":null,
+                "max_quantity":null,
+                "allow_below_zero":false,
+                "native_purchase_price":null,
+                "native_retail_price":"1000.0",
+                "vat_rate":null,
+                "average_native_purchase_price":"0.0",
+                "supply_type":"service",
+                "archived":true,
+                "private_note":null,
+                "suggest_for":"invoices",
+                "created_at":"2022-1-22T16:26:02.998+01:00",
+                "updated_at":"2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
+                "subject_url": null,
+            }
+        ]
+        ```
+
 
 # Group Inventory Moves
 
