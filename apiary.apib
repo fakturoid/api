@@ -3445,6 +3445,55 @@ Po smazání položky server vrátní odpověď `204 No Content`.
 
 + Response 204
 
+### Archivace položky [PATCH/accounts/{slug}/inventory_items/{id}/archive.json]
+
+Po archivaci položky server vrátní odpověď `200 OK` a JSON s archivovanou položkou.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+        ```json
+        {
+            "id": 98,
+            "name":"Some improvement",
+            "article_number_type":"isbn",
+            "archived": true,
+            // other inventory items fields truncated ...
+        }
+        ```
+### Zaktivnění položky [PATCH/accounts/{slug}/inventory_items/{id}/unarchive.json]
+
+Po zaktivnění položky server vrátní odpověď `200 OK` a JSON s aktivní položkou.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+        ```json
+        {
+            "id": 98,
+            "name":"Some improvement",
+            "article_number_type":"isbn",
+            "archived": false,
+            // other inventory items fields truncated ...
+        }
+        ```
+
 ## Inventory Items Collection [/accounts/{slug}/inventory_items.json]
 
 + Parameters
