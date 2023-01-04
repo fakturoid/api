@@ -1902,6 +1902,7 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
     <tr><td>vat_rate</td><td>Sazba DPH (pro neplátce DPH 0)</td><td>integer, required</td></tr>
     <tr><td>unit_price_without_vat</td><td>Cena za jednotku bez DPH</td><td>decimal, readonly</td></tr>
     <tr><td>unit_price_with_vat</td><td>Cena za jednotku včetně DPH</td><td>decimal, readonly</td></tr>
+    <tr><td>sku</td><td>SKU kód skladové položky</td><td>string, optional</td></tr>
 </table>
 
 ```json
@@ -1927,6 +1928,18 @@ Atributy `unit_price_without_vat` a `unit_price_with_vat` mají stejnou hodnotu 
 
 - sazba DPH je nastavena na 0
 - je zapnuta přenesená daňová povinnost na faktuře nebo šabloně, ke které řádek náleží (je-li na nákladu zapnutá přenesaná daňová povinnost, nastavení `vat_price_mode` je ignorováno)
+
+Používáte-li sklad, můžete při vytváření nebo úpravě řádku poslat atribut `sku` a některé údaje řádku se automaticky vyplní ze skladové položky.
+Atributy, které se automaticky vyplňují:
+
+- `unit_name`
+- `vat_rate`
+- `unit_price`
+- `name`
+
+Jakýkoliv z těchto atributů lze zaslat spolu s SKU kódem a v tomto případě bude mít přednost před skladovou položkou (ale nesmí být prázdný).
+
+Skladové položky lze tímto způsobem načítat u řádků faktur, šablon, pravidelných faktur, nákladů, nabídek a účtenek.
 
 ### Příklady
 
@@ -1997,6 +2010,87 @@ Response:
   "lines": [
     {
       ...
+      "unit_price": "1000.0",
+      "vat_rate": "21",
+      "unit_price_without_vat": "1000.0",
+      "unit_price_with_vat": "1210.0"
+    }
+  ]
+}
+```
+
+#### Načtení ze skladové položky
+
+Request:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      "sku": "123456789"
+    }
+  ]
+}
+```
+
+Response:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "name": "Skladová položka",
+      "quantity": "1.0",
+      "unit_name": "kg",
+      "unit_price": "1000.0",
+      "vat_rate": "21",
+      "unit_price_without_vat": "1000.0",
+      "unit_price_with_vat": "1210.0"
+    }
+  ]
+}
+```
+
+#### Částečné načtení ze skladové položky
+
+Request:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      "sku": "123456789",
+      "name": "",
+      "quantity": "2.0",
+      "unit_name": "ks",
+    }
+  ]
+}
+```
+
+Response:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "name": "Skladová položka",
+      "quantity": "2.0",
+      "unit_name": "ks",
       "unit_price": "1000.0",
       "vat_rate": "21",
       "unit_price_without_vat": "1000.0",
