@@ -3483,7 +3483,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
     + Body
 
         ```json
-        { "name": "Hosting" }
+        { "name": "Book" }
         ```
 
 + Response 200 (application/json)
@@ -3491,7 +3491,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
     ```json
     {
         "id": 98,
-        "name": "Some improvement",
+        "name": "Book",
         "article_number_type": "isbn",
         // other inventory items fields truncated ...
     }
@@ -3517,7 +3517,7 @@ Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessab
     ```json
     {
         "errors": {
-            "number": [
+            "name": [
                 "je povinná položka"
             ]
         }
@@ -3613,7 +3613,6 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 
         ```json
         {
-            "id": 980190962,
             "name": "Some improvement",
             "sku": null,
             "article_number_type": "ian",
@@ -3636,9 +3635,9 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 
         ```json
         {
-            "id": 98,
+            "id": 980190962,
             "name": "Some improvement",
-            "article_number_type": "isbn",
+            "article_number_type": "ian",
             // other inventory items fields truncated ...
         }
         ```
@@ -3700,10 +3699,7 @@ Parametry je možné libovolně kombinovat. Archivované položky se nevrací.
                 "private_note": null,
                 "suggest_for": "invoices",
                 "created_at": "2022-1-22T16:26:02.998+01:00",
-                "updated_at": "2022-1-22T16:26:02.998+01:00",
-                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
-                "subject_url": null,
+                "updated_at": "2022-1-22T16:26:02.998+01:00"
             },
             {
                 "id": 4,
@@ -3726,10 +3722,7 @@ Parametry je možné libovolně kombinovat. Archivované položky se nevrací.
                 "private_note": null,
                 "suggest_for": "invoices",
                 "created_at": "2022-1-22T16:26:02.998+01:00",
-                "updated_at": "2022-1-22T16:26:02.998+01:00",
-                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
-                "subject_url": null,
+                "updated_at": "2022-1-22T16:26:02.998+01:00"
             }
         ]
         ```
@@ -3792,10 +3785,7 @@ Parametry a jejich použití je stejné jako u seznamu položek výše. Vrací s
                 "private_note": null,
                 "suggest_for": "invoices",
                 "created_at": "2022-1-22T16:26:02.998+01:00",
-                "updated_at": "2022-1-22T16:26:02.998+01:00",
-                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
-                "subject_url": null,
+                "updated_at": "2022-1-22T16:26:02.998+01:00"
             },
             {
                 "id": 4,
@@ -3818,10 +3808,7 @@ Parametry a jejich použití je stejné jako u seznamu položek výše. Vrací s
                 "private_note": null,
                 "suggest_for": "invoices",
                 "created_at": "2022-1-22T16:26:02.998+01:00",
-                "updated_at": "2022-1-22T16:26:02.998+01:00",
-                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
-                "subject_url": null,
+                "updated_at": "2022-1-22T16:26:02.998+01:00"
             }
         ]
         ```
@@ -3881,10 +3868,7 @@ Vyhledává se v následujících polích: `name`, `article_number`, `sku`.
                 "private_note": null,
                 "suggest_for": "invoices",
                 "created_at": "2022-1-22T16:26:02.998+01:00",
-                "updated_at": "2022-1-22T16:26:02.998+01:00",
-                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
-                "subject_url": null,
+                "updated_at": "2022-1-22T16:26:02.998+01:00"
             },
             {
                 "id": 4,
@@ -3907,10 +3891,7 @@ Vyhledává se v následujících polích: `name`, `article_number`, `sku`.
                 "private_note": null,
                 "suggest_for": "invoices",
                 "created_at": "2022-1-22T16:26:02.998+01:00",
-                "updated_at": "2022-1-22T16:26:02.998+01:00",
-                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
-                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
-                "subject_url": null,
+                "updated_at": "2022-1-22T16:26:02.998+01:00"
             }
         ]
         ```
