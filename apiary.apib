@@ -1902,6 +1902,7 @@ Vyhledává se v následujících polích na fakturách: `number`, `variable_sym
     <tr><td>vat_rate</td><td>Sazba DPH (pro neplátce DPH 0)</td><td>integer, required</td></tr>
     <tr><td>unit_price_without_vat</td><td>Cena za jednotku bez DPH</td><td>decimal, readonly</td></tr>
     <tr><td>unit_price_with_vat</td><td>Cena za jednotku včetně DPH</td><td>decimal, readonly</td></tr>
+    <tr><td>sku</td><td>SKU kód skladové položky</td><td>string, optional</td></tr>
 </table>
 
 ```json
@@ -1927,6 +1928,18 @@ Atributy `unit_price_without_vat` a `unit_price_with_vat` mají stejnou hodnotu 
 
 - sazba DPH je nastavena na 0
 - je zapnuta přenesená daňová povinnost na faktuře nebo šabloně, ke které řádek náleží (je-li na nákladu zapnutá přenesaná daňová povinnost, nastavení `vat_price_mode` je ignorováno)
+
+Používáte-li sklad, můžete při vytváření nebo úpravě řádku poslat atribut `sku` a některé údaje řádku se automaticky vyplní ze skladové položky.
+Atributy, které se automaticky vyplňují:
+
+- `unit_name`
+- `vat_rate`
+- `unit_price`
+- `name`
+
+Jakýkoliv z těchto atributů lze zaslat spolu s SKU kódem a v tomto případě bude mít přednost před skladovou položkou (ale nesmí být prázdný).
+
+Skladové položky lze tímto způsobem načítat u řádků faktur, šablon, pravidelných faktur, nákladů a nabídek.
 
 ### Příklady
 
@@ -1997,6 +2010,87 @@ Response:
   "lines": [
     {
       ...
+      "unit_price": "1000.0",
+      "vat_rate": "21",
+      "unit_price_without_vat": "1000.0",
+      "unit_price_with_vat": "1210.0"
+    }
+  ]
+}
+```
+
+#### Načtení ze skladové položky
+
+Request:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      "sku": "123456789"
+    }
+  ]
+}
+```
+
+Response:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "name": "Skladová položka",
+      "quantity": "1.0",
+      "unit_name": "kg",
+      "unit_price": "1000.0",
+      "vat_rate": "21",
+      "unit_price_without_vat": "1000.0",
+      "unit_price_with_vat": "1210.0"
+    }
+  ]
+}
+```
+
+#### Částečné načtení ze skladové položky
+
+Request:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      "sku": "123456789",
+      "name": "",
+      "quantity": "2.0",
+      "unit_name": "ks",
+    }
+  ]
+}
+```
+
+Response:
+
+```json
+{
+  ...
+  "vat_price_mode": "from_total_with_vat",
+  ...
+  "lines": [
+    {
+      ...
+      "name": "Skladová položka",
+      "quantity": "2.0",
+      "unit_name": "ks",
       "unit_price": "1000.0",
       "vat_rate": "21",
       "unit_price_without_vat": "1000.0",
@@ -3252,6 +3346,871 @@ Parametry a jejich použití je stejné jako u seznamu šablon výše.
         ]
         ```
 
+
+# Group Inventory Items
+
+V současné době máme funkci Sklad v režimu pro beta testování se základními funkcemi. Pokud byste měli zájem, můžeme Vám funkci zapnout, budeme pak rádi za jakékoliv postřehy a zpětnou vazbu.
+
+## Položky skladu
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>id</td><td>Identifikátor položky</td><td>integer, readonly</td></tr>
+<tr><td>name</td><td>Název položky</td><td>text, required</td></tr>
+<tr><td>sku</td><td>Interní kód položky (SKU)</td><td>string, optional (required pokud je zapnuto sledování počtu)</td></tr>
+<tr><td>article_number_type</td><td>Typ kódu produktu (ian ean isbn)</td><td>string, optional, default: ian</td></tr>
+<tr><td>article_number</td><td>Kód produktu</td><td>string, optional</td></tr>
+<tr><td>unit_name</td><td>Měrná jednotka</td><td>string, optional</td></tr>
+<tr><td>track_quantity</td><td>Sledovat počet</td><td>boolean, optional, default: false</td></tr>
+<tr><td>quantity</td><td>Množství skladem</td><td>decimal, optional (required pokud je zapnuto sledování počtu)</td></tr>
+<tr><td>min_quantity</td><td>Minimální množství</td><td>decimal, optional</td></tr>
+<tr><td>max_quantity</td><td>Maximální množství</td><td>decimal, optional</td></tr>
+<tr><td>allow_below_zero</td><td>Množství může jít do záporu</td><td>boolean, default: false</td></tr>
+<tr><td>native_purchase_price</td><td>Nákupní cena za jednotku</td><td>decimal, optional (required pokud je zapnuto sledování počtu)</td></tr>
+<tr><td>native_retail_price</td><td>Prodejní cena za jednotku</td><td>decimal, required</td></tr>
+<tr><td>vat_rate</td><td>Sazba DPH: Základní 21 % (standard) / Snížená 15 % (reduced) / Snížená 10 % (reduced2) / Nulová (zero)</td><td>string, optional</td></tr>
+<tr><td>average_native_purchase_price</td><td>Průměrná nákupní cena</td><td>decimal, readonly</td></tr>
+<tr><td>supply_type</td><td>Typ položky: Zboží (goods) / Služba (service)</td><td>string, optional</td></tr>
+<tr><td>archived</td><td>Položka je archivovaná</td><td>boolean, readonly</td></tr>
+<tr><td>private_note</td><td>Soukromá poznámka</td><td>text, optional</td></tr>
+<tr><td>suggest_for</td><td>Napovídat pro: Faktury (invoices) / Náklady (expenses) / Oboje (both)</td><td>string, optional</td></tr>
+<tr><td>created_at</td><td>Datum vytvoření položky</td><td>datetime, readonly</td></tr>
+<tr><td>updated_at</td><td>Datum poslední aktualizace položky</td><td>datetime, readonly</td></tr>
+</table>
+
+### Atribut `quantity`
+
+Množství na skladě nelze aktualizovat pomocí akce update – lze jej měnit pouze přidáním pohybu (`InventoryMove`).
+
+## Inventory Item [/accounts/{slug}/inventory_items/{id}.json]
+
++ Model
+
+    ```json
+    {
+        "id": 980190962,
+        "name": "Some improvement",
+        "sku": null,
+        "article_number_type": "ian",
+        "article_number": null,
+        "unit_name": null,
+        "track_quantity": false,
+        "quantity": null,
+        "min_quantity": null,
+        "max_quantity": null,
+        "allow_below_zero": false,
+        "native_purchase_price": null,
+        "native_retail_price": "1000.0",
+        "vat_rate": null,
+        "average_native_purchase_price": "0.0",
+        "supply_type": "service",
+        "archived": false,
+        "private_note": null,
+        "suggest_for": "invoices",
+        "created_at": "2022-1-22T16:26:02.998+01:00",
+        "updated_at": "2022-1-22T16:26:02.998+01:00"
+    }
+    ```
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `20`) ... id položky
+
+### Detail položky [GET]
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "221fff2205c3005243d543a7b849e70d"
+        Last-Modified: Tue, 18 Jun 2013 09:01:58 GMT
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 980190962,
+            "name": "Some improvement",
+            "sku": null,
+            "article_number_type": "ian",
+            "article_number": null,
+            "unit_name": null,
+            "track_quantity": false,
+            "quantity": null,
+            "min_quantity": null,
+            "max_quantity": null,
+            "allow_below_zero": false,
+            "native_purchase_price": null,
+            "native_retail_price": "1000.0",
+            "vat_rate": null,
+            "average_native_purchase_price": "0.0",
+            "supply_type": "service",
+            "archived": false,
+            "private_note": null,
+            "suggest_for": "invoices",
+            "created_at": "2022-1-22T16:26:02.998+01:00",
+            "updated_at": "2022-1-22T16:26:02.998+01:00"
+        }
+        ```
+
+### Úprava položky [PATCH]
+
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou položkou.
+
+Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request Proper
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+
+        ```json
+        { "name": "Hosting" }
+        ```
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "id": 98,
+        "name": "Some improvement",
+        "article_number_type": "isbn",
+        // other inventory items fields truncated ...
+    }
+    ```
+
++ Request Faulty
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+
+        ```json
+        { "name": "" }
+        ```
+
++ Response 422 (application/json)
+
+    ```json
+    {
+        "errors": {
+            "number": [
+                "je povinná položka"
+            ]
+        }
+    }
+    ```
+
+### Smazání položky [DELETE]
+
+Po smazání položky server vrátní odpověď `204 No Content`.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204
+
+### Archivace položky [PATCH/accounts/{slug}/inventory_items/{id}/archive.json]
+
+Po archivaci položky server vrátní odpověď `200 OK` a JSON s archivovanou položkou.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    ```json
+    {
+        "id": 98,
+        "name": "Some improvement",
+        "article_number_type": "isbn",
+        "archived": true,
+        // other inventory items fields truncated ...
+    }
+    ```
+
+### Zaktivnění položky [PATCH/accounts/{slug}/inventory_items/{id}/unarchive.json]
+
+Po zaktivnění položky server vrátní odpověď `200 OK` a JSON s aktivní položkou.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    ```json
+    {
+        "id": 98,
+        "name": "Some improvement",
+        "article_number_type": "isbn",
+        "archived": false,
+        // other inventory items fields truncated ...
+    }
+    ```
+
+## Inventory Items Collection [/accounts/{slug}/inventory_items.json]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
+### Nová položka [POST]
+
+Po úspěšném vytvoření položky dostanete ze serveru odpověď `201 Created`, hlavička `location` bude nastavena na adresu nově vytvořené položky. Spolu s tím bude navrácena právě vytvořená položka.
+
+Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 980190962,
+            "name": "Some improvement",
+            "sku": null,
+            "article_number_type": "ian",
+            "article_number": null,
+            "unit_name": null,
+            "track_quantity": false
+        }
+        ```
+
++ Response 201
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/98.json
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 98,
+            "name": "Some improvement",
+            "article_number_type": "isbn",
+            // other inventory items fields truncated ...
+        }
+        ```
+
+### Seznam položek [GET]
+
+Seznam možných parametrů je uveden v tabulce. Jediným povinným je `slug`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
+Parametry je možné libovolně kombinovat. Archivované položky se nevrací.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 položkách.
+    + article_number (optional, string, `ian`) ... Položky podle typ kódu produktu
+    + sku (optional, string, `KU994RUR8423`) ... Položky podle interního kódu produktu (SKU)
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Položky vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Položky vytvořené nebo upravené po zadaném datu
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "19d196964ad49038f59384eed34e3e36"
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items.json?page=2>; rel="next"
+        ```
+
+    + Body
+
+        ```json
+        [
+            {
+                "id": 5,
+                "name": "Some improvement",
+                "sku": null,
+                "article_number_type": "ian",
+                "article_number": null,
+                "unit_name": null,
+                "track_quantity": false,
+                "quantity": null,
+                "min_quantity": null,
+                "max_quantity": null,
+                "allow_below_zero": false,
+                "native_purchase_price": null,
+                "native_retail_price": "1000.0",
+                "vat_rate": null,
+                "average_native_purchase_price": "0.0",
+                "supply_type": "service",
+                "archived": false,
+                "private_note": null,
+                "suggest_for": "invoices",
+                "created_at": "2022-1-22T16:26:02.998+01:00",
+                "updated_at": "2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
+                "subject_url": null,
+            },
+            {
+                "id": 4,
+                "name": "Some improvement",
+                "sku": null,
+                "article_number_type": "ian",
+                "article_number": null,
+                "unit_name": null,
+                "track_quantity": false,
+                "quantity": null,
+                "min_quantity": null,
+                "max_quantity": null,
+                "allow_below_zero": false,
+                "native_purchase_price": null,
+                "native_retail_price": "1000.0",
+                "vat_rate": null,
+                "average_native_purchase_price": "0.0",
+                "supply_type": "service",
+                "archived": false,
+                "private_note": null,
+                "suggest_for": "invoices",
+                "created_at": "2022-1-22T16:26:02.998+01:00",
+                "updated_at": "2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
+                "subject_url": null,
+            }
+        ]
+        ```
+
+## Inventory Items Collection archived only [/accounts/{slug}/inventory_items/archived.json]
+
+### Seznam archivovanách položek [GET]
+
+Parametry a jejich použití je stejné jako u seznamu položek výše. Vrací se pouze archivované položky.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 položkách.
+    + article_number (optional, string, `ian`) ... Položky podle typ kódu produktu
+    + sku (optional, string, `KU994RUR8423`) ... Položky podle interního kódu produktu (SKU)
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Položky vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Položky vytvořené nebo upravené po zadaném datu
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "19d196964ad49038f59384eed34e3e36"
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/archived.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/archived.json?page=2>; rel="next"
+        ```
+
+    + Body
+
+        ```json
+        [
+            {
+                "id": 5,
+                "name": "Some improvement",
+                "sku": null,
+                "article_number_type": "ian",
+                "article_number": null,
+                "unit_name": null,
+                "track_quantity": false,
+                "quantity": null,
+                "min_quantity": null,
+                "max_quantity": null,
+                "allow_below_zero": false,
+                "native_purchase_price": null,
+                "native_retail_price": "1000.0",
+                "vat_rate": null,
+                "average_native_purchase_price": "0.0",
+                "supply_type": "service",
+                "archived": true,
+                "private_note": null,
+                "suggest_for": "invoices",
+                "created_at": "2022-1-22T16:26:02.998+01:00",
+                "updated_at": "2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
+                "subject_url": null,
+            },
+            {
+                "id": 4,
+                "name": "Some improvement",
+                "sku": null,
+                "article_number_type": "ian",
+                "article_number": null,
+                "unit_name": null,
+                "track_quantity": false,
+                "quantity": null,
+                "min_quantity": null,
+                "max_quantity": null,
+                "allow_below_zero": false,
+                "native_purchase_price": null,
+                "native_retail_price": "1000.0",
+                "vat_rate": null,
+                "average_native_purchase_price": "0.0",
+                "supply_type": "service",
+                "archived": true,
+                "private_note": null,
+                "suggest_for": "invoices",
+                "created_at": "2022-1-22T16:26:02.998+01:00",
+                "updated_at": "2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
+                "subject_url": null,
+            }
+        ]
+        ```
+
+## Inventory Items Collection fulltext search [/accounts/{slug}/inventory_items/search.json{?query}]
+
+### Fulltextové vyhledávání v položkách [GET]
+
+Vyhledává se v následujících polích: `name`, `article_number`, `sku`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + query (string, `Hledaný řetězec`) ... Hledaný řetězec
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 20 položkách.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "46339b977ca99a3d8df1a1f8e354c66b"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=1&query=czech>; rel="first", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=1&query=czech>; rel="prev", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=3&query=czech>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/search.json?page=3&query=czech>; rel="next"
+        ```
+
+    + Body
+
+        ```json
+        [
+            {
+                "id": 5,
+                "name": "Some improvement",
+                "sku": null,
+                "article_number_type": "ian",
+                "article_number": null,
+                "unit_name": null,
+                "track_quantity": false,
+                "quantity": null,
+                "min_quantity": null,
+                "max_quantity": null,
+                "allow_below_zero": false,
+                "native_purchase_price": null,
+                "native_retail_price": "1000.0",
+                "vat_rate": null,
+                "average_native_purchase_price": "0.0",
+                "supply_type": "service",
+                "archived": true,
+                "private_note": null,
+                "suggest_for": "invoices",
+                "created_at": "2022-1-22T16:26:02.998+01:00",
+                "updated_at": "2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/5",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5.json",
+                "subject_url": null,
+            },
+            {
+                "id": 4,
+                "name": "Some improvement",
+                "sku": null,
+                "article_number_type": "ian",
+                "article_number": null,
+                "unit_name": null,
+                "track_quantity": false,
+                "quantity": null,
+                "min_quantity": null,
+                "max_quantity": null,
+                "allow_below_zero": false,
+                "native_purchase_price": null,
+                "native_retail_price": "1000.0",
+                "vat_rate": null,
+                "average_native_purchase_price": "0.0",
+                "supply_type": "service",
+                "archived": true,
+                "private_note": null,
+                "suggest_for": "invoices",
+                "created_at": "2022-1-22T16:26:02.998+01:00",
+                "updated_at": "2022-1-22T16:26:02.998+01:00",
+                "html_url": "https://app.fakturoid.cz/applecorp/inventory_items/4",
+                "url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/4.json",
+                "subject_url": null,
+            }
+        ]
+        ```
+
+# Group Inventory Moves
+
+V současné době máme funkci Sklad v režimu pro beta testování se základními funkcemi. Pokud byste měli zájem, můžeme Vám funkci zapnout, budeme pak rádi za jakékoliv postřehy a zpětnou vazbu.
+
+## Pohyby skladu
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+<tr><td>id</td><td>Identifikátor pohybu</td><td>integer, readonly</td></tr>
+<tr><td>direction</td><td>Směr pohybu: Naskladnění (in) / Vyskladnění (out)</td><td>string, required</td></tr>
+<tr><td>moved_on</td><td>Datum pohybu</td><td>datetime, required</td></tr>
+<tr><td>quantity_change</td><td>Množství</td><td>decimal, required</td></tr>
+<tr><td>purchase_price</td><td>Nákupní cena za jednotku</td><td>decimal, optional</td></tr>
+<tr><td>purchase_currency</td><td>Kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>native_purchase_price</td><td>Nákupní cena v měně účtu</td><td>decimal, readonly</td></tr>
+<tr><td>retail_price</td><td>Prodejní cena za jednotku</td><td>decimal, optional</td></tr>
+<tr><td>retail_currency</td><td>Kód měny (nepovinné - doplní se z účtu, 3 znaky)</td><td>string, optional, default: by account settings</td></tr>
+<tr><td>private_note</td><td>Soukromá poznámka</td><td>text, optional</td></tr>
+<tr><td>inventory_item_id</td><td>Identifikátor skladové položky</td><td>integer, optional</td></tr>
+<tr><td>created_at</td><td>Datum vytvoření pohybu</td><td>datetime, readonly</td></tr>
+<tr><td>updated_at</td><td>Datum poslední aktualizace pohybu</td><td>datetime, readonly</td></tr>
+</table>
+
+## Inventory Move [/accounts/{slug}/inventory_items/{inventory_item_id}/inventory_moves/{id}.json]
+
++ Model
+
+    ```json
+    {
+        "id": 1,
+        "direction": "out",
+        "moved_on": "2022-11-22",
+        "quantity_change": "2.0",
+        "purchase_price": "500.0",
+        "purchase_currency": "CZK",
+        "native_purchase_price": "500.0",
+        "retail_price": "1000.0",
+        "retail_currency": "CZK",
+        "private_note": "Squeak!",
+        "inventory_item_id": 1016791645,
+        "created_at": "2022-11-1T17:11:24.801+01:00",
+        "updated_at": "2022-11-1T17:11:24.801+01:00"
+    }
+    ```
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1`) ... id pohybu
+    + inventory_item_id (integer, `1`) ... id položky
+
+### Detail pohybu [GET]
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "221fff2205c3005243d543a7b849e70d"
+        Last-Modified: Tue, 18 Jun 2013 09:01:58 GMT
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 1,
+            "direction": "out",
+            "moved_on": "2022-11-2",
+            "quantity_change": "2.0",
+            "purchase_price": "500.0",
+            "purchase_currency": "CZK",
+            "native_purchase_price": "500.0",
+            "retail_price": "1000.0",
+            "retail_currency": "CZK",
+            "private_note": "Squeak!",
+            "inventory_item_id": 1016791645,
+            "created_at": "2022-11-1T17:11:24.801+01:00",
+            "updated_at": "2022-11-1T17:11:24.801+01:00"
+        }
+        ```
+
+### Úprava pohybu [PATCH]
+
+Odpověď serveru na tento příkaz je `200 OK` a JSON s upravenou položkou.
+
+Při odeslání nevalidních dat dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
+Při úpravě pohybu který je přiřazen dokladu dostanete ze serveru odpověď `403 Forbidden`.
+
++ Request Proper
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+
+        ```json
+        {
+            "direction": "out",
+            "moved_on": "2022-11-2",
+            "quantity_change": "2.0",
+            "purchase_price": "500.0",
+            "purchase_currency": "CZK",
+            "retail_price": "1000.0",
+            "retail_currency": "CZK",
+            "private_note": "Squeak!",
+            "inventory_item_id": 1016791645
+        }
+        ```
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "id": 98,
+        "direction": "out"
+        // other inventory moves fields truncated ...
+    }
+    ```
+
++ Request Faulty
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+
+        ```json
+        { "direction": "" }
+        ```
+
++ Response 422 (application/json)
+
+    ```json
+    {
+        "errors": {
+            "direction": [
+                "je povinná položka"
+            ]
+        }
+    }
+    ```
+
+### Smazání pohybu [DELETE]
+
+Po smazání položky server vrátní odpověď `204 No Content`.
+
+Při smazání pohybu který je přiřazen dokladu dostanete ze serveru odpověď `403 Forbidden`.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204
+
+## Inventory Moves Collection [/accounts/{slug}/inventory_items/{inventory_item_id}/inventory_moves/{id}.json]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
+### Nový pohyb [POST]
+
+Po úspěšném vytvoření položky dostanete ze serveru odpověď `201 Created`, hlavička `location` bude nastavena na adresu nově vytvořeného pohybu. Spolu s tím bude navrácen právě vytvořený pohyb.
+
+Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+
+        ```json
+        {
+            "direction": "out",
+            "moved_on": "2022-11-2",
+            "quantity_change": "2.0",
+            "purchase_price": "500.0",
+            "purchase_currency": "CZK",
+            "retail_price": "1000.0",
+            "retail_currency": "CZK",
+            "private_note": "Squeak!",
+            "inventory_item_id": 5
+        }
+        ```
+
++ Response 201
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        Location: https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items/5/inventory_moves/1.json
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 1,
+            "direction": "out",
+            "moved_on": "2022-11-2"
+            // other inventory moves fields truncated ...
+        }
+        ```
+
+### Seznam pohybů [GET]
+
+Seznam možných parametrů je uveden v tabulce. Jediným povinným je `slug`, který je součástí URL adresy. Ostatní parametry jsou nepovinné a přijdou na konec adresy např `?page=4`.
+Parametry je možné libovolně kombinovat.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `5`) ... Číslo stránky, stránkuje se po 20 položkách.
+    + inventory_item_id (optional, string, `1`) ... Pohyby dané položky
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Pohyby vytvořené po zadaném datu
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Pohyby vytvořené nebo upravené po zadaném datu
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "19d196964ad49038f59384eed34e3e36"
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/inventory_items.json?page=2>; rel="next"
+        ```
+
+    + Body
+
+        ```json
+        [
+            {
+                "id": 1,
+                "direction": "out",
+                "moved_on": "2022-11-2",
+                "quantity_change": "2.0",
+                "purchase_price": "500.0",
+                "purchase_currency": "CZK",
+                "retail_price": "1000.0",
+                "retail_currency": "CZK",
+                "private_note": "Squeak!",
+                "inventory_item_id": 5
+            },
+            {
+                "id": 2,
+                "direction": "out",
+                "moved_on": "2022-11-2",
+                "quantity_change": "2.0",
+                "purchase_price": "500.0",
+                "purchase_currency": "CZK",
+                "retail_price": "1000.0",
+                "retail_currency": "CZK",
+                "private_note": "Squeak!",
+                "inventory_item_id": 5
+            }
+        ]
+        ```
 
 # Group Messages
 
