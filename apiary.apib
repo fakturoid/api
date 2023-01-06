@@ -4074,10 +4074,11 @@ Při smazání pohybu který je přiřazen dokladu dostanete ze serveru odpově�
 
 + Response 204
 
-## Inventory Moves Collection [/accounts/{slug}/inventory_items/{inventory_item_id}/inventory_moves/{id}.json]
+## Inventory Item Moves Collection [/accounts/{slug}/inventory_items/{inventory_item_id}/inventory_moves.json]
 
 + Parameters
     + slug (string, `applecorp`) ... Název účtu
+    + inventory_item_id (integer, `1`) ... id položky
 
 ### Nový pohyb [POST]
 
@@ -4130,6 +4131,11 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
             // other inventory moves fields truncated ...
         }
         ```
+
+## Inventory Moves Collection [/accounts/{slug}/inventory_moves.json]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
 
 ### Seznam pohybů [GET]
 
