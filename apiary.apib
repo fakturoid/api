@@ -1937,6 +1937,15 @@ Atributy, které se automaticky vyplňují:
 - `unit_price`
 - `name`
 
+Pokud políčko `name` nepošlete, doplní se do popisu řádku mimo názvu položky ještě SKU kód a případně i druhý kód produktu (IAN/EAN/ESBN) (pokud je nastaven).
+Výsledek pak může vypadat takto:
+
+```
+Název skladové položky
+SKU: 123456789
+IAN: 987654321
+```
+
 Jakýkoliv z těchto atributů lze zaslat spolu s SKU kódem a v tomto případě bude mít přednost před skladovou položkou (ale nesmí být prázdný).
 
 Skladové položky lze tímto způsobem načítat u řádků faktur, šablon, pravidelných faktur, nákladů a nabídek.
