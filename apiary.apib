@@ -23,7 +23,7 @@ Pro vytvoření nebo úpravu záznamu musíte přidat hlavičku `Content-Type: a
 ```
 curl -u vas@email.cz:API_TOKEN -H 'User-Agent: YourApp (yourname@example.com)' \
     -H 'Content-Type: application/json' \
-    -X POST -d '{ "subject_id": "28" }' \
+    -X POST -d '{ "subject_id": 28 }' \
     https://app.fakturoid.cz/api/v2/accounts/{slug}/invoices.json
 ```
 
@@ -1344,7 +1344,7 @@ Příklad:
             "generator_id": 4,
             "related_id": null,
             "correction": "false",
-            "correction_id": "false",
+            "correction_id": null,
             "paypal": false,
             "gopay": false,
             "token": "udDTG8Q88M",
@@ -1606,8 +1606,8 @@ V případě, kdy ve Fakturoidím učtu není zadaný bankovní účet, API vrá
         ```json
         {
             "custom_id": "1234",
-            "subject_id": "28",
-            "number_format_id": "1",
+            "subject_id": 28,
+            "number_format_id": 1,
             "number": "2012-0001",
             "currency": "CZK",
             "payment_method": "bank",
@@ -2615,7 +2615,7 @@ Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unpro
 
         ```json
         {
-            "subject_id": "28",
+            "subject_id": 28,
             "currency": "CZK",
             "payment_method": "bank",
             "due": 10,
