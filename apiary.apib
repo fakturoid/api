@@ -2778,6 +2778,242 @@ Vyhledává se v následujících polích na nákladech: `number`, `variable_sym
         ]
         ```
 
+
+# Group Inbox file
+
+## Krabice
+
+<table>
+<tr><th>Atribut</th><th>Popis</th><th>Detail</th></tr>
+
+<tr><td>id</td><td>identifikátor souboru</td><td>integer, readonly</td></tr>
+<tr><td>filename</td><td>název souboru</td><td>string, readonly</td></tr>
+<tr><td>bytesize</td><td>velikost souboru v bytech</td><td>integer, readonly</td></tr>
+<tr><td>send_to_ocr</td><td>soubor bude poslán na OCR</td><td>boolean</td></tr>
+<tr><td>sent_to_ocr_at</td><td>datum odeslání souboru na OCR</td><td>datetime, readonly</td></tr>
+<tr><td>ocr_status</td><td>stav zpracování OCR souboru</td><td>sting, readonly</td></tr>
+<tr><td>ocr_completed_at</td><td>datum dokončení OCR souboru</td><td>datetime, readonly</td></tr>
+<tr><td>created_at</td><td>datum vytvoření souboru</td><td>datetime, readonly</td></tr>
+<tr><td>updated_at</td><td>datum poslední aktualizace souboru</td><td>datetime, readonly</td></tr>
+<tr><td>download_url</td><td>API adresa pro stažení souboru</td><td>string, readonly</td></tr>
+</table>
+
+
+## Inbox file [/accounts/{slug}/inbox_files/{id}.json]
+
++ Model
+
+    ```json
+    {
+        "id": 49,
+        "filename": "attachment.png",
+        "bytesize": 1304,
+        "send_to_ocr": false,
+        "sent_to_ocr_at": null,
+        "ocr_status": null,
+        "ocr_completed_at": null,
+        "created_at": "2023-06-14T13:55:39.858+02:00",
+        "updated_at": "2023-06-14T13:55:39.883+02:00",
+        "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inbox_files/49/download"
+    }
+    ```
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1234`) ... id souboru
+
+
+### Stažení souboru [GET /accounts/{slug}/inbox_files/{id}/download]
+
+Pokud soubor existuje, server vrátí odpověď `200 OK` a tělo odpovědi obsahuje binární data souboru.
+Pokud soubor neexistuje, dostanete odpověď `404 Not found`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1234`) ... id souboru
+
++ Request
+
+    + Headers
+
+        ```
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+
+    + Headers
+
+        ```
+        Content-Type: image/png
+        Content-Disposition: attachment; filename="attachment.png"; filename*=UTF-8''attachment.png
+        Content-Transfer-Encoding: binary
+        ```
+
+    + Body
+
+        ```
+        ... binary data ...
+        ```
+
++ Response 404 (text/html)
+
+### Poslání souboru na OCR [POST /accounts/{slug}/inbox_files/{id}/send_to_ocr]
+
+__Poznámka:__ V současné době je 'Poslání souboru na OCR' v režimu pro beta testování a není dostupné pro všechny účty.
+
+
+Je-li funkce OCR pro vybraný soubor dostupná, server vrátí odpověď `204 No Content`, jinak `403 Forbidden`.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + id (integer, `1234`) ... id souboru
+
++ Request
+
+    + Headers
+
+        ```
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204
+
++ Response 403 (application/json)
+
+### Smazání souboru [DELETE]
+
+Po smazání souboru server vrátí odpověď `204 No Content`, nejde-li náklad smazat, dostanete odpověď `422 Unprocessable Entity`.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 204
+
++ Response 422 (application/json)
+
+
+## Inbox file Collection [/accounts/{slug}/inbox_files.json]
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+
+### Nový soubor [POST]
+Soubor se posílá v atributu `attachment` jako base64 kódovaný řetězec.
+
+Název souboru je možné předat v atributu `filename`.
+Pokud není předán, použije se název souboru ve tvaru `attachment.*` s příponou podle MIME typu uvedeného v atributu `attachment`.
+
+Po úspěšném vytvoření souboru dostanete ze serveru odpověď `201 Created` a JSON se základními informacemi o souboru.
+
+Pokud budou odeslána nevalidní data, dostanete ze serveru odpověď `422 Unprocessable Entity` a JSON se seznamem chyb v odeslaných datech.
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
+    + Body
+
+        ```json
+        {
+            "attachment": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABg ...",
+            "filename": "INV123654.png"
+        }
+        ```
+
++ Response 201
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ```
+
+    + Body
+
+        ```json
+        {
+            "id": 49,
+            "filename": "INV123654.png",
+            "bytesize": 1304,
+            "send_to_ocr": false,
+            "sent_to_ocr_at": null,
+            "ocr_status": null,
+            "ocr_completed_at": null,
+            "created_at": "2023-06-14T13:55:39.858+02:00",
+            "updated_at": "2023-06-14T13:55:39.883+02:00",
+            "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inbox_files/49/download"
+        }
+        ```
++ Response 422 (application/json)
+
+    + Body
+
+        ```json
+        {
+            "errors": {
+                "filename": [
+                    "není vyplněno"
+                ]
+            }
+        }
+        ```
+
+### Seznam souborů [GET]
+
+Server vrátí seznam všech souborů ve formátu JSON.
+
++ Request (application/json)
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ```
+
++ Response 200 (application/json)
+    + Body
+        ```json
+        [
+            {
+                "id": 49,
+                "filename": "attachment.png",
+                "bytesize": 1304,
+                "send_to_ocr": false,
+                "sent_to_ocr_at": null,
+                "ocr_status": null,
+                "ocr_completed_at": null,
+                "created_at": "2023-06-14T13:55:39.858+02:00",
+                "updated_at": "2023-06-14T13:55:39.883+02:00",
+                "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inbox_files/49/download"
+            },
+            ...
+            {
+                "id":40,
+                "filename": "attachment2.pdf",
+                "bytesize": 61601,
+                "send_to_ocr": false,
+                "sent_to_ocr_at": null,
+                "ocr_status": null,
+                "ocr_completed_at": null,
+                "created_at": "2023-06-12T00:00:00.000+02:00",
+                "updated_at": "2023-06-12T10:35:01.683+02:00",
+                "download_url": "https://app.fakturoid.cz/api/v2/accounts/applecorp/inbox_files/40/download"
+            }
+        ]
+        ```
+
 # Group Generators
 
 ## Šablony faktur (jednoduché i pravidelné)
