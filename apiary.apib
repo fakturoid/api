@@ -1676,7 +1676,6 @@ Parametry je možné libovolně kombinovat.
     + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
     + subject_id (optional, integer, `5`) ... Faktury podle kontatku
     + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
-    + correction (optional, boolean, `true`) ... Filtrovat pouze opravné daňové doklady (ODD)
 
 + Request
 
@@ -1829,6 +1828,66 @@ Parametry a jejich použití je stejné jako u seznamu faktur výše.
                 "custom_id": null,
                 "proforma": true,
                 "number": "1-2012-0005",
+                // other invoice fields truncated ...
+            }
+        ]
+        ```
+
++ Response 400 (application/json)
+
+## Invoices Collection corrections only [/accounts/{slug}/invoices/correction.json]
+
+### Seznam Opravných daňových dokladů [GET]
+
+Parametry a jejich použití je stejné jako u seznamu faktur výše.
+
++ Parameters
+    + slug (string, `applecorp`) ... Název účtu
+    + page (optional, integer, `4`) ... Číslo stránky, stránkuje se po 40 fakturách.
+    + since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené po zadaném datu
+    + until (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené do zadaného data
+    + updated_since (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené nebo upravené po zadaném datu
+    + updated_until (optional, datetime, `2012-05-20T15:00:00+01:00`) ... Faktury vytvořené nebo upravené do zadaného data
+    + number (optional, string, `20120005`) ... Budou vráceny faktury s daným číslem
+    + status (optional, string, `paid`) ... Budou vráceny faktury v zadaném stavu.
+    + subject_id (optional, integer, `5`) ... Faktury podle kontatku
+    + custom_id (text, optional, `315`) ... Filtrovat podle vlastního ID
+
++ Request
+
+    + Headers
+
+        ```
+        Content-Type: application/json
+        User-Agent: YourApp (yourname@example.com)
+        ```
+
++ Response 200
+    + Headers
+
+        ```
+        Content-Type: application/json
+        ETag: "e50c359d3d1a49c705949037e8b188ef"
+        Link: <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/correction.json?page=6>; rel="last", <https://app.fakturoid.cz/api/v2/accounts/applecorp/invoices/correction.json?page=2>; rel="next"
+        ```
+    + Body
+
+        ```json
+        [
+            {
+                "id": 9,
+                "custom_id": null,
+                "correction": true,
+                "correction_id": 3,
+                "number": "2012-0004",
+                // other invoice fields truncated ...
+            },
+            {
+                "id": 10,
+                "custom_id": null,
+                "correction": true,
+                "correction_id": 5,
+                "number": "2012-0005",
                 // other invoice fields truncated ...
             }
         ]
