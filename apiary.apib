@@ -48,14 +48,38 @@ API podporuje pouze formát JSON. Všude používejte kódování UTF8. Při pou
 
 # Ověření
 
-Ověření se provádí přes HTTP BASIC AUTH, kde jako username slouží váš email a za heslo uvedete api_token (zjistíte v Nastavení vašeho účtu v záložce _Já_).
+Ověření se provádí přes HTTP BASIC AUTH, kde jako username slouží váš email a za heslo uvedete API klíč (obojí zjistíte v Nastavení vašeho účtu v sekci _Uživatelský účet_).
+
+Příklad HTTP Authorization hlavičky:
+
+```
+Authorization: Basic dmFzQGVtYWlsLmN6OjY1MzYzOGRjNzMzYWZjZTc1MTMwMzAzZmU2ZTYwMTBmNjM3NjhhZjA=
+```
+
+Kde `dmFzQGVtYWlsLmN6OjY1MzYzOGRjNzMzYWZjZTc1MTMwMzAzZmU2ZTYwMTBmNjM3NjhhZjA=` je `vas@email.cz:653638dc733afce75130303fe6e6010f63768af0` zakódovaný do Base64.
+
 
 ### Příklad
 
 ```
-curl -u vas@email.cz:653638dc733afce75130303fe6e6010f63768af0 \
-    -H 'User-Agent: YourApp (yourname@example.com)' \
-    https://app.fakturoid.cz/api/v2/accounts/{slug}/account.json
+curl --include --request GET 'https://app.fakturoid.cz/api/v2/accounts/{slug}/account.json' \
+  --header 'Authorization: Basic dmFzQGVtYWlsLmN6OjY1MzYzOGRjNzMzYWZjZTc1MTMwMzAzZmU2ZTYwMTBmNjM3NjhhZjA=' \
+  --header 'User-Agent: YourApp (yourname@example.com)' \
+  --header 'Content-Type: application/json' \
+  --header 'Accept: application/json'
+```
+
+`{slug}` nahraďte za název vašeho účtu.
+
+Některé jazyky, knihovny a nástroje umí specifikovat Basic auth hlavičku automaticky a nemusíte nic kódovat, například v cURL lze použít parametr `--user`,
+který provede zakódování a vyrobí hlavičku `Authorization` za vás.
+
+```
+curl --include --request GET 'https://app.fakturoid.cz/api/v2/accounts/{slug}/account.json' \
+  --user 'vas@email.cz:653638dc733afce75130303fe6e6010f63768af0' \
+  --header 'User-Agent: YourApp (yourname@example.com)' \
+  --header 'Content-Type: application/json' \
+  --header 'Accept: application/json'
 ```
 
 Při zadání špatných přihlašovacích údajů dostanete ze serveru odpověď `401 Unauthorized`.
